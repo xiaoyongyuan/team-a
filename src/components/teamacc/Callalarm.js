@@ -4,9 +4,16 @@ import {Table, DatePicker, Form, Input, Row, Col, Button} from 'antd';
 // import moment from 'moment';
 import BreadcrumbCustom from "../BreadcrumbCustom";
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import {post} from "../../axios/tools";
 const {RangePicker } = DatePicker;
 const FormItem = Form.Item;
+const data=[{
+    code:1,
+    type:1
+},{
+    code:2,
+    type:0
+}]
 class Callalarm extends Component {
     constructor(props) {
         super(props);
@@ -18,17 +25,17 @@ class Callalarm extends Component {
 
     componentDidMount() {
         this.setState({
+            list:data
         })
         //取数据
         this.requestdata()
     }
-    requestdata=(params) => {//取数据
-        axios.get("table.json",params)
-        .then((res)=>{
-            if(res.data.success){
-                console.log(res.data.data);
+    requestdata=(params={}) => {//取数据
+        post({url:"/api/rollcall/getlist_maintain",data:params}, (res)=>{
+            if(res.success){
                 this.setState({
-                    list: res.data.data
+                    list: res.data,
+                    total:res.totalcount
                 })
             }
         })
@@ -55,47 +62,49 @@ class Callalarm extends Component {
             },
             {
                 title: '用户',
-                dataIndex: 'deveui',
-                key: 'manage'
-            }, {
+                dataIndex: 'qpplyname',
+                key: 'qpplyname'
+            },{
                 title: '摄像头',
-                dataIndex: 'deveui',
-                key: 'coordinate',
-                render: text => <span>{text}</span>,
+                dataIndex: 'cameraname',
+                key: 'cameraname',
+            },
+            {
+                title: '点名对象',
+                dataIndex: 'rname',
+                key: 'rname',
             },
             {
                 title: '提交日期',
-                dataIndex: 'type',
-                key: 'usertype',
-                render: text => <span>{text}</span>,
+                dataIndex: 'applydate',
+                key: 'applydate',
             },
             {
                 title: '处理状态',
-                dataIndex: 'type',
-                key: 'state',
-                render: text => <span>{text}</span>,
+                dataIndex: 'rhandle',
+                key: 'rhandle',
+                render: text =>{
+                    switch(text){
+                        case 0:
+                        return('未处理');
+                        case 1:
+                        return('通过');
+                        case 2:
+                        return('未通过');
+                    }
+                },
             },
             {
                 title: '处理日期',
-                dataIndex: 'teamname',
-                key: 'riqi',
-                render: text => <span>{text}</span>,
+                dataIndex: 'handledate',
+                key: 'handledate',
             },
             {
                 title: '操作',
-                key: 'manage3',
-                render: (text, record) => {
-                    let id=text.code
-                    if(text.type){
-                        return(
-                            <Link to={"/app/teamacc/adopt?RowId="+id } > <Button>查看</Button></Link>
-                        )
-                    }else{
-                        return(
-                            <Link to={"/app/teamacc/auditing?RowId="+id}><Button>处理</Button> </Link>
-                        )
-                    }
-                    },
+                key: 'option',
+                render: (text, record) => 
+                    <Link to={"/app/teamacc/adopt?code="+text.code } > <Button>查看</Button></Link>
+                ,
             }];
 
         function onChange_time(date, dateString) {

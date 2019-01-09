@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import '../../style/sjg/home.css';
 import { Card, Form, Input, Row, Col, Button,Upload, message, Icon, } from 'antd';
 import BreadcrumbCustom from '../BreadcrumbCustom';
-import axios from 'axios';
+import {post} from "../../axios/tools";
+import nopic from "../../style/imgs/nopic.png";
 const FormItem = Form.Item;
 const props = {
     name: 'file',
@@ -24,57 +25,73 @@ const props = {
 };
 
 class Adopt extends Component {
-    // state = {
-    //     confirmDirty: false,
-    //     list:[],
-    // };
     constructor(props) {
         super(props);
         this.state = {
-            list:[],
-            confirmDirty: false,
-            isDeal: false
+            data:[],
+            imgsrc:nopic,
+            present:[]
         };
     }
-    componentDidMount(e) {
+    componentWillMount(){
         this.setState({
+            code:this.props.query.code
         })
-        //取数据
-       console.log(e);
-        this.requestdata();
     }
-    requestdata=(params) => {//取数据
-        axios.get("table.json",params)
-            .then((res)=>{
-            if(res.data.success){
-                console.log(res.data.data);
-                this.setState({
-                    list: res.data.data
+    componentDidMount(){
+        const _this=this;
+        post({url:"/api/rollcall/getone_maintain",data:{code:this.state.code}}, (res)=>{
+            if(res.success){
+                _this.props.form.setFieldsValue({
+                    qpplyname: res.data.cameraname, //用户名
+                    rname: res.data.rname, //对象名
+                    applydate: res.data.applydate, 
+                    cameraname: res.data.cameraname, 
+                    rhandle: res.data.rhandle,   //处理结果                           
+                });
+                _this.setState({
+                    imgsrc: res.data.basepic, //图片
+                    present: JSON.parse(res.data.rzone), //区域   
+                },()=>{
+                   this.draw() 
                 })
             }
         })
+        this.setState({
+        })
     }
-
-    // requestdata = () => {
-    //     if(this.state.code){
-    //         axios.get("table.json").then((res)=>{
-    //             if(res.data.success){
-    //                 console.log(res.data.data);
-    //                 this.setState({
-    //                     name: res.data.data.name,
-    //                     type: res.data.data.type,
-    //                     binding: res.data.data.binding,
-    //                     deveui: res.data.data.deveui,
-    //                     teamname: res.data.data.teamname,
-    //
-    //
-    //                 })
-    //
-    //             }
-    //         })
-    //     }
-    // };
-
+    draw = () => { //绘制区域
+        let item=this.state.present;
+        console.log('itemitem',item)
+        if(item.length){
+            let ele = document.getElementById("time_graph_canvas");
+            let area = ele.getContext("2d");
+            area.strokeStyle='#ff0';
+            area.lineWidth=3;
+            area.beginPath();
+            area.moveTo(item[0][0],item[0][1]);
+            item.map((elx,i)=>{
+                if(i>0){
+                   area.lineTo(item[i][0],item[i][1]);
+                   if(i===3){
+                   area.lineTo(item[0][0],item[0][1]);
+                   } 
+                   area.stroke();
+                }
+            }) 
+        }
+        
+    }
+    cancelhandle=()=>{ //不通过
+        const _this=this;
+        post({url:"/api/rollcall/handle",data:{code:this.state.code,rhandle:2}}, (res)=>{
+            if(res.success){
+                message.success('设置成功',2,function(){
+                    _this.props.history.go(-1);
+               });
+            }
+        })
+    }
 
     handleSubmit = (e) => {
         e.preventDefault();
@@ -108,51 +125,49 @@ class Adopt extends Component {
                         <div className="gutter-box">
                             <Card title="" bordered={false}>
                                 <Form onSubmit={this.handleSubmit}>
-                                    <FormItem
-                                        {...formItemLayout}
-                                        label="摄像头IP"
-                                        hasFeedback
-                                    >
-                                        {getFieldDecorator('IP', {
-                                            rules: [{required: true, message: '请输入摄像头IP',whitespace: true}],
-                                        })(
-                                            <Input />
-                                        )}
-                                    </FormItem>
+                                    
                                     <FormItem
                                         {...formItemLayout}
                                         label="用户名"
                                         hasFeedback
                                     >
-                                        {getFieldDecorator('用户名', {
+                                        {getFieldDecorator('qpplyname', {
                                             rules: [{required: true, message: '请输入用户名',whitespace: true}],
                                         })(
-                                            <Input />
+                                            <Input disabled />
                                         )}
                                     </FormItem>
                                     <FormItem
                                         {...formItemLayout}
-                                        label="审核结果"
+                                        label="摄像头"
                                         hasFeedback
                                     >
-                                        {getFieldDecorator('审核结果', {
-                                            rules: [{required: true,whitespace: true}],
+                                        {getFieldDecorator('cameraname', {
+                                            rules: [{required: true, message: '请输入摄像头IP',whitespace: true}],
                                         })(
-                                            <Input />
+                                            <Input disabled />
                                         )}
                                     </FormItem>
-
+                                    <FormItem
+                                        {...formItemLayout}
+                                        label="对象名"
+                                        hasFeedback
+                                    >
+                                        {getFieldDecorator('rname', {
+                                            rules: [{required: true, message: '请输入摄像头IP',whitespace: true}],
+                                        })(
+                                            <Input disabled />
+                                        )}
+                                    </FormItem>
                                     <Row className="area_row">
                                         <Col span={3} offset={5} className="area_text">
                                             区域：
                                         </Col>
                                         <Col span={10}>
-                                            <div className="area">
-                                                <img alt="2" src="../../style/logo.png" />
-                                            </div>
+                                            <canvas id="time_graph_canvas" width="704px" height="576px" style={{backgroundImage:'url('+this.state.imgsrc+')',backgroundSize:'100% 100%'}} onClick={this.clickgetcorrd} onMouseMove={this.drawmove} />
                                         </Col>
-
-                                    </Row>
+                                    </Row>           
+                                    
                                     <Row className="area_row">
                                         <Col span={4} offset={4} className="area_text">
                                             对象图：
@@ -170,9 +185,21 @@ class Adopt extends Component {
                                             </Upload>
                                         </Col>
                                     </Row>
-                                    <Row className="area_row">
-                                        <Col span={4} offset={10} className="area_text">
-                                            <Button type="primary" size="large">返回</Button>
+                                    <FormItem
+                                        {...formItemLayout}
+                                        label="审核结果"
+                                        hasFeedback
+                                    >
+                                        {getFieldDecorator('rhandle', {
+                                            rules: [{required: true,whitespace: true}],
+                                        })(
+                                            <Input disabled />
+                                        )}
+                                    </FormItem>
+                                    <Row>
+                                        <Col span={8} offset={16}>
+                                            <Button type="primary" htmlType="submit" className="login-form-button" >上传对象图</Button>
+                                            <Button style={{display:"inline-block"}} onClick={this.cancelhandle}>不通过</Button>
                                         </Col>
                                     </Row>
 

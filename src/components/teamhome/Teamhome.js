@@ -34,7 +34,8 @@ class Teamhome extends React.Component {
     }
     componentWillMount(){
         post({url:"/api/company/getone_maintain"},(res)=>{
-            var monthly=res.data.companyadd.map(list =>list.name);
+        	if(res){
+        		var monthly=res.data.companyadd.map(list =>list.name);
             for(let i=monthly.length-1;i>=0;i--){
                 var dayd=moment(monthly[i]).format('MM.DD');
                 this.state.monthlyNumber.push(dayd);
@@ -53,6 +54,8 @@ class Teamhome extends React.Component {
                     console.log(this.state.monthlyNumberY);
                 });
             }
+        	}
+            
         })
     }
     render() {
