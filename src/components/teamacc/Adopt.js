@@ -7,8 +7,10 @@ import {post} from "../../axios/tools";
 import nopic from "../../style/imgs/nopic.png";
 const FormItem = Form.Item;
 const props = {
-    name: 'file',
-    action: '//jsonplaceholder.typicode.com/posts/',
+    accept:'image/*',
+    name: 'lffupload.png',
+    action: 'http://api.aokecloud.cn//upload/temp',
+    // action: '/src/style/imgs/',
     headers: {
         authorization: 'authorization-text',
     },
@@ -17,9 +19,9 @@ const props = {
             console.log(info.file, info.fileList);
         }
         if (info.file.status === 'done') {
-            message.success(`${info.file.name} file uploaded successfully`);
+            message.success(`file uploaded successfully`);
         } else if (info.file.status === 'error') {
-            message.error(`${info.file.name} file upload failed.`);
+            message.error(`file upload failed.`);
         }
     },
 };
@@ -129,10 +131,9 @@ class Adopt extends Component {
                                     <FormItem
                                         {...formItemLayout}
                                         label="用户名"
-                                        hasFeedback
                                     >
                                         {getFieldDecorator('qpplyname', {
-                                            rules: [{required: true, message: '请输入用户名',whitespace: true}],
+                                            rules: [{required: false, message: '请输入用户名',whitespace: true}],
                                         })(
                                             <Input disabled />
                                         )}
@@ -140,10 +141,9 @@ class Adopt extends Component {
                                     <FormItem
                                         {...formItemLayout}
                                         label="摄像头"
-                                        hasFeedback
                                     >
                                         {getFieldDecorator('cameraname', {
-                                            rules: [{required: true, message: '请输入摄像头IP',whitespace: true}],
+                                            rules: [{required: false, message: '请输入摄像头IP',whitespace: true}],
                                         })(
                                             <Input disabled />
                                         )}
@@ -151,10 +151,9 @@ class Adopt extends Component {
                                     <FormItem
                                         {...formItemLayout}
                                         label="对象名"
-                                        hasFeedback
                                     >
                                         {getFieldDecorator('rname', {
-                                            rules: [{required: true, message: '请输入摄像头IP',whitespace: true}],
+                                            rules: [{required: false, message: '请输入摄像头IP',whitespace: true}],
                                         })(
                                             <Input disabled />
                                         )}
@@ -188,10 +187,9 @@ class Adopt extends Component {
                                     <FormItem
                                         {...formItemLayout}
                                         label="审核结果"
-                                        hasFeedback
                                     >
                                         {getFieldDecorator('rhandle', {
-                                            rules: [{required: true,whitespace: true}],
+                                            rules: [{required: false}],
                                         })(
                                             <Input disabled />
                                         )}
