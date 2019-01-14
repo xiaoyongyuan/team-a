@@ -73,7 +73,7 @@ class Monthlynumber extends React.Component{
                         shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
                     }
                 },
-                data: this.props.monthlyY
+                data:this.props.monthlyY
             }]
         };
         return(

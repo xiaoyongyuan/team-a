@@ -1,8 +1,9 @@
-
 import React, { Component } from 'react';
 import '../../style/sjg/home.css';
-import {Form,Table, DatePicker,Input, Row, Col, Button,Modal,} from 'antd';
+import {Form,Table, DatePicker,Input, Row, Col, Button,Modal,LocaleProvider} from 'antd';
 import BreadcrumbCustom from "../BreadcrumbCustom";
+import zh_CN from "antd/lib/locale-provider/zh_CN";
+import 'moment/locale/zh-cn';
 import moment from 'moment';
 import ModaTeam from './ModaTeam';
 import {post} from "../../axios/tools";
@@ -27,10 +28,9 @@ class Teammange extends Component {
         
     }
 
-    requestdata=(params) => {//取数据
+    requestdata=() => {//取数据
         post({url:"/api/company/getlist"}, (res)=>{
             if(res.success){
-                console.log("列表数据：",res.data);
                 this.setState({
                     list: res.data
                 })
@@ -48,7 +48,6 @@ class Teammange extends Component {
 
 
     onChange_radio=(e)=>{//单选
-        console.log('radio checked', e.target.value);
         this.setState({
             value: e.target.value,
         });
@@ -118,7 +117,7 @@ class Teammange extends Component {
             }
         });
     };
-    handleCancel = (e) => {
+    handleCancel = () => {
         const forms=this.formRef.formref();
         this.setState({
             visible: false,
@@ -129,22 +128,24 @@ class Teammange extends Component {
     selectopt = (e) => { //检索search
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            console.log(typeof(values.clouddata))
-            if(values.clouddata==undefined &&values.name==undefined){
+            if(values.clouddata==undefined && values.name==undefined){
+                this.requestdata();
                 this.setState({
                     deleteshow: true,
-                })
+                });
                 return false ;
             }
 
             if(!err){
-                const data={
-                    bdate:values.clouddata[0].format('YYYY-MM-DD'),
-                    edate:values.clouddata[1].format('YYYY-MM-DD'),
-                    cname:values.name,
-                }
- 
-                post({url:"/api/company/getlist",data:data}, (res)=>{
+                /*if(values.clouddata!==undefined ) {*/
+                console.log(values.name);
+                    var dataUseres = {
+                        bdate: values.clouddata[0].format('YYYY-MM-DD'),
+                        edate: values.clouddata[1].format('YYYY-MM-DD'),
+                        cname: values.name,
+                    }
+                /*}*/
+                post({url:"/api/company/getlist",data:dataUseres}, (res)=>{
                     if(res.success){
                         this.setState({
                             list: res.data
@@ -250,7 +251,7 @@ searchCancel = () =>{//删除取消
         return (
             <div>
                 <BreadcrumbCustom first="账号管理" second="用户管理" />
-                <Row className="margin_top80 margin_bottom40">
+                    <Row className="margin_top80 margin_bottom40">
                     <Col span={18}>
                         <Form layout="inline"onSubmit={this.selectopt}>
                             <FormItem label="名称">
@@ -260,13 +261,16 @@ searchCancel = () =>{//删除取消
                                      <Input />
                                 )}
                             </FormItem>
-                            <FormItem label="云服务到期日期">
+                            <LocaleProvider locale={zh_CN}>
+                                <FormItem label="云服务到期日期">
                                 {getFieldDecorator('clouddata', {
                                     rules: [{ required: false, message: '请选择日期!' }],
                                 })(
-                                    <RangePicker onChange={onChange_time} format={dateFormat} />
+                                    <RangePicker
+                                        onChange={onChange_time} format={dateFormat} />
                                 )}
                             </FormItem>
+                            </LocaleProvider>
                             <FormItem>
                                 <Button type="primary" htmlType="submit">
                                     查询
@@ -297,6 +301,7 @@ searchCancel = () =>{//删除取消
                 </Modal>
                 <Modal title="提示信息" visible={this.state.deleteshow} onOk={this.searchOk}
                        onCancel={this.searchCancel}
+                        footer={null}
                 >
                     <p>请选择查询的内容 </p>
                 </Modal>
