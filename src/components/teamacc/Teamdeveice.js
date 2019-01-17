@@ -214,7 +214,7 @@ class Teamdeveice extends Component {
                             </Form>
                         </Col>
                     </Row>
-                <Table columns={columns} dataSource={this.state.list} />
+                <Table columns={columns} dataSource={this.state.list} bordered={true}/>
                 <Modal title='编辑' visible={this.state.visible} onOk={this.handleCreate}
                        onCancel={this.handleCancel}
                 >
@@ -227,6 +227,8 @@ class Teamdeveice extends Component {
                 </Modal>
                 <Modal title="提示信息" visible={this.state.deleteshow} onOk={this.deleteOk}
                        onCancel={this.deleteCancel}
+                       okText="确认"
+                       cancelText="取消"
                 >
                     <p>确认删除吗？</p>
                 </Modal>
