@@ -191,7 +191,7 @@ class Comemploye extends Component {
                 <BreadcrumbCustom first="系统管理" second="人员管理" />
                 <div className="shange">
                     <Row>
-                        <Col span={16}>
+                        <Col span={22}>
                             <Form layout="inline" onSubmit={this.selectopt}>
                                 <FormItem label="姓名">
                                     {getFieldDecorator('realname', {
@@ -228,13 +228,15 @@ class Comemploye extends Component {
 
                     </Row>
                     <Row>
-                        <Table columns={columns} dataSource={this.state.list} />
+                        <Table columns={columns} dataSource={this.state.list} bordered={true}/>
                     </Row>
                 </div>
                 <Modal title={this.state.type?'查看维护团队':'新增维护团队'}
                        visible={this.state.visible}
                        onOk={this.handleCreate}
                        onCancel={this.handleCancel}
+                       okText="确认"
+                       cancelText="取消"
                 >
                     <ModalForm visible={this.state.visible}
                                code={this.state.type}
@@ -246,6 +248,8 @@ class Comemploye extends Component {
 
                 <Modal title="提示信息" visible={this.state.deleteshow} onOk={this.deleteOk}
                        onCancel={this.deleteCancel}
+                       okText="确认"
+                       cancelText="取消"
                 >
                     <p>确认删除吗？</p>
                 </Modal>
