@@ -196,7 +196,7 @@ class Department extends Component {
                 <BreadcrumbCustom first="系统管理" second="部门管理" />
                 <div className="shange">
                     <Row>
-                        <Col span={12}>
+                        <Col span={22}>
                             <Form layout="inline" onSubmit={this.selectopt}>
                                 <FormItem label="名称">
                                     {getFieldDecorator('cgname', {
@@ -217,17 +217,21 @@ class Department extends Component {
                         </Col>
                     </Row>
                 <Row>
-                    <Table columns={columns} dataSource={this.state.list} />
+                    <Table columns={columns} dataSource={this.state.list} bordered={true}/>
                 </Row>
                 </div>
                        
                 <Modal title={this.state.type?'编辑分组':'新增分组'} visible={this.state.visible} onOk={this.handleCreate}
           onCancel={this.handleCancel}
+                       okText="确认"
+                       cancelText="取消"
                 >  
                     <Input className="departname" name="departname" value={this.state.departname} onChange={this.handleChange} />
                 </Modal>
                 <Modal title="提示信息" visible={this.state.deleteshow} onOk={this.deleteOk}
           onCancel={this.deleteCancel}
+                       okText="确认"
+                       cancelText="取消"
                 >  
                   <p>确认删除吗？</p>  
                 </Modal>
