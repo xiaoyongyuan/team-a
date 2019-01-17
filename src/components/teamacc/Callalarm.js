@@ -140,7 +140,7 @@ class Callalarm extends Component {
                     </Col>
                 </Row>
 
-                <Table columns={columns} dataSource={this.state.list} />
+                <Table columns={columns} dataSource={this.state.list} bordered={true}/>
 
             </div>
         )
