@@ -138,6 +138,5 @@
     "presets": [
       "react-app"
     ]
-  },
-  "proxy": "http://login.aokecloud.cn/"
+  }
 }

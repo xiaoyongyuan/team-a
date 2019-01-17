@@ -120,8 +120,8 @@ class Teamdeveice extends Component {
                 render: text => <span>树莓派</span>,
             },{
                 title: '所属用户',
-                dataIndex: 'ccode',
-                key: 'ccode',
+                dataIndex: 'pname',
+                key: 'pname',
                 render: text => <span>{text}</span>,
             },{
                 title: '綁定状态',
@@ -139,7 +139,7 @@ class Teamdeveice extends Component {
                 },
             },{
                 title: '绑定日期',
-                dataIndex: 'binding',
+                dataIndex: 'createon',
                 key: 'manage'
             },{
                 title: '操作',
@@ -169,52 +169,51 @@ class Teamdeveice extends Component {
             <div>
                 <BreadcrumbCustom first="账号管理" second="设备管理" />
                 <Row className="margin_top80 margin_bottom40">
-                    <Col span={22}>
-                        <Form layout="inline"onSubmit={this.selectopt}>
-                            
-                            <FormItem label="设备编号">
-                                {getFieldDecorator('ecode', {
-                                    rules: [{ required: false, message: '设备编号!' }],
-                                })(
-                                    <Input />
-                                )}
-                            </FormItem>
-                            <FormItem label="状态">
-                                {getFieldDecorator('estatus', {
-                                    initialValue:""
-                                })(
-                                    <Select style={{ width: 120 }}>
-                                        <Option value="">所有</Option>
-                                        <Option value="0">未绑定</Option>
-                                        <Option value="2">维修中</Option>
-                                        <Option value="1">已绑定</Option>
-                                    </Select>
-                                )}
-                            </FormItem>
-                            <FormItem label="所属用户">
-                                {getFieldDecorator('companycode', {
-                                    initialValue:"",
-                                })(
-                                    <Select style={{ width: 120 }}>
-                                        <Option value="">所有</Option>
-                                    {
-                                            this.state.userlist.map((item, index) => (
-                                                <Option value={item.code}>{item.cname}</Option>
-                                            ))  
-                                        
-                                    }
-                                    </Select>
-                                )}
-                            </FormItem>
-                            <FormItem>
-                                <Button type="primary" htmlType="submit">
-                                    查询
-                                </Button>
-                            </FormItem>
-                        </Form>
-                    </Col>
-                </Row>
+                        <Col span={22}>
+                            <Form layout="inline"onSubmit={this.selectopt}>
 
+                                <FormItem label="设备编号">
+                                    {getFieldDecorator('ecode', {
+                                        rules: [{ required: false, message: '设备编号!' }],
+                                    })(
+                                        <Input />
+                                    )}
+                                </FormItem>
+                                <FormItem label="状态">
+                                    {getFieldDecorator('estatus', {
+                                        initialValue:""
+                                    })(
+                                        <Select style={{ width: 120 }}>
+                                            <Option value="">所有</Option>
+                                            <Option value="0">未绑定</Option>
+                                            <Option value="2">维修中</Option>
+                                            <Option value="1">已绑定</Option>
+                                        </Select>
+                                    )}
+                                </FormItem>
+                                <FormItem label="所属用户">
+                                    {getFieldDecorator('companycode', {
+                                        initialValue:"",
+                                    })(
+                                        <Select style={{ width: 120 }}>
+                                            <Option value="">所有</Option>
+                                        {
+                                                this.state.userlist.map((item, index) => (
+                                                    <Option value={item.code} key={index}>{item.cname}</Option>
+                                                ))
+
+                                        }
+                                        </Select>
+                                    )}
+                                </FormItem>
+                                <FormItem>
+                                    <Button type="primary" htmlType="submit">
+                                        查询
+                                    </Button>
+                                </FormItem>
+                            </Form>
+                        </Col>
+                    </Row>
                 <Table columns={columns} dataSource={this.state.list} />
                 <Modal title='编辑' visible={this.state.visible} onOk={this.handleCreate}
                        onCancel={this.handleCancel}

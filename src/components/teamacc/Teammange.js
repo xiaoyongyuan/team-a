@@ -1,8 +1,9 @@
-
 import React, { Component } from 'react';
 import '../../style/sjg/home.css';
-import {Form,Table, DatePicker,Input, Row, Col, Button,Modal,} from 'antd';
+import {Form,Table, DatePicker,Input, Row, Col, Button,Modal,LocaleProvider} from 'antd';
 import BreadcrumbCustom from "../BreadcrumbCustom";
+import zh_CN from "antd/lib/locale-provider/zh_CN";
+import 'moment/locale/zh-cn';
 import moment from 'moment';
 import ModaTeam from './ModaTeam';
 import {post} from "../../axios/tools";
@@ -17,19 +18,19 @@ class Teammange extends Component {
         };
     }
     componentDidMount() {
-        let utypes= localStorage.getItem("teamuser");
+        let utypes= localStorage.getItem("user");
         let utypeObj=JSON.parse(utypes);
         this.setState({
             utype: utypeObj.utype
-        })   
-        //取数据
-        this.requestdata()
+        },()=>{
+            this.requestdata()
+        })
+        
     }
 
-    requestdata=(params) => {//取数据
+    requestdata=() => {//取数据
         post({url:"/api/company/getlist"}, (res)=>{
             if(res.success){
-                console.log("列表数据：",res.data);
                 this.setState({
                     list: res.data
                 })
@@ -47,7 +48,6 @@ class Teammange extends Component {
 
 
     onChange_radio=(e)=>{//单选
-        console.log('radio checked', e.target.value);
         this.setState({
             value: e.target.value,
         });
@@ -57,6 +57,7 @@ class Teammange extends Component {
         this.setState({
             visible: true,
             type:0,
+            istrue:false
         });
     };
     showModalEdit=(code,index)=>{ //编辑用户
@@ -71,20 +72,19 @@ class Teammange extends Component {
         e.preventDefault();
         const forms=this.formRef.formref();
         forms.validateFields((err, values) => {
-            if (!err) {
+            if (!err) {                           
+                const data={
+                    cname:values.cname,
+                    adminname:values.adminname,
+                    adminaccount:values.adminaccount,
+                    cloudvaliddate:values.cloudvaliddate?moment(values.cloudvaliddate).format("YYYY-MM-DD"):'',
+                    clng:values.clng,
+                    clat:values.clat,
+                    servicetype:values.opening.join(','),
+                    memo:values.memo,
+                }
                 if(this.state.type){
-                    // console.log("編輯接口",)
-                    const data={
-                        comid:this.state.type,
-                        cname:values.cname,
-                        adminname:values.adminname,
-                        adminaccount:values.adminaccount,
-                        cloudvaliddate: moment(values.cloudvaliddate).format("YYYY-MM-DD"),
-                        ctype:values.ctype,
-                        clng:values.clng,
-                        clat:values.clat,
-                        memo:values.memo,
-                    }
+                    data.comid=this.state.type;
                     post({url:"/api/company/update",data:data}, (res)=>{
                         if(res.success){
                             data.code=res.code;
@@ -97,20 +97,9 @@ class Teammange extends Component {
                     })
 
                 }else{
-                    // console.log("新增接口",values.cname, values.adminname,values.adminaccount,values.cloudvaliddate,values.ctype,values.clng,values.clat,values.memo)
-                    const data={
-                        cname:values.cname,
-                        adminname:values.adminname,
-                        adminaccount:values.adminaccount,
-                        cloudvaliddate: moment(values.cloudvaliddate).format("YYYY-MM-DD"),
-                        ctype:values.ctype,
-                        clng:values.clng,
-                        clat:values.clat,
-                        memo:values.memo,
-                    }
+                    data.ctype=4;
                     post({url:"/api/company/add",data:data}, (res)=>{
                         if(res.success){
-                            console.log(res.success)
                             data.code=res.code;
                             const list=this.state.list;
                             list.unshift(data);
@@ -128,7 +117,7 @@ class Teammange extends Component {
             }
         });
     };
-    handleCancel = (e) => {
+    handleCancel = () => {
         const forms=this.formRef.formref();
         this.setState({
             visible: false,
@@ -139,23 +128,24 @@ class Teammange extends Component {
     selectopt = (e) => { //检索search
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!",values.clouddata,values.name)
-            console.log(typeof(values.clouddata))
-            if(values.clouddata==undefined &&values.name==undefined){
+            if(values.clouddata==undefined && values.name==undefined){
+                this.requestdata();
                 this.setState({
                     deleteshow: true,
-                })
+                });
                 return false ;
             }
 
             if(!err){
-                const data={
-                    bdate:values.clouddata[0].format('YYYY-MM-DD'),
-                    edate:values.clouddata[1].format('YYYY-MM-DD'),
-                    cname:values.name,
-                }
- 
-                post({url:"/api/company/getlist",data:data}, (res)=>{
+                /*if(values.clouddata!==undefined ) {*/
+                console.log(values.name);
+                    var dataUseres = {
+                        bdate: values.clouddata[0].format('YYYY-MM-DD'),
+                        edate: values.clouddata[1].format('YYYY-MM-DD'),
+                        cname: values.name,
+                    }
+                /*}*/
+                post({url:"/api/company/getlist",data:dataUseres}, (res)=>{
                     if(res.success){
                         this.setState({
                             list: res.data
@@ -181,15 +171,12 @@ searchCancel = () =>{//删除取消
         const _this=this;
         const { getFieldDecorator } = this.props.form;
         function onChange_time(date, dateString) {
-            console.log(dateString[0]);
-            console.log(dateString[1]);
             _this.setState({
                 timeString1:dateString[0],
                 timeString2:dateString[1]
             });
         }
         const dateFormat = 'YYYY/MM/DD';
-
         const columns = [
             {
                 title: '序号',
@@ -206,19 +193,16 @@ searchCancel = () =>{//删除取消
                 title: '联系人',
                 dataIndex: 'adminname',
                 key: 'adminname',
-                render: text => <span>{text}</span>,
             },
             {
                 title: '联系人电话',
                 dataIndex: 'adminaccount',
                 key: 'adminaccount',
-                render: text => <span>{text}</span>,
             },
             {
                 title: '云服务到期日期',
                 dataIndex: 'cloudvaliddate',
                 key: 'cloudvaliddate',
-                render: text => <span>{text}</span>,
             },
             {
                 title: '类型',
@@ -229,7 +213,7 @@ searchCancel = () =>{//删除取消
                     return ('树莓派企业用户');
 
                  }if (text==5) {
-                    return ('局域网个人用户');
+                    return ('局域网企业用户');
                  } else {
                     return ('树莓派个人用户');
                  }
@@ -250,15 +234,16 @@ searchCancel = () =>{//删除取消
             },
             {
                 title: '操作',
-                key: 'manage3',
+                dataIndex: 'code',
+                key: 'code',
                 render: (text, record,index) => (
                     <span>
                         <Button 
                          style={this.state.utype? {display:"inline-block"}:{display:"none"}}                      
-                         onClick={() => {_this.showModalEdit(text.code,index,record)}}
+                         onClick={() => {_this.showModalEdit(text,index)}}
                         >编辑
                         </Button>
-                        {/* <Button onClick={()=>_this.showModaldelete(text.code,index,record)}>删除</Button> */}
+                        {/* <Button onClick={()=>_this.showModaldelete(text,index)}>删除</Button> */}
 
                     </span>
                 ),
@@ -266,7 +251,7 @@ searchCancel = () =>{//删除取消
         return (
             <div>
                 <BreadcrumbCustom first="账号管理" second="用户管理" />
-                <Row className="margin_top80 margin_bottom40">
+                    <Row className="margin_top80 margin_bottom40">
                     <Col span={18}>
                         <Form layout="inline"onSubmit={this.selectopt}>
                             <FormItem label="名称">
@@ -276,13 +261,16 @@ searchCancel = () =>{//删除取消
                                      <Input />
                                 )}
                             </FormItem>
-                            <FormItem label="云服务到期日期">
+                            <LocaleProvider locale={zh_CN}>
+                                <FormItem label="云服务到期日期">
                                 {getFieldDecorator('clouddata', {
                                     rules: [{ required: false, message: '请选择日期!' }],
                                 })(
-                                    <RangePicker onChange={onChange_time} format={dateFormat} />
+                                    <RangePicker
+                                        onChange={onChange_time} format={dateFormat} />
                                 )}
                             </FormItem>
+                            </LocaleProvider>
                             <FormItem>
                                 <Button type="primary" htmlType="submit">
                                     查询
@@ -301,15 +289,19 @@ searchCancel = () =>{//删除取消
 
                 <Modal visible={this.state.visible}
                        onOk={this.handleCreate}
-                       onCancel={this.handleCancel} 
+                       onCancel={this.handleCancel}
+                       okText="确认"
+                       cancelText="取消"
                 >
                     <ModaTeam visible={this.state.visible}
                               code={this.state.type}
+                              istrue={this.state.istrue}
                               wrappedComponentRef={(form) => this.formRef = form}
                     />
                 </Modal>
                 <Modal title="提示信息" visible={this.state.deleteshow} onOk={this.searchOk}
                        onCancel={this.searchCancel}
+                        footer={null}
                 >
                     <p>请选择查询的内容 </p>
                 </Modal>

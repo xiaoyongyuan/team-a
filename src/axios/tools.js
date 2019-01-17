@@ -19,7 +19,7 @@ const Httpurl='http://api.aokecloud.cn';
  * @param msg       接口异常提示
  * @param headers   接口所需header配置
  */
-export const post = async({url, msg = '接口异常',data={}},callback) =>{
+export const post = async({url, msg = '接口异常',data={},type},callback) =>{
   const token=localStorage.getItem('teamtoken');
   const comid=localStorage.getItem('teamcomid');
   const account=localStorage.getItem('teamaccount');
@@ -41,6 +41,9 @@ export const post = async({url, msg = '接口异常',data={}},callback) =>{
         window.location.href="#/login"
         return callback(false)
       }else{
+        if(type){
+          return callback(false);
+        }
         message.warn(res.data.errorinfo);
         return callback(false);
       }

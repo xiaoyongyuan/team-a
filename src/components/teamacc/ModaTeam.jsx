@@ -1,64 +1,121 @@
 import React, { Component } from 'react';
-import {Form,Input,Radio,DatePicker} from 'antd';
+import {Form,Input,Radio,DatePicker,Checkbox ,Upload, message, Button, Icon, } from 'antd';
 import {post} from "../../axios/tools";
 import moment from 'moment';
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
+let vis=false;
 class ModaBianhao extends Component {
     constructor(props){
         super(props);
         this.state={
             visible:props.visible || false,
             form:false,
+            istrue:true
         };
     }
 
     componentDidMount() {
+        let plainOptions = [];
+        post({url:"/api//servicetype/getsinfo"}, (res)=>{
+            if(res.success){
+                if(res.data.length){
+                    res.data.map((el,i)=>{
+                        let objs={
+                           label: el.name,
+                           value: el.name,
+                        };
+                        plainOptions.push(objs)  
+                    })
+                    this.setState({
+                        plainOptions
+                    })
+                }
+            }
+        })
+
         //编辑  数据回填
         this.setState({
             code:this.props.code,
         },()=>{
             this.requestdata()
         });
-        console.log("this.props.code",this.props.code)
     }
-    componentDidUpdate = () => {
-        if(this.props.code && this.props.code!=this.state.code){
-            this.setState({
-                code:this.props.code
-            }, () => {this.requestdata()});
-        }
-    }
+
     requestdata=(params) => {//取数据
-         console.log("this.state.code",this.state.code)
+        this.props.form.setFieldsValue({
+            opening:['围界入侵']
+        })
         if(this.state.code){
             post({url:"/api/company/getone",data:{comid:this.state.code} }, (res)=>{
-                console.log("111333",typeof (res.data.ctype))
+                let istrue=true;
+                res.data.ctype == 4? istrue=true:istrue=false
+                this.setState({
+                    istrue:istrue
+                });
                 this.props.form.setFieldsValue({
+                    opening:res.data.servicetype.split(','),
                     cname: res.data.cname,
                     adminname:res.data.adminname,
                     adminaccount:res.data.adminaccount,
                     ctype: res.data.ctype.toString(),//类型
                     clng: res.data.clng,
                     clat: res.data.clat,
-                     cloudvaliddate:moment(res.data.cloudvaliddate),//日期
+                    cloudvaliddate:res.data.cloudvaliddate?moment(res.data.cloudvaliddate):undefined,//日期
                     memo: res.data.memo,
-
                 });
             })
         }
     }
 
     formref = () => { //将form传给父组件由父组件控制表单提交
-        // const aa=this.props.form.getFieldsValue();
         return this.props.form;
     };
 
+    componentWillReceiveProps(nextProps){
+        if( nextProps.visible != vis){
+            vis=nextProps.visible;
+            if(nextProps.visible){
+                vis=nextProps.visible;
+                this.setState({
+                    code:nextProps.code,
+                },()=>{
+                    this.requestdata() 
+                });
+            }
+        }
+
+    }
+
+
     render() {
-        function onChange(date, dateString) {
+        const CheckboxGroup = Checkbox.Group;
+        const _this=this;
+        function onChangecheck(checkedValues) {
+            console.log('checked = ', checkedValues);
+        }
+
+        function onChangeD(date, dateString) {
             console.log(date, dateString);
         }
         const { getFieldDecorator } = this.props.form;
+        const props = {
+            name: 'file',
+            action: '//jsonplaceholder.typicode.com/posts/',
+            headers: {
+                authorization: 'authorization-text',
+            },
+            onChange(info) {
+                if (info.file.status !== 'uploading') {
+                    console.log(info.file, info.fileList);
+                }
+                if (info.file.status === 'done') {
+                    message.success(`${info.file.name} file uploaded successfully`);
+                } else if (info.file.status === 'error') {
+                    message.error(`${info.file.name} file upload failed.`);
+                }
+            },
+        };
         return (
             <Form layout="vertical" onSubmit={this.handleSubmit}>
                 <div>
@@ -81,7 +138,6 @@ class ModaBianhao extends Component {
                             rules: [{
                             required: true, message: '请输入有效手机号!' ,
                             pattern: new RegExp(/^1(3|4|5|7|8)\d{9}$/, "g"),
-
                         }],
                             initialValue:''
                         })(
@@ -93,14 +149,34 @@ class ModaBianhao extends Component {
                             initialValue: "4",
                             rules: [{ required: true, message: '请输入用户类型!' }],
                         })(
-                            <RadioGroup onChange={this.onChange_radio}>
-                                <Radio value="5">局域网个人用户</Radio>
+                            <RadioGroup disabled  onChange={this.onChange_radio}>
+                                <Radio value="5">局域网企业用户</Radio>
                                 <Radio value="4">树莓派企业用户</Radio>
                                 <Radio value="3">树莓派个人用户</Radio>
                             </RadioGroup>
                         )}
                     </FormItem>
-
+                    <FormItem label="开通功能">
+                        {getFieldDecorator('opening', {
+                            rules: [{ required: true}],
+                        })(
+                            <CheckboxGroup disabled={!this.state.istrue}  options={_this.state.plainOptions}  onChange={onChangecheck} />
+                        )}
+                    </FormItem>
+                    <div style={{display:this.state.istrue?"block":"none"}}>
+                        <FormItem label="场景">
+                            {getFieldDecorator('scene', {
+                                initialValue: "",
+                                rules: [{ required: false, message: '请上传图片!' }],
+                            })(
+                                <Upload {...props}>
+                                    <Button>
+                                        <Icon type="upload" /> 上传
+                                    </Button>
+                                </Upload>,
+                            )}
+                        </FormItem>
+                    </div>
                     <FormItem label="经度">
                         {getFieldDecorator('clng', {
                             rules: [{
@@ -125,7 +201,7 @@ class ModaBianhao extends Component {
                         {getFieldDecorator('cloudvaliddate', {
                             rules: [{ required: false, message: '请输入云服务到期日期!' }],
                         })(
-                            <DatePicker onChange={onChange} />
+                            <DatePicker onChange={onChangeD} />
                         )}
                     </FormItem>
                     <FormItem label="备注">

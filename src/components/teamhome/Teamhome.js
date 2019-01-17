@@ -8,6 +8,7 @@ import '../../style/publicStyle/publicStyle.css';
 import '../../style/ztt/css/Companyhome.css';
 import {post} from "../../axios/tools";
 import moment from "moment";
+
 //图标
 import juyuwangIcon from '../../style/ztt/img/juyuwangIcon .png';
 import shumeipaiIcon from '../../style/ztt/img/shumeipaiIcon.png';
@@ -35,27 +36,23 @@ class Teamhome extends React.Component {
     componentWillMount(){
         post({url:"/api/company/getone_maintain"},(res)=>{
         	if(res){
-        		var monthly=res.data.companyadd.map(list =>list.name);
-            for(let i=monthly.length-1;i>=0;i--){
-                var dayd=moment(monthly[i]).format('MM.DD');
-                this.state.monthlyNumber.push(dayd);
-            }
-            var timeY=res.data.companyadd.map(list =>list.value);
-            if(res.success){
-                this.setState({
-                    enterpriseUsers:res.data.smpqy,
-                    personUsers:res.data.smpgr,
-                    raspberry:res.data.smpqy+res.data.smpgr,
-                    LANequipment:res.data.jyw,
-                    mapJson:res.data.company,
-                    monthlyNumberY:timeY,
-                    cloudUsers:res.data.overdue.slice(0,3)
-                },()=>{
-                    console.log(this.state.monthlyNumberY);
-                });
-            }
+                for(let y=res.data.companyadd.length-1;y>=0;y--){
+                    var timeY1=res.data.companyadd[y];
+                   this.state.monthlyNumber.push(moment(timeY1.name).format('MM.DD'));
+                }
+                var timeY=res.data.companyadd.map(list =>list.value).reverse();
+                if(res.success){
+                    this.setState({
+                        enterpriseUsers:res.data.smpqy,
+                        personUsers:res.data.smpgr,
+                        raspberry:res.data.smpqy+res.data.smpgr,
+                        LANequipment:res.data.jyw,
+                        mapJson:res.data.company,
+                        monthlyNumberY:timeY,
+                        cloudUsers:res.data.overdue.slice(0,3)
+                    });
+                }
         	}
-            
         })
     }
     render() {
@@ -191,17 +188,6 @@ class Teamhome extends React.Component {
                                                 )
                                             })
                                         }
-                                        
-                                        {/* <Row className="cloudUsers">
-                                            <Col xl={8} xxl={8} className="listContext">户县凌博物馆</Col>
-                                            <Col xl={8} xxl={8} className="listContext">2018-12-29</Col>
-                                            <Col xl={8} xxl={8} className="listContext">李四</Col>
-                                        </Row>
-                                        <Row className="cloudUsers">
-                                            <Col xl={8} xxl={8} className="listContext">户县凌博物馆</Col>
-                                            <Col xl={8} xxl={8} className="listContext">2018-12-29</Col>
-                                            <Col xl={8} xxl={8} className="listContext">李四</Col>
-                                        </Row> */}
                                     </Card>
                                 </div>
                             </Col>
