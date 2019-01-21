@@ -182,9 +182,9 @@ class Teamhome extends React.Component {
                                                     return(
 
                                                             <Row className="cloudUsers" key={index}>
-                                                                <Col xl={8} xxl={8} className="listContext">{item.cname}</Col>
-                                                                <Col xl={8} xxl={8} className="listContext">{item.cloudvaliddate}</Col>
-                                                                <Col xl={8} xxl={8} className="listContext">{item.adminname}</Col>
+                                                                <Col xl={8} xxl={8} className="listContext" title={item.cname}>{item.cname}</Col>
+                                                                <Col xl={8} xxl={8} className="listContext" title={item.cloudvaliddate}>{item.cloudvaliddate}</Col>
+                                                                <Col xl={8} xxl={8} className="listContext" title={item.adminname}>{item.adminname}</Col>
                                                             </Row>
 
                                                     )
