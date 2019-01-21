@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import '../../style/sjg/home.css';
-import {Table, DatePicker, Form, Input, Row, Col, Button} from 'antd';
-// import moment from 'moment';
+import {Table, DatePicker, Form, Input, Row, Col, Button, LocaleProvider} from 'antd';
+import zh_CN from "antd/lib/locale-provider/zh_CN";
+import 'moment/locale/zh-cn';
 import BreadcrumbCustom from "../BreadcrumbCustom";
 import { Link } from 'react-router-dom';
 import {post} from "../../axios/tools";
@@ -124,13 +125,15 @@ class Callalarm extends Component {
                                     <Input />
                                 )}
                             </FormItem>
-                            <FormItem label="云服务到期日期">
+                            <LocaleProvider locale={zh_CN}>
+                                <FormItem label="云服务到期日期">
                                 {getFieldDecorator('clouddata', {
                                     rules: [{ required: false, message: '请选择!' }],
                                 })(
                                     <RangePicker onChange={onChange_time} format={dateFormat} />
                                 )}
                             </FormItem>
+                            </LocaleProvider>
                             <FormItem>
                                 <Button type="primary" htmlType="submit">
                                     查询
