@@ -292,6 +292,9 @@
 .shareUsers{
     color:#79AAFA
 }
+.fiveHeight .ant-card-body{
+    height: 169px!important;
+}
 /*
 *dashboard.js 管理员首页
 */

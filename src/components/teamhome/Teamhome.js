@@ -171,23 +171,25 @@ class Teamhome extends React.Component {
                                 </div>
                             </Col>
                             <Col xl={10} xxl={10} className="rightShift topShift">
-                                <div className="gutter-box cardBorder">
+                                <div className="gutter-box cardBorder fiveHeight">
                                     <Card>
                                         <Row>
                                             <Col xl={3} xxl={2}><div className="sandian"><img src={daoqifuwu} alt="" /></div></Col>
                                             <Col xl={12} xxl={12} className="listContext"><span className="titleFont">五天内服务器到期用户</span></Col>
                                         </Row>
-                                        {
-                                            this.state.cloudUsers.map((item,index)=>{
-                                                return(
-                                                    <Row className="cloudUsers" key={index}>
-                                                        <Col xl={8} xxl={8} className="listContext">{item.cname}</Col>
-                                                        <Col xl={8} xxl={8} className="listContext">{item.cloudvaliddate}</Col>
-                                                        <Col xl={8} xxl={8} className="listContext">{item.adminname}</Col>
-                                                    </Row>
-                                                )
-                                            })
-                                        }
+                                            {
+                                                this.state.cloudUsers.map((item,index)=>{
+                                                    return(
+
+                                                            <Row className="cloudUsers" key={index}>
+                                                                <Col xl={8} xxl={8} className="listContext">{item.cname}</Col>
+                                                                <Col xl={8} xxl={8} className="listContext">{item.cloudvaliddate}</Col>
+                                                                <Col xl={8} xxl={8} className="listContext">{item.adminname}</Col>
+                                                            </Row>
+
+                                                    )
+                                                })
+                                            }
                                     </Card>
                                 </div>
                             </Col>

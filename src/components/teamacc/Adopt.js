@@ -176,13 +176,6 @@ class Adopt extends Component {
                                                 <img alt="3" src="../../style/logo.png" />
                                             </div>
                                         </Col>
-                                        <Col xl={6} offset={4}>
-                                            <Upload {...props}>
-                                                <Button>
-                                                    <Icon type="upload" /> Click to Upload
-                                                </Button>
-                                            </Upload>
-                                        </Col>
                                     </Row>
                                     <FormItem
                                         {...formItemLayout}
