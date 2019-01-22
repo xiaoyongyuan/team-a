@@ -20,7 +20,6 @@ class Department extends Component {
     requestdata=(params) => {//取数据
         post({url:"/api/companygroup/getlist"}, (res)=>{
             if(res.success){
-                console.log("列表数据：",res.data);
                 this.setState({
                     list: res.data
                 })
@@ -48,7 +47,6 @@ class Department extends Component {
                 }
                 post({url:"/api/companygroup/update",data:data}, (res)=>{
                     if(res.success){
-                        console.log(res.success)
                          // data.comid=res.comid;
                         let list=this.state.list;
                             list[this.state.index].cgname=res.data[0].cgname;
@@ -63,7 +61,6 @@ class Department extends Component {
                 }
                 post({url:"/api/companygroup/add",data:data}, (res)=>{
                     if(res.success){
-                        console.log(res.success)
                          data.code=res.code;
                         const list=this.state.list;
                         list.unshift(data);
@@ -112,7 +109,6 @@ class Department extends Component {
     }
     //删除确认
     deleteOk = () =>{
-        console.log("code",this.state.type)
         const data={
             code:this.state.type,
         }
@@ -144,7 +140,6 @@ class Department extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if(!err){
-                console.log('检索',values)
                 const data={
                     cgname:values.cgname,
                 }

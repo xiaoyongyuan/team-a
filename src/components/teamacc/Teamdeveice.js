@@ -171,7 +171,6 @@ class Teamdeveice extends Component {
                 <Row className="margin_top80 margin_bottom40">
                         <Col span={22}>
                             <Form layout="inline"onSubmit={this.selectopt}>
-
                                 <FormItem label="设备编号">
                                     {getFieldDecorator('ecode', {
                                         rules: [{ required: false, message: '设备编号!' }],

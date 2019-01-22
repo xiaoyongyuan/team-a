@@ -29,8 +29,6 @@ class Comemploye extends Component {
                 this.setState({
                     list: res.data
                 })
-
-                console.log(res.data)
             }
         })
     }
@@ -58,7 +56,6 @@ class Comemploye extends Component {
                 
                 if(this.state.type){
                 }else{
-                    // console.log("新增接口",values.realname, values.account,values.emailaddress)
                     const data={
                         realname:values.realname,
                         account:values.account,
@@ -99,7 +96,6 @@ class Comemploye extends Component {
             index:index,
             code:code
         });
-        console.log(code)
     }
     deleteOk = (code,index) =>{//确认删除
         const data={

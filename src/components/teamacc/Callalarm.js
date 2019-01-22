@@ -46,7 +46,6 @@ class Callalarm extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if(!err){
-                console.log("1111",values.name,values.clouddata[0].format('YYYY-MM-DD'),values.clouddata[1].format('YYYY-MM-DD'))
                 this.requestdata(values)
             }
         })

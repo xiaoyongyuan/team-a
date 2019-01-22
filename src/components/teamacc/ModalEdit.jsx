@@ -23,14 +23,9 @@ class ModalEdit extends Component {
         this.updatedata()
     }
     updatedata = () => {
-        console.log('dddd',this.state.record)
-
         if(this.props.record){
             axios.get("table.json").then((res)=>{
                 if(res.data.success){
-
-                    console.log("ssssssssssss:",res.data.data[this.state.record.code]);
-
                     this.props.form.setFieldsValue({
                         state: `${res.data.data[this.state.record.code].type}`,
                     });

@@ -64,7 +64,6 @@ class Adopt extends Component {
     }
     draw = () => { //绘制区域
         let item=this.state.present;
-        console.log('itemitem',item)
         if(item.length){
             let ele = document.getElementById("time_graph_canvas");
             let area = ele.getContext("2d");

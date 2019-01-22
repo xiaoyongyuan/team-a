@@ -50,8 +50,6 @@ class Teamhome extends React.Component {
                         mapJson:res.data.company,
                         monthlyNumberY:timeY,
                         cloudUsers:res.data.overdue.slice(0,3)
-                    },()=>{
-                        console.log(this.state.mapJson,typeof (this.state.mapJson));
                     });
                 }
         	}
