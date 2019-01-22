@@ -59,7 +59,7 @@ class Teamdispersion extends Component {
                         },
                         emphasis: {
                             show: true,
-                            color: '#ffffff',
+                            color: '#D5656E',
                         }
                     },
                     symbolSize:20
