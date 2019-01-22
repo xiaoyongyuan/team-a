@@ -69,7 +69,7 @@ class Teamdispersion extends Component {
         return (
             <ReactEcharts
                 option={option}
-                style={{height: '415px', width: '100%'}}
+                style={{height: '397px', width: '100%'}}
                 className={'react_for_echarts'}
             />
         )

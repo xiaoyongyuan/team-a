@@ -138,7 +138,6 @@ class Teammange extends Component {
 
             if(!err){
                 /*if(values.clouddata!==undefined ) {*/
-                console.log(values.name);
                     var dataUseres = {
                         bdate: values.clouddata[0].format('YYYY-MM-DD'),
                         edate: values.clouddata[1].format('YYYY-MM-DD'),
