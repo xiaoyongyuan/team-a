@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class groupLeader extends Component {
+class Workbench extends Component {
     constructor(props) {
         super(props);
         
@@ -9,11 +9,11 @@ class groupLeader extends Component {
     render() {      
 
         return (
-            <div className="groupLeader">
-                组长首页
+            <div className="workBench">
+                值班人员工作台
             </div>
         )
     }
 
 }
-export default groupLeader;
+export default Workbench;
