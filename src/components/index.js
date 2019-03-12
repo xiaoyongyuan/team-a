@@ -26,7 +26,7 @@ import AlarmDetail from './watch/AlarmDetail';
 
 
 //组长
-import groupleader from './groupleader/groupleader';
+import groupleader from './groupleader/Groupleader';
 import performance from './groupleader/performance';
 import dataCharts from './groupleader/dataCharts';
 
@@ -41,6 +41,7 @@ export default {
     WysiwygBundle
     
     , Teamhome, Teammange, Teamdeveice, Callalarm, Adopt, Auditing, Department, Comemploye
+
     , watchIndex, workbench, history, AlarmDetail
     , groupleader, performance, dataCharts
 

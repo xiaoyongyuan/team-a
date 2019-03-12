@@ -1,0 +1,123 @@
+.groupLeader{
+    margin-top: 20px;
+}
+.groupLeader-border{
+    margin: 10px 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #bfbdbd
+}
+.groupLeader-border .alarm-top{
+    width: 100%;
+    display: inline-block;
+    padding: 10px 20px;
+    border-bottom: 1px solid #dcd9d9;
+}
+.groupLeader .alarm-type{
+    padding: 5px 10px;
+}
+.groupLeader .group-height{
+    height: 200px;
+}
+.groupLeader .group-flex,.groupLeader .group-user{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.groupLeader .name{
+    width: 30%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.groupLeader .count{
+    width: 23%;
+    color: #ffffff;
+}
+.groupLeader .group-alarm{
+    height: 350px;
+}
+.groupLeader .group-img{
+    width: 96.5%;
+    height: 310px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.groupLeader .group-img img{
+    padding: 15px;
+    width:100%;
+    height:50%;
+}
+.groupLeader .group-details{
+    width: 96.5%;
+    height: 410px;
+}
+.groupLeader .untreatedAlarm{
+    background: #6475F9;
+}
+.groupLeader .todayAlarm{
+    background: #FA8068;
+}
+.groupLeader .userAlarm{
+    background:#76BBFC ;
+}
+.groupLeader .alarm-number{
+    font-weight: bolder;
+    font-size: 25px;
+    padding: 0 10px;
+}
+.groupLeader .misreporting{
+    padding: 0 10px;
+}
+.groupLeader .record{
+    margin-top: 10px;
+}
+.groupLeader .record-center{
+    font-family: "微软雅黑";
+    text-align: center;
+    font-weight: bolder;
+}
+.groupLeader .details-title{
+    font-family: "微软雅黑";
+    text-align: center;
+    font-weight: bolder;
+    width: 20%;
+}
+.groupLeader .record-body{
+    text-align: center;
+    padding: 13px 10px;
+}
+.groupLeader .details-body{
+    width: 20%;
+    text-align: center;
+    padding: 10px 0;
+}
+.groupLeader .groupLeader-img{
+    width: 50%;
+}
+.groupLeader .groupLeader-img .groupLeaderName{
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+.groupLeader .groupIcon{
+    width: 130px;
+    height: 130px;
+   margin: 10px auto;
+}
+.groupLeader .groupIcon img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.groupLeader .group-information{
+    display: flex;
+    align-items: center;
+}
+.groupLeader .nickname{
+    font-weight: bolder;
+    font-size: 22px;
+}
+.groupLeader .todayDetails{
+    width: 100%;
+}
