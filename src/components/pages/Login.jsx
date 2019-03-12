@@ -49,14 +49,14 @@ class Login extends React.Component {
                             {getFieldDecorator('account', {
                                 rules: [{ required: true, message: '请输入用户名!' }],
                             })(
-                                <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="13111111111" />
+                                <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} />
                             )}
                         </FormItem>
                         <FormItem>
                             {getFieldDecorator('password', {
                                 rules: [{ required: true, message: '请输入密码!' }],
                             })(
-                                <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="888888" />
+                                <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" />
                             )}
                         </FormItem>
                         <FormItem>

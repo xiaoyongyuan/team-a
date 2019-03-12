@@ -18,7 +18,7 @@ class Teammange extends Component {
         };
     }
     componentDidMount() {
-        let utypes= localStorage.getItem("user");
+        let utypes= localStorage.getItem("teamuser");
         let utypeObj=JSON.parse(utypes);
         this.setState({
             utype: utypeObj.utype

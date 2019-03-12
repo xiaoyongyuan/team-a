@@ -12,6 +12,19 @@ export default {
             ],
         },
         {
+            key: '/app/watch', title: '值班人员', icon: 'bars',
+            subs: [
+                { key: '/app/watch/watchIndex', title: '首页', component: 'watchIndex'},
+                { key: '/app/watch/workbench', title: '工作台', component: 'workbench'},               
+            ],
+        },
+        {
+            key: '/app/groupleader', title: '组长', icon: 'bars',
+            subs: [
+                { key: '/app/groupleader/groupleader', title: '首页', component: 'groupleader'},               
+            ],
+        },
+        {
             key: '/app/comsettings', title: '系统管理', icon: 'bars',
             subs: [
                 { key: '/app/comsettings/comemploye', title: '用户管理', component: 'Comemploye'},

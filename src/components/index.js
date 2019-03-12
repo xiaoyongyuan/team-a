@@ -17,6 +17,12 @@ import Department from './comsetting/Department';
 import Comemploye from './comsetting/Comemploye';
 
 
+//值班人员
+import watchIndex from './watch/watchIndex';
+import workbench from './watch/workbench';
+
+//组长
+import groupleader from './groupleader/groupleader';
 
 
 const WysiwygBundle = Loadable({ // 按需加载富文本配置
@@ -28,5 +34,7 @@ export default {
     WysiwygBundle
     
     , Teamhome, Teammange, Teamdeveice, Callalarm, Adopt, Auditing, Department, Comemploye
+    , watchIndex, workbench
+    , groupleader
 
 }
