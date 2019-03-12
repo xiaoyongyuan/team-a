@@ -20,9 +20,16 @@ import Comemploye from './comsetting/Comemploye';
 //值班人员
 import watchIndex from './watch/watchIndex';
 import workbench from './watch/workbench';
+import history from './watch/history';
+import alarmDetail from './watch/alarmDetail';
+
+
 
 //组长
 import groupleader from './groupleader/Groupleader';
+import performance from './groupleader/performance';
+import dataCharts from './groupleader/dataCharts';
+
 
 
 const WysiwygBundle = Loadable({ // 按需加载富文本配置
@@ -34,7 +41,6 @@ export default {
     WysiwygBundle
     
     , Teamhome, Teammange, Teamdeveice, Callalarm, Adopt, Auditing, Department, Comemploye
-    , watchIndex, workbench
-    , groupleader
+    , watchIndex, workbench, groupleader,history,alarmDetail,performance,dataCharts
 
 }
