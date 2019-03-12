@@ -15,13 +15,15 @@ export default {
             key: '/app/watch', title: '值班人员', icon: 'bars',
             subs: [
                 { key: '/app/watch/watchIndex', title: '首页', component: 'watchIndex'},
-                { key: '/app/watch/workbench', title: '工作台', component: 'workbench'},               
+                { key: '/app/watch/workbench', title: '工作台', component: 'workbench'},
+                { key: '/app/watch/history', title: '处理历史', component: 'history'},                 
             ],
         },
         {
             key: '/app/groupleader', title: '组长', icon: 'bars',
             subs: [
-                { key: '/app/groupleader/groupleader', title: '首页', component: 'groupleader'},               
+                { key: '/app/groupleader/groupleader', title: '首页', component: 'groupleader'},
+                { key: '/app/groupleader/performance', title: '业绩统计', component: 'performance'},               
             ],
         },
         {
