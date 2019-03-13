@@ -21,7 +21,7 @@ import Comemploye from './comsetting/Comemploye';
 import watchIndex from './watch/watchIndex';
 import workbench from './watch/workbench';
 import history from './watch/history';
-import AlarmDetail from './watch/AlarmDetail';
+import AlarmDetail from './watch/Alarmdetails';
 
 
 
