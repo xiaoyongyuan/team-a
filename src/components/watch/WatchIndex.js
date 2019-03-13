@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Col, Row} from "antd";
 import WorkStatistics from "../groupleader/WorkStatistics";
 import "../../style/ztt/css/watchIndex.css";
+import ClassifiedStatistics from "./ClassifiedStatistics";
 class WatchIndex extends Component {
     constructor(props) {
         super(props);
@@ -57,8 +58,9 @@ class WatchIndex extends Component {
                             <Col span={12}>
                                 <div className="group-alarm groupLeader-border">
                                     <p className="watch-alarm">昨日处理总数</p>
-                                    <p className="watch-number watch-alarm">454</p>
-                                    <p>分类统计</p>
+                                    <p className="watch-number statisticsNumber">454</p>
+                                    <p className="statisticsNumber">分类统计</p>
+                                    <ClassifiedStatistics />
                                 </div>
                             </Col>
                         </Row>

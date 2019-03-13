@@ -63,7 +63,7 @@
     padding: 10px 0;
 }
 .watchIndex .watch-number{
-    font-size: 25px;
+    font-size: 22px;
     font-weight: bolder;
     color:#063883;
 }
@@ -87,4 +87,7 @@
 }
 .watchIndex .Camera{
     padding: 7px 0;
+}
+.watchIndex .statisticsNumber{
+    margin-left: 20px;
 }
