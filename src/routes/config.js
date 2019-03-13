@@ -14,8 +14,8 @@ export default {
         {
             key: '/app/watch', title: '值班人员', icon: 'bars',
             subs: [
-                { key: '/app/watch/watchIndex', title: '首页', component: 'watchIndex'},
-                { key: '/app/watch/workbench', title: '工作台', component: 'workbench'},
+                { key: '/app/watch/watchIndex', title: '首页', component: 'WatchIndex'},
+                { key: '/app/watch/workbench', title: '工作台', component: 'Workbench'},
                 { key: '/app/watch/history', title: '处理历史', component: 'history'},                 
             ],
         },

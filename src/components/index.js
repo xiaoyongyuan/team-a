@@ -18,8 +18,8 @@ import Comemploye from './comsetting/Comemploye';
 
 
 //值班人员
-import watchIndex from './watch/watchIndex';
-import workbench from './watch/workbench';
+import WatchIndex from './watch/WatchIndex';
+import Workbench from './watch/Workbench';
 import history from './watch/history';
 import AlarmDetail from './watch/Alarmdetails';
 
@@ -42,7 +42,7 @@ export default {
     
     , Teamhome, Teammange, Teamdeveice, Callalarm, Adopt, Auditing, Department, Comemploye
 
-    , watchIndex, workbench, history, AlarmDetail
+    , WatchIndex, Workbench, history, AlarmDetail
     , groupleader, performance, dataCharts
 
 }
