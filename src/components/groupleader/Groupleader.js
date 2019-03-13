@@ -107,7 +107,6 @@ class Groupleader extends Component {
                                 <p>开发管理</p>
                             </div>
                         </div>
-
                     </div>
                     <div className="group-height count groupLeader-border alarm-type untreatedAlarm">
                         <p className="alarm-type">未处理报警数</p>

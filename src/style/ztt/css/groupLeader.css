@@ -16,7 +16,7 @@
     padding: 5px 10px;
 }
 .groupLeader .group-height{
-    height: 200px;
+    height: 165px;
 }
 .groupLeader .group-flex,.groupLeader .group-user{
     display: flex;
@@ -101,9 +101,9 @@
     text-align: center;
 }
 .groupLeader .groupIcon{
-    width: 130px;
-    height: 130px;
-   margin: 10px auto;
+    width: 105px;
+    height: 105px;
+    margin: 10px auto;
 }
 .groupLeader .groupIcon img{
     width: 100%;

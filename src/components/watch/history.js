@@ -5,7 +5,7 @@ import "../../style/publicStyle/publicStyle.css";
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
 import 'moment/locale/zh-cn';
 import {post} from "../../axios/tools";
-import AlarmDetail from "./AlarmDetail";
+import AlarmDetail from "./Alarmdetails";
 import nodata from "../../style/imgs/nodata.png";
 import banditpic from "../../style/imgs/banditpic.png";
 import firepic from "../../style/imgs/firepic.png";

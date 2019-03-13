@@ -1,0 +1,90 @@
+.watchIndex{
+    margin-top: 20px;
+}
+.watchIndex-border{
+    margin: 10px 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #bfbdbd
+}
+.watchIndex .group-height{
+    height: 165px;
+}
+.watchIndex .group-flex,.watchIndex .group-user{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.watchIndex .name{
+    width: 30%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.watchIndex .untreatedAlarm{
+    width: 70%;
+    border:1px solid #CCCCCC;
+}
+.watchIndex .groupLeader-img{
+    width: 50%;
+}
+.watchIndex .groupLeader-img .groupLeaderName{
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+.watchIndex .groupIcon{
+    width: 105px;
+    height: 105px;
+    margin: 10px auto;
+}
+.watchIndex .groupIcon img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.watchIndex .group-information{
+    display: flex;
+    align-items: center;
+}
+.watchIndex .nickname{
+    font-weight: bolder;
+    font-size: 22px;
+}
+.watchIndex .pending-list{
+    height: 780px;
+}
+.watchIndex .group-alarm{
+    height: 400px;
+}
+.watchIndex .watch-alarm{
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+}
+.watchIndex .watch-number{
+    font-size: 25px;
+    font-weight: bolder;
+    color:#063883;
+}
+.watchIndex .police-Name{
+    text-align: center;
+    padding: 15px 10px;
+}
+.watchIndex .police-number{
+    font-size: 17px;
+    font-weight: bolder;
+}
+.watchIndex .listImg img{
+    width: 100%;
+    height: 100%;
+}
+.watchIndex .textCenter{
+    text-align: center;
+}
+.watchIndex .alarmList{
+    padding: 15px 15px;
+}
+.watchIndex .Camera{
+    padding: 7px 0;
+}
