@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
+import {post} from "../../axios/tools";
+import "../../style/ztt/css/police.css";
+
 class dataCharts extends Component {
     constructor(props){
         super(props);
@@ -42,12 +45,10 @@ class dataCharts extends Component {
                 left: '3%',
                 right: '4%',
                 bottom: '2%',
-                top:'200',
+                top:'160',
                 containLabel: true,
             },
-            
             xAxis : [
-                
                 {
                     axisLabel: {        
                         textStyle: {
@@ -64,7 +65,6 @@ class dataCharts extends Component {
                 },
                
             ],
-           
             yAxis : [
                 {
                     type : 'value',
@@ -82,9 +82,10 @@ class dataCharts extends Component {
                     type:'bar',
                     barWidth:"30%",
                     stack: '1',
-                    data:[1200, 1320, 1010, 1340, 900, 2300, 2100],
+                    data:[1800, 1320, 1010, 1340, 900, 2300, 2100],
                     itemStyle: {        //上方显示数值
                         normal: {
+                            color:'#68D4D5',
                             label: {
                                 show: true, //开启显示
                                 position: 'insideTop', //在上方显示
@@ -101,9 +102,10 @@ class dataCharts extends Component {
                     type:'bar', 
                     barWidth:"30%",
                     stack: '1',
-                    data:[2200, 0, 1910, 0, 2900, 0, 3100],
-                    itemStyle: {        //上方显示数值
+                    data:[2200,'', 1910,'', 2900, '', 3100],
+                    itemStyle: {//上方显示数值
                         normal: {
+                            color:'#FFB980',
                             label: {
                                 show: true, //开启显示
                                 position: 'top', //在上方显示
@@ -120,9 +122,10 @@ class dataCharts extends Component {
                     barWidth:"30%",
                     type:'bar',
                     stack: '1',
-                    data:[0, 2320, 0, 1540, 0, 3300, 0],
+                    data:['', 2320, '', 1540, '', 3300, ''],
                     itemStyle: { //上方显示数值
                         normal: {
+                            color:'#C4B6E0',
                             label: {
                                 show: true, //开启显示
                                 position: 'top', //在上方显示
