@@ -21,7 +21,7 @@ import Comemploye from './comsetting/Comemploye';
 import watchIndex from './watch/watchIndex';
 import workbench from './watch/workbench';
 import history from './watch/history';
-import alarmDetail from './watch/alarmDetail';
+import AlarmDetail from './watch/AlarmDetail';
 
 
 
@@ -41,6 +41,8 @@ export default {
     WysiwygBundle
     
     , Teamhome, Teammange, Teamdeveice, Callalarm, Adopt, Auditing, Department, Comemploye
-    , watchIndex, workbench, groupleader,history,alarmDetail,performance,dataCharts
+
+    , watchIndex, workbench, history, AlarmDetail
+    , groupleader, performance, dataCharts
 
 }
