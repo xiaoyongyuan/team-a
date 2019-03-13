@@ -23,7 +23,8 @@ class Alarmdetails extends React.Component{
       	obj:true, //是否显示报警对象
       	prev:'', //上一条数据code
       	next:'', //下一条数据code
-      	code:'', //当前数据的code
+        code:'', //当前数据的code
+        videoopen:false //视频开关
       };
   }
   componentWillMount() {
@@ -63,6 +64,7 @@ class Alarmdetails extends React.Component{
     //       tags:res.data.tags, 
     //       pic_width:res.data.pic_width, //报警宽
     //       pic_height:res.data.pic_height, //报警高  
+    //       videopath:res.data.videopath, //视频地址 
   
     //     }
     //     this.setState({
@@ -81,6 +83,11 @@ class Alarmdetails extends React.Component{
     },()=>{
     	this.draw()
     });	
+  }
+  onChangeVideo=()=>{ // 查看视频切换
+    this.setState({
+        videoopen: !this.state.videoopen,
+    }); 
   }
   looknew=(text)=>{ //查看上下一条
     let faths=this.state.faths;
@@ -250,7 +257,16 @@ class Alarmdetails extends React.Component{
       							  </Button>&nbsp;&nbsp;&nbsp;
       							  <Button type="primary" onClick={()=>this.looknew('next')} disabled={this.state.next?false:true}>
       								下一条<Icon type="right" />
-      							  </Button>
+      							  </Button> 　
+                      <Button type="primary" onClick={()=>this.onChangeVideo()} style={{marginLeft:'20px'}}>
+                      查看视频
+                      </Button>
+                      
+                      {/* {this.state.data.videopath
+                      ?<Button type="primary" onClick={()=>this.onChangeVideo()} style={{marginLeft:'20px'}}>
+                      {this.state.videoopen?"查看图片":"查看视频"}
+                      </Button>
+                       :''} */}
       							</ButtonGroup> 
             			</div>
             		</div>	
@@ -263,8 +279,8 @@ class Alarmdetails extends React.Component{
                             <p><label>报警处理：</label><span>误报</span></p>
                             <p><div style={{float:'left',color:'#444'}}>　　备注：</div>
                                 <span>
-                                    <textarea placeholder="备注" id="" cols="50" rows="6">
-                                    备注内容
+                                    <textarea placeholder="备注内容" id="" cols="50" rows="6">
+                                    
                                     </textarea> 
                                 </span>
                              </p>

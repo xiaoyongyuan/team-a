@@ -120,7 +120,7 @@ class performance extends Component {
                                 <Button type="primary" htmlType="submit" className="queryBtn">查询</Button>
                             </Col>
                             <Col xl={2} xxl={2} lg={4} className="mt">
-                                <a href="#/app/groupleader/dataCharts" className="queryBtn">查看统计图</a>
+                                <a href="#/app/groupleader/dataCharts" className="tjt">查看统计图</a>
                             </Col>
                         </Form>
                     </Row>
