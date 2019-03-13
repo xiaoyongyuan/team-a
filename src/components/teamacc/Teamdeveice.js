@@ -29,6 +29,8 @@ class Teamdeveice extends Component {
     }
     requestdata=(params) => {//取数据
         post({url:'/api/equipment/getlist',data:params},(res)=>{
+            console.log('******************',res.data);
+            
             if(res){
                 this.setState({
                     list:res.data,

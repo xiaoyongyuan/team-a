@@ -37,15 +37,14 @@ export default {
     ],
     // 非菜单相关路由
     others: [
-        { key: '/app/teamacc/adopt', title: '点名处理', component: 'Adopt'},
-        { key: '/app/teamacc/auditing', title: '点名查看', component: 'Auditing'},
+            { key: '/app/groupleader/dataCharts', title: '统计图', component: 'dataCharts'}, 
             {
-        key: '/subs4', title: '页面', icon: 'switcher',
-        subs: [
-            { key: '/login', title: '登录' },
-            { key: '/404', title: '404' },
-        ],
-        },
+                key: '/subs4', title: '页面', icon: 'switcher',
+                subs: [
+                    { key: '/login', title: '登录' },
+                    { key: '/404', title: '404' },
+                ],
+            },
     ]
 }
 

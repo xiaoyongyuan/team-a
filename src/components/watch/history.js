@@ -196,7 +196,7 @@ class history extends React.Component {
                 <LocaleProvider locale={zh_CN}>
                     <Row style={{marginTop:"20px",marginLeft:"20px"}}>
                         <Form onSubmit={this.handleSubmit} layout="inline">
-                            <Col xl={5} xxl={5}>
+                            <Col xl={6} xxl={6}>
                                 <Form.Item label="日期" >
                                     {getFieldDecorator('date')(
                                         <RangePicker
@@ -207,7 +207,7 @@ class history extends React.Component {
                                     )}
                                 </Form.Item>
                             </Col>
-                            <Col xl={3} xxl={3}>
+                            <Col xl={5} xxl={5}>
                             <Form.Item
                                label="操作人"
                             >
