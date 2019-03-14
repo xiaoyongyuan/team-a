@@ -116,17 +116,6 @@ class WatchIndex extends Component {
                               <Col span={4} className="textCenter">警报</Col>
                               <Col span={6} className="textCenter">2019-3-12 14:34:00</Col>
                           </Row>
-                          <Row className="alarmList">
-                              <Col span={6} className="listImg textCenter">
-                                  <div><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313105209.jpg" alt=""/></div></Col>
-                              <Col span={8} className="textCenter">
-                                  <Row className="Camera">摄像头</Row>
-                                  <Row className="Camera">12:45:34 挂起</Row>
-                                  <Row className="Camera">备注内容</Row>
-                              </Col>
-                              <Col span={4} className="textCenter">警报</Col>
-                              <Col span={6} className="textCenter">2019-3-12 14:34:00</Col>
-                          </Row>
                       </div>
                     </Col>
                 </Row>
