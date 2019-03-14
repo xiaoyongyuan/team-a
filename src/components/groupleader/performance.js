@@ -79,12 +79,12 @@ class performance extends Component {
             ,{
                 title: '警报',
                 dataIndex: 'createon',
-                key: 'manage'
+                key: 'manage1'
             }
             ,{
                 title: '查询用户详情次数',
                 dataIndex: 'createon',
-                key: 'manage'
+                key: 'manage2'
             }];
 
         return (
