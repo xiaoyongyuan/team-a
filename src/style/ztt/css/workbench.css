@@ -113,7 +113,7 @@
     margin: 25px 20px;
     border-radius: 5px;
 }
-@media screen and (max-width: 1400px){
+@media screen and (max-width: 1440px){
     .workBench .remarks,.workBench .alarm-btn Button{
         width: 100%;
     }
