@@ -83,12 +83,15 @@ class dataCharts extends Component {
                     barWidth:"30%",
                     stack: '1',
                     data:[1800, 1320, 1010, 1340, 900, 2300, 2100],
-                    itemStyle: {        //上方显示数值
+                    itemStyle: { //上方显示数值
                         normal: {
                             color:'#68D4D5',
                             label: {
                                 show: true, //开启显示
                                 position: 'insideTop', //在上方显示
+                                formatter: function(p) {
+                                   return p.value > 0 ? (p.value) : '';
+                                },
                                 textStyle: { //数值样式
                                     color: 'black',
                                     fontSize: 16
@@ -102,13 +105,16 @@ class dataCharts extends Component {
                     type:'bar', 
                     barWidth:"30%",
                     stack: '1',
-                    data:[2200,'', 1910,'', 2900, '', 3100],
+                    data:[2200,0, 1910,0, 2900, 0, 3100],
                     itemStyle: {//上方显示数值
                         normal: {
                             color:'#FFB980',
                             label: {
                                 show: true, //开启显示
                                 position: 'top', //在上方显示
+                                formatter: function(p) {
+                                    return p.value > 0 ? (p.value) : '';
+                                 },
                                 textStyle: { //数值样式
                                     color: 'black',
                                     fontSize: 16
@@ -122,13 +128,16 @@ class dataCharts extends Component {
                     barWidth:"30%",
                     type:'bar',
                     stack: '1',
-                    data:['', 2320, '', 1540, '', 3300, ''],
+                    data:[0, 2320, 0, 1540, 0, 3300, 0],
                     itemStyle: { //上方显示数值
                         normal: {
                             color:'#C4B6E0',
                             label: {
                                 show: true, //开启显示
                                 position: 'top', //在上方显示
+                                formatter: function(p) {
+                                    return p.value > 0 ? (p.value) : '';
+                                 },
                                 textStyle: { //数值样式
                                     color: 'black',
                                     fontSize: 16

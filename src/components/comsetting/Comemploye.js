@@ -18,7 +18,6 @@ class Comemploye extends Component {
         this.requestdata()
         let utypes= localStorage.getItem("teamuser");
         let utypeObj=JSON.parse(utypes);
-
         this.setState({
             utype: utypeObj.utype
         })
@@ -38,7 +37,6 @@ class Comemploye extends Component {
             type:code,
             index:index,
         });
-        // this.formRef.updates()
     };
     showModal = (e) => { //新增弹窗
         e.preventDefault();
@@ -48,18 +46,23 @@ class Comemploye extends Component {
         });
     };
     handleCreate = (e) => {//modal提交
-        // this.props.form.resetFields();
+        const formquanxian=this.formRef.formquanxian();
+        // console.log('e.target.value111111111111111',formquanxian);
         e.preventDefault();
         const forms=this.formRef.formref();
         forms.validateFields((err, values) => {
+            // console.log('******************',values);
             if (!err) {
-                
                 if(this.state.type){
                 }else{
                     const data={
                         realname:values.realname,
                         account:values.account,
                         emailaddress:values.emailaddress,
+                        job_number:values.job_number,
+                        remark:values.remark,
+                        sex:values.sex,
+                        quanxian:formquanxian
                     }
                     post({url:"/api/companyuser/add",data:data}, (res)=>{
                         if(res.success){
@@ -72,7 +75,6 @@ class Comemploye extends Component {
                             })
                         }
                     })
-
                 }
                 this.setState({
                     visible: false,
@@ -81,7 +83,6 @@ class Comemploye extends Component {
             }
         });
     };
-
     handleCancel = (e) => { //modal取消
         const forms=this.formRef.formref();
         e.preventDefault();
@@ -156,11 +157,27 @@ class Comemploye extends Component {
                 dataIndex: 'realname',
                 key: 'realname',
                 render: text => <span>{text}</span>,
+            },{
+                title: '工号',
+                dataIndex: 'job_number',
+                key: 'job_number',
+                render: text => <span>{text}</span>,
+            }
+            ,{
+                title: '权限',
+                dataIndex: 'quanxian',
+                key: 'quanxian',
+                render: text => <span>{text}</span>,
             }
             ,{
                 title: '邮箱',
                 dataIndex: 'emailaddress',
                 key: 'emailaddress',
+                render: text => <span>{text}</span>,
+            },{
+                title: '备注',
+                dataIndex: 'remark',
+                key: 'remark',
                 render: text => <span>{text}</span>,
             },{
                 title: '操作',
@@ -170,16 +187,12 @@ class Comemploye extends Component {
                     if(record.utype){
                         return (
                             <div>
-                                <Button onClick={()=>_this.showModalEdit(text,index)}>编辑</Button>
-                                <span className="ant-divider" />
+                                <Button style={{marginRight:'20px'}} onClick={()=>_this.showModalEdit(text,index)}>编辑</Button>
                                 <Button style={this.state.utype?{display:"inline-block"}:{display:"none"}} onClick={()=>_this.showModaldelete(text,index)}>删除</Button>
                             </div>
                         )
                     }
                 }
-
-                    
-                
             }
         ];
         return (
@@ -195,7 +208,6 @@ class Comemploye extends Component {
                                             required: false,
                                             message: '请输入名称!'
                                         }],
-
                                     })(
                                         <Input />
                                     )}
@@ -205,7 +217,6 @@ class Comemploye extends Component {
                                         rules: [{
                                             required: false,
                                             message: '请输入账号!',
-
                                         }],
                                     })(
                                         <Input />
@@ -221,13 +232,12 @@ class Comemploye extends Component {
                         <Col span={2}>
                             <Button style={this.state.utype?{display:"inline-block"}:{display:"none"}}type="primary" onClick={this.showModal}>新增</Button>
                         </Col>
-
                     </Row>
                     <Row>
                         <Table columns={columns} dataSource={this.state.list} bordered={true}/>
                     </Row>
                 </div>
-                <Modal title={this.state.type?'查看维护团队':'新增维护团队'}
+                <Modal title={this.state.type?'查看维护团队':'新增用户管理'}
                        visible={this.state.visible}
                        onOk={this.handleCreate}
                        onCancel={this.handleCancel}
@@ -239,9 +249,6 @@ class Comemploye extends Component {
                                wrappedComponentRef={(form) => this.formRef = form}
                     />
                 </Modal>
-
-
-
                 <Modal title="提示信息" visible={this.state.deleteshow} onOk={this.deleteOk}
                        onCancel={this.deleteCancel}
                        okText="确认"
@@ -253,5 +260,4 @@ class Comemploye extends Component {
         )
     }
 }
-
 export default Comemploye=Form.create()(Comemploye);

@@ -92,18 +92,15 @@ class performance extends Component {
                  <LocaleProvider locale={zh_CN}>
                     <Row className="formstyle">
                         <Form onSubmit={this.handleSubmit} layout="inline">
-                            <Col xl={6} xxl={6}>
-                                <Form.Item label="日期" >
-                                    {getFieldDecorator('date')(
-                                        <RangePicker
-                                            showTime={{ format: 'HH:00:00' }}
-                                            format="YYYY-MM-DD HH:00:00"
-                                            placeholder={['开始时间', '结束时间']}
-                                        />
-                                    )}
-                                </Form.Item>
-                            </Col>
-                            <Col xl={5} xxl={5}>
+                            <Form.Item label="日期" >
+                                {getFieldDecorator('date')(
+                                    <RangePicker
+                                        showTime={{ format: 'HH:00:00' }}
+                                        format="YYYY-MM-DD HH:00:00"
+                                        placeholder={['开始时间', '结束时间']}
+                                    />
+                                )}
+                            </Form.Item>
                             <Form.Item
                                label="姓名"
                             >
@@ -112,16 +109,9 @@ class performance extends Component {
                                 })(
                                     <Input placeholder="请输入姓名" />
                                 )}
-                                </Form.Item>
-
-                            </Col>
-                          
-                            <Col xl={2} xxl={2} lg={4} className="mt">
+                            </Form.Item>
                                 <Button type="primary" htmlType="submit" className="queryBtn">查询</Button>
-                            </Col>
-                            <Col xl={2} xxl={2} lg={4} className="mt">
                                 <a href="#/app/groupleader/dataCharts" className="tjt">查看统计图</a>
-                            </Col>
                         </Form>
                     </Row>
                 </LocaleProvider>
