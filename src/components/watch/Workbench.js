@@ -33,9 +33,9 @@ class Workbench extends Component {
                             </div>
                         </div>
                         <div className="processingAlarm-right">
-                            <Button type="primary" className="alarm-btn">虚警</Button>
-                            <Button type="primary" className="alarm-btn">误报</Button>
-                            <Button type="primary" className="alarm-btn" onClick={()=>this.userInformation()}>推送并获取用户信息</Button>
+                            <div className="alarm-btn"><Button type="primary" >虚警</Button></div>
+                            <div className="alarm-btn"><Button type="primary">误报</Button></div>
+                            <div className="alarm-btn Push"><Button type="primary" onClick={()=>this.userInformation()}>推送</Button></div>
                             <textarea className="remarks" placeholder="备注信息" ></textarea>
                         </div>
                     </div>

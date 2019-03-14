@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Col, Row} from "antd";
 import WorkStatistics from "../groupleader/WorkStatistics";
 import "../../style/ztt/css/watchIndex.css";
+import ClassifiedStatistics from "./ClassifiedStatistics";
 class WatchIndex extends Component {
     constructor(props) {
         super(props);
@@ -57,8 +58,9 @@ class WatchIndex extends Component {
                             <Col span={12}>
                                 <div className="group-alarm groupLeader-border">
                                     <p className="watch-alarm">昨日处理总数</p>
-                                    <p className="watch-number watch-alarm">454</p>
-                                    <p>分类统计</p>
+                                    <p className="watch-number statisticsNumber">454</p>
+                                    <p className="statisticsNumber">分类统计</p>
+                                    <ClassifiedStatistics />
                                 </div>
                             </Col>
                         </Row>
@@ -80,17 +82,6 @@ class WatchIndex extends Component {
                                   </Col>
                                   <Col span={4} className="textCenter">警报</Col>
                                   <Col span={6} className="textCenter">2019-3-12 14:34:00</Col>
-                          </Row>
-                          <Row className="alarmList">
-                              <Col span={6} className="listImg textCenter">
-                                  <div><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313105209.jpg" alt=""/></div></Col>
-                              <Col span={8} className="textCenter">
-                                  <Row className="Camera">摄像头</Row>
-                                  <Row className="Camera">12:45:34 挂起</Row>
-                                  <Row className="Camera">备注内容</Row>
-                              </Col>
-                              <Col span={4} className="textCenter">警报</Col>
-                              <Col span={6} className="textCenter">2019-3-12 14:34:00</Col>
                           </Row>
                           <Row className="alarmList">
                               <Col span={6} className="listImg textCenter">
