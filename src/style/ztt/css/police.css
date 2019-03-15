@@ -320,9 +320,9 @@
 .xuanzhuan{
     position: absolute;
     color: #000;
-    right: -57px;
+    right: -60px;
     display: inline-block;
-    top: 16px;
+    top: 10px;
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
     color: white;
@@ -346,7 +346,9 @@
     border-color: transparent;
     box-shadow:none;
 }
-
+.flexright{  
+   width: 100%;
+}
 .rednum{
     width:12%;
     float:left;
@@ -360,7 +362,7 @@
 /* //help部分 */
 .right_linr{
     float:left;
-    width:46%
+    width:50%;
 }
 .remark{
     float:left;
@@ -388,4 +390,15 @@
   color:#5298F5;
   border-radius: 6px;
   margin-left: 20px;
+}
+.memo{
+    width:50%;
+    height:100px;
+    border:1px solid #333;
+    padding:6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }

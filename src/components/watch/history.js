@@ -74,16 +74,14 @@ class history extends React.Component {
         var alarmmdata={
             bdate:this.state.bdate,
             edate:this.state.edate,
+            hstatus:this.state.hstatus,
+            account:this.state.account,
             pagesize:18,
             pageindex:this.state.page,
         }
         post({url:'/api/alarmhandle/getlist',data:alarmmdata},(res)=>{
-            console.log('/api/alarmhandle/getlist',res);
-            
             if(res.success){
-                this.setState({
-                    displaysearch:true,
-                })
+               
                 if(res.data.length===0){
                     this.setState({
                       nodatapic:false,
@@ -95,6 +93,7 @@ class history extends React.Component {
                 }
                 if(res.data.length){
                     this.setState({
+                        displaysearch:true,
                         policeList:res.data,
                         type:1,
                         totalcount:res.totalcount,
@@ -122,12 +121,11 @@ class history extends React.Component {
     handleSubmit =(e)=>{
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-               console.log('*values',values);
             this.setState({
-                bdate:values.date.length?values.date[0].format('YYYY-MM-DD'):'',
-                edate:values.date.length?values.date[1].format('YYYY-MM-DD'):'',
-                cid:values.cid,
-                setuser:values.setuser,
+                bdate:values.date?values.date[0].format('YYYY-MM-DD'):'',
+                edate:values.date?values.date[1].format('YYYY-MM-DD'):'',
+                hstatus:values.hstatus,
+                account:values.account,
                 pageindex:this.state.page,
             })
             if(!err){
@@ -168,13 +166,32 @@ class history extends React.Component {
         if(code === 0){
             return "未处理";
         }else if(code === 1){
-            return "确认";
-        }else if(code === 2){
-            return "忽略";
-        }else if(code === 3){
             return "虚警";
+        }else if(code === 2){
+            return "误报";
+        }else if(code === 3){
+            return "警报";
+        }else if(code === -1){
+            return "已获取未处理";
+        }else if(code === -2){
+            return "挂起";
         }
     };
+      //报警状态
+      atypetext =(type) =>{
+            switch(type){
+              case 1:
+                return '围界入侵';
+              case 110:
+                return '匪警';
+              case 119:
+                return '火警';
+              case 12:
+                return '整点打卡';
+              default:
+               return '未知类型：'+type;
+            }
+          }
     atypeimg =(type,img)=>{
         switch(type){
           case 1:
@@ -201,7 +218,6 @@ class history extends React.Component {
                 <LocaleProvider locale={zh_CN}>
                     <Row style={{marginTop:"20px",marginLeft:"20px"}}>
                         <Form onSubmit={this.handleSubmit} layout="inline">
-                            
                                 <Form.Item label="日期" >
                                     {getFieldDecorator('date')(
                                         <RangePicker
@@ -210,14 +226,14 @@ class history extends React.Component {
                                     )}
                                 </Form.Item>
                                 <Form.Item label="操作人">
-                                    {getFieldDecorator('setuser', {
+                                    {getFieldDecorator('account', {
                                         rules: [{ required: false, message: '请输入操作人' }],
                                     })(
                                         <Input placeholder="操作人" />
                                     )}
                                 </Form.Item>
                                 <Form.Item label="处理状态" >
-                                    {getFieldDecorator('cid',{
+                                    {getFieldDecorator('hstatus',{
                                         initialValue:"",
                                     } )(
                                         <Select style={{ width: 120 }}>
@@ -245,8 +261,8 @@ class history extends React.Component {
                                 <div className="listmargintop">
                                     <div >
                                         <Row>
-                                            <div className={this.sanjiaose(1)} >  
-                                                <span className="xuanzhuan">{this.handleState(2)}</span>
+                                            <div className={this.sanjiaose(v.hstatus)} >  
+                                                <span className="xuanzhuan">{this.handleState(v.hstatus)}</span>
                                             </div>
                                             <Col span={10}>
                                                 <div className="pliceImgyal" onClick={()=>this.alarmImg(v.code)}>
@@ -257,13 +273,15 @@ class history extends React.Component {
                                                 <div className="row-alarmlist-detail">
                                                         <div className="word-row">
                                                             <p className="fontstyle right_linr">{v.name}</p>
-                                                            <p className="fontstyle right_linr">{v.alarmtype}</p>
+                                                            <p className="fontstyle right_linr">
+                                                               {this.atypetext(v.atype?v.atype:'未处理')}
+                                                            </p>
                                                         </div>
                                                         <div style={{float:'left',width:'100%'}}>
                                                             <p className="fontstyle right_linr">{v.atime}</p>
                                                         </div>
                                                         <div className="remark">
-                                                             此处为备注内容
+                                                        {v.memo?v.memo:'暂无备注'}
                                                         </div>
                                                 </div>
                                             </Col>
@@ -283,8 +301,7 @@ class history extends React.Component {
                         onCancel={this.handleCancelAlarmImg}
                         footer={null}
                     >
-                    
-                        <AlarmDetail />
+                        <AlarmDetail visible={this.state.alarmImgType} activecompcode={this.state.activecompcode} toson={this.state.toson} closeAlarm={this.handleCancelAlarmImg} />
                     </Modal>
                 </div>
             </div>
