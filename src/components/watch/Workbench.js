@@ -1,17 +1,165 @@
 import React, { Component } from 'react';
-import {Button,Collapse,Row,Col, Modal } from "antd";
+import {Button,Collapse,Row,Col, Modal,message,Icon} from "antd";
 import "../../style/ztt/css/workbench.css";
+import {post} from "../../axios/tools";
 const Panel = Collapse.Panel;
 class Workbench extends Component {
     constructor(props) {
         super(props);
         this.state={
-            visibleUser:false
+            visibleUser:false,
+            visibleTips:false,
+            pending:[]
         };
     }
-    userInformation=()=>{
+    componentDidMount() {
+        this.getOneAlarm();
+        this.pendingList();
+    }
+    //值班人员报警
+    getOneAlarm=()=>{
+      post({url:"/api/alarmhandle/get_handle"},(res)=>{
+          if(res.success){
+            this.setState({
+                oldHstatus:res.alarmhandle.hstatus,
+                code:res.data.code,
+                companycode:res.data.companycode,
+                eid:res.data.eid,
+                picpath:res.data.picpath,
+                atime:res.data.atime,
+                field:res.data.field,
+                finalresult1:res.data.finalresult1,
+                picWidth:res.data.pic_width,
+                picHeight:res.data.pic_height
+            },()=>{
+                this.paintingBoundary();//围界
+            });
+          }
+      })
+    };
+    typeAlarm=(type,name)=>{
         this.setState({
-            visibleUser:true
+            name,
+            visibleTips:true,
+            type
+        });
+    };
+    //围界
+    paintingBoundary=()=> {
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+        ctx.lineWidth=1;
+        ctx.clearRect(0,0,704,576);//清除之前的绘图
+        const datafield=this.state.field;
+        ctx.strokeStyle='#f00';
+        datafield.map((el,i)=>{
+            ctx.moveTo(parseInt(datafield[i][0][0]),parseInt(datafield[i][0][1]));
+            ctx.lineTo(parseInt(datafield[i][1][0]),parseInt(datafield[i][1][1]));
+            ctx.lineTo(parseInt(datafield[i][2][0]),parseInt(datafield[i][2][1]));
+            ctx.lineTo(parseInt(datafield[i][3][0]),parseInt(datafield[i][3][1]));
+            ctx.lineTo(parseInt(datafield[i][0][0]),parseInt(datafield[i][0][1]));
+            ctx.stroke();
+            ctx.closePath();
+        });
+        const objs = this.state.finalresult1;
+        var x=704/this.state.picWidth,y=576/this.state.picHeight;
+        if(this.state.finalresult){
+            objs.map((el,)=>{
+                ctx.strokeStyle="#ff0";
+                ctx.beginPath();
+                ctx.rect(parseInt(el.x*x),parseInt(el.y*y),parseInt(el.w*x),parseInt(el.h*y));
+                ctx.stroke();
+                ctx.closePath();
+            })
+        }
+    };
+    //挂在列表显示
+    pendingList=()=>{
+      post({url:"/api/alarmhandle/getlist",data:{hstatus:"-2"}},(res)=>{
+          console.log(res.totalcount,"totalcount")
+          if(res.success){
+            this.setState({
+                pending:res.data,
+                pendingCount:res.totalcount
+            })
+          }else{
+              message.warning(res.errorinfo);
+          }
+      })
+    };
+    /*
+    * 改变报警类型
+    * 1虚警 2误报 3报警 -2挂起 -1以获取未处理 0未处理
+    * 如果为报警并获取用户的信息
+    * */
+    handleOkTips=()=>{
+        if(this.state.code){
+            post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:this.state.type}},(res)=>{
+                if(res.success){
+                    var alarmold=this.state.oldHstatus;
+                    alarmold=this.state.type;
+                    message.success("修改成功");
+                    this.setState({
+                        visibleTips:false,
+                        alarmold
+                    });
+                    if(this.state.type===3){
+                        post({url:"/api/company/getinfo_maintain",data:{code:this.state.companycode}},(res)=>{
+                            if(res.success){
+                                this.setState({
+                                    userName:res.data.adminname,
+                                    userPhone:res.data.adminaccount
+                                })
+                            }
+                        });
+                        this.setState({
+                            visibleUser:true
+                        })
+                    }
+                }else{
+                    message.warning(res.errorinfo);
+                }
+            });
+        }else{
+            message.warning("报警code不存在");
+            this.setState({
+                visibleTips:false,
+            })
+        }
+    };
+    //挂载处理
+    mountProcessing=()=>{
+        if(this.state.code){
+            post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:"-2"}},(res)=>{
+                if(res.success){
+                    var old=this.state.oldHstatus=-2;
+                    this.setState({old},()=>{
+                        this.pendingList();
+                    });
+                }else {
+                    message.warning(res.errorinfo);
+                }
+            })
+        }else{
+            message.warning("报警code不存在");
+        }
+
+    };
+    //下一页
+    nextPage=()=>{
+        this.getOneAlarm();
+    };
+    remarks=()=>{
+      var remarks=document.getElementById("remarks").value;
+      post({url:"/api/alarmhandle/get_handle"},(res)=>{
+          if(res.success){
+
+          }
+      })
+    };
+    handleCancelTips=()=>{
+        this.setState({
+            visibleTips:false
         })
     };
     userHandleCancel=()=>{
@@ -25,18 +173,22 @@ class Workbench extends Component {
                 <div className="processingAlarm workbenchBorder">
                     <div className="processing-title">
                         <div className="processingAlarm-left">
-                            <p><span>yy摄像头</span><span>2019-12-3 16:00</span></p>
-                            <div className="alarmImg"><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313/1000020_20190313105125_640X360.jpg" alt=""/></div>
+                            <p><span>{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span></p>
+                            <div className="alarmImg">
+                                <canvas id="myCanvas" style={{backgroundImage:'url('+this.state.picpath+')',backgroundSize:"100% 100%"}} />
+                            </div>
                             <div className="alarm-video">
                                 <Button type="primary">短视频</Button>
                                 <Button type="primary">直播</Button>
                             </div>
                         </div>
                         <div className="processingAlarm-right">
-                            <div className="alarm-btn"><Button type="primary" >虚警</Button></div>
-                            <div className="alarm-btn"><Button type="primary">误报</Button></div>
-                            <div className="alarm-btn Push"><Button type="primary" onClick={()=>this.userInformation()}>推送</Button></div>
-                            <textarea className="remarks" placeholder="备注信息" ></textarea>
+                            <div className="mount"><Icon type="paper-clip" title="挂载" style={{fontSize:"30px",float:"right",color:"#6188C1",cursor:"pointer"}} onClick={()=>this.mountProcessing()} /></div>
+                            <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(1,"虚警")}>虚警</Button></div>
+                            <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(2,"误报")}>误报</Button></div>
+                            <div className="alarm-btn Push"><Button type="primary" onClick={()=>this.typeAlarm(3,"报警")}>推送</Button></div>
+                            <textarea className="remarks" id="remarks" placeholder="备注信息" onBlur={()=>this.remarks()} />
+                            <div className="nextPage"><Icon type="right-circle" title="下一页" style={{fontSize:"80px",float:"right",color:"#2E75E4",cursor:"pointer"}} onClick={()=>this.nextPage()} /></div>
                         </div>
                     </div>
 
@@ -44,70 +196,20 @@ class Workbench extends Component {
                 <div className="hangUp workbenchBorder">
                     <Collapse accordion defaultActiveKey={['1']}>
                         <Panel header="挂载" key="1">
-                            <div  className="hangUpPanel">
-                                <Row>
-                                    <Col span={12}>
-                                        <div className="hangUpImg"><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313155219.jpg" alt=""/></div>
-                                    </Col>
-                                    <Col span={10}>
-                                        <p>yy摄像头</p>
-                                        <p>备注信息</p>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col span={12}>
-                                        <div className="hangUpImg"><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313155219.jpg" alt=""/></div>
-                                    </Col>
-                                    <Col span={10}>
-                                        <p>yy摄像头</p>
-                                        <p>备注信息</p>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col span={12}>
-                                        <div className="hangUpImg"><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313155219.jpg" alt=""/></div>
-                                    </Col>
-                                    <Col span={10}>
-                                        <p>yy摄像头</p>
-                                        <p>备注信息</p>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col span={12}>
-                                        <div className="hangUpImg"><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313155219.jpg" alt=""/></div>
-                                    </Col>
-                                    <Col span={10}>
-                                        <p>yy摄像头</p>
-                                        <p>备注信息</p>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col span={12}>
-                                        <div className="hangUpImg"><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313155219.jpg" alt=""/></div>
-                                    </Col>
-                                    <Col span={10}>
-                                        <p>yy摄像头</p>
-                                        <p>备注信息</p>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col span={12}>
-                                        <div className="hangUpImg"><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313155219.jpg" alt=""/></div>
-                                    </Col>
-                                    <Col span={10}>
-                                        <p>yy摄像头</p>
-                                        <p>备注信息</p>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col span={12}>
-                                        <div className="hangUpImg"><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313155219.jpg" alt=""/></div>
-                                    </Col>
-                                    <Col span={10}>
-                                        <p>yy摄像头</p>
-                                        <p>备注信息</p>
-                                    </Col>
-                                </Row>
+                            <div className="hangUpPanel">
+                                {
+                                    this.state.pending.map((v,i)=>(
+                                        <Row key={i}>
+                                            <Col xxl={15} xl={14}>
+                                                <div className="hangUpImg"><img src={v.pic_min} alt="" /></div>
+                                            </Col>
+                                            <Col  xxl={9} xl={10}>
+                                                <p>{v.name}</p>
+                                                <p>{v.memo?v.memo:"无"}</p>
+                                            </Col>
+                                        </Row>
+                                    ))
+                                }
                             </div>
                         </Panel>
                     </Collapse>
@@ -119,12 +221,23 @@ class Workbench extends Component {
                     footer={null}
                 >
                     <div className="userDetails">
-                        <p><label>姓名：</label><span>李四</span></p>
-                        <p><label>联系电话：</label><span>13678976336</span></p>
+                        <p><label>姓名：</label><span>{this.state.userName}</span></p>
+                        <p><label>联系电话：</label><span>{this.state.userPhone}</span></p>
                         <p><label>地址：</label><span>西安雁塔区西安理工大科技园</span></p>
                         <p><label>紧急联系人1：</label><span>李**</span><span>***********</span></p>
                         <p><label>紧急联系人2：</label><span>王**</span><span>***********</span></p>
                     </div>
+                </Modal>
+                <Modal
+                    title="提示信息"
+                    visible={this.state.visibleTips}
+                    onOk={this.handleOkTips}
+                    onCancel={this.handleCancelTips}
+                    width={400}
+                    okText="确认"
+                    cancelText="取消"
+                >
+                   <span>为确定{this.state.name?this.state.name:""}吗?</span>
                 </Modal>
             </div>
         )

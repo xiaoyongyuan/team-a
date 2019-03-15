@@ -15,6 +15,7 @@ class ClassifiedStatistics extends Component {
                 },
                 show:false,
             },
+            color:["#B674FC","#6475F9","#FA8068","#76BBFC"],
             yAxis: {
                 type: 'value',
                 splitLine:{

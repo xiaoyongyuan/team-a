@@ -25,13 +25,13 @@ class WorkStatistics extends Component {
                 name:"数量",
             },
             series: [
-                {type: 'bar'},
-                {type: 'bar'},
-                {type: 'bar'},
+                {type: 'bar',color:"#43B4F8",barWidth:"10%"},
+                {type: 'bar',color:"#FE6661",barWidth:"10%"},
+                {type: 'bar',color:"#5570FB",barWidth:"10%"},
                 {
                     type: "line",
                     smooth: true,
-                    color:["#3A7EE0"],
+                    color:["#FDC228"],
                     data:[43.3,73,39,78,34,23,45]
                 }
             ]
