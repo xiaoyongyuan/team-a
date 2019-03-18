@@ -32,7 +32,6 @@ class history extends React.Component {
             pageSize:18, //每页显示数量
             totalcount:0, //数据总量
             toson:{}, //传给详情页面的值
-            loading:1,
             displaygreen: 'block',
             displayred:'block',
             displayblue:'block',
@@ -71,6 +70,9 @@ class history extends React.Component {
     };
     //报警信息列表
     handleAlerm = ()=>{
+        this.setState({
+            loadding:true,
+        })
         var alarmmdata={
             bdate:this.state.bdate,
             edate:this.state.edate,
@@ -159,6 +161,14 @@ class history extends React.Component {
             return("triangle-topright-green triangleblue");
         }else if(status === 3){
             return("triangle-topright-green trianglered");
+        }else if(status === -1){
+            return("triangle-topright-green trianglered");
+        }
+        else if(status === -2){
+            return("triangle-topright-green trianglered");
+        }
+        else if(status === -3){
+            return("triangle-topright-green trianglered");
         }
     }
       //报警状态
@@ -175,6 +185,8 @@ class history extends React.Component {
             return "已获取未处理";
         }else if(code === -2){
             return "挂起";
+        }else if(code === -3){
+            return "已过期";
         }
     };
       //报警状态
@@ -266,7 +278,7 @@ class history extends React.Component {
                                             </div>
                                             <Col span={10}>
                                                 <div className="pliceImgyal" onClick={()=>this.alarmImg(v.code)}>
-                                                    <img src={v.pic_min} alt="" />
+                                                    <img src={v.pic_min?v.pic_min:nodata} alt="" />
                                                 </div>
                                             </Col>
                                             <Col span={14} className="r_flex">
