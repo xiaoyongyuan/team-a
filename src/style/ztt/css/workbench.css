@@ -37,10 +37,10 @@
     margin: 10px 10px;
 }
 .workBench .processingAlarm{
-    width: 80%;
+    width: 56%;
 }
 .workBench .hangUp{
-    width: 30%;
+    width: 18%;
     position: relative;
 }
 .workBench .processing-title{
@@ -55,9 +55,19 @@
     margin-left: 10px;
     display: flex;
     flex-direction: column;
+    position: relative;
+}
+.workBench .mountUp{
+    width: 80%;
+    height: 5%;
+    position: absolute;
+    left: 10%;
+    top:1%;
+    background-color: #437EDB;
+    border-radius: 20px;
 }
 .workBench .alarm-btn Button{
-    width: 40%;
+    width: 60%;
     height: 60px;
     margin: 40px 0;
     border-radius: 5px;
@@ -98,7 +108,7 @@
     overflow: auto;
 }
 .workBench .remarks{
-    width: 40%;
+    width: 60%;
     height:100px;
     margin-top: 50px;
     resize: none;
@@ -132,8 +142,20 @@
     .workBench .hangUpImg{
         padding: 5px 5px;
     }
+    .workBench .processingAlarm{
+        width: 80%;
+    }
+    .workBench .hangUp{
+        width: 20%;
+    }
 }
 .workBench .mountRestore{
     cursor: pointer;
+}
+.workBench .anticon-right svg{
+    display: none!important;
+}
+.ant-collapse-header{
+    text-align: center;
 }
 
