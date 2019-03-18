@@ -118,7 +118,7 @@
 .workBench .atimeLeft{
     margin-left: 20px;
 }
-#myCanvas{
+#myCanvas,#videopath{
     width: 704px;
     height: 576px;
     position: absolute;
@@ -132,5 +132,8 @@
     .workBench .hangUpImg{
         padding: 5px 5px;
     }
+}
+.workBench .mountRestore{
+    cursor: pointer;
 }
 

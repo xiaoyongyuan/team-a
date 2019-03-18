@@ -9,7 +9,8 @@ class Workbench extends Component {
         this.state={
             visibleUser:false,
             visibleTips:false,
-            pending:[]
+            pending:[],
+            videoFalse:false//视频开关
         };
     }
     componentDidMount() {
@@ -25,12 +26,15 @@ class Workbench extends Component {
                 code:res.data.code,
                 companycode:res.data.companycode,
                 eid:res.data.eid,
+                memo:res.data.memo,
+                videopath:res.data.videopath,
                 picpath:res.data.picpath,
                 atime:res.data.atime,
                 field:res.data.field,
                 finalresult1:res.data.finalresult1,
                 picWidth:res.data.pic_width,
-                picHeight:res.data.pic_height
+                picHeight:res.data.pic_height,
+                videoFalse:false
             },()=>{
                 this.paintingBoundary();//围界
             });
@@ -47,10 +51,13 @@ class Workbench extends Component {
     //围界
     paintingBoundary=()=> {
         var c = document.getElementById("myCanvas");
+        var ctx1 = c.getContext("2d");
+        ctx1.lineWidth=1;
+        ctx1.clearRect(0,0,704,576);//清除之前的绘图
+
+        const datafield=this.state.field;
         var ctx = c.getContext("2d");
         ctx.lineWidth=1;
-        ctx.clearRect(0,0,704,576);//清除之前的绘图
-        const datafield=this.state.field;
         ctx.strokeStyle='#f00';
         datafield.map((el,i)=>{
             ctx.moveTo(parseInt(datafield[i][0][0]),parseInt(datafield[i][0][1]));
@@ -60,6 +67,7 @@ class Workbench extends Component {
             ctx.lineTo(parseInt(datafield[i][0][0]),parseInt(datafield[i][0][1]));
             ctx.stroke();
             ctx.closePath();
+            return '';
         });
         const objs = this.state.finalresult1;
         var x=704/this.state.picWidth,y=576/this.state.picHeight;
@@ -70,13 +78,13 @@ class Workbench extends Component {
                 ctx.rect(parseInt(el.x*x),parseInt(el.y*y),parseInt(el.w*x),parseInt(el.h*y));
                 ctx.stroke();
                 ctx.closePath();
+                return '';
             })
         }
     };
     //挂在列表显示
     pendingList=()=>{
       post({url:"/api/alarmhandle/getlist",data:{hstatus:"-2"}},(res)=>{
-          console.log(res.totalcount,"totalcount")
           if(res.success){
             this.setState({
                 pending:res.data,
@@ -102,6 +110,8 @@ class Workbench extends Component {
                     this.setState({
                         visibleTips:false,
                         alarmold
+                    },()=>{
+                        this.pendingList();
                     });
                     if(this.state.type===3){
                         post({url:"/api/company/getinfo_maintain",data:{code:this.state.companycode}},(res)=>{
@@ -114,6 +124,8 @@ class Workbench extends Component {
                         });
                         this.setState({
                             visibleUser:true
+                        },()=>{
+                            this.pendingList();
                         })
                     }
                 }else{
@@ -127,7 +139,7 @@ class Workbench extends Component {
             })
         }
     };
-    //挂载处理
+    //挂载列表
     mountProcessing=()=>{
         if(this.state.code){
             post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:"-2"}},(res)=>{
@@ -150,12 +162,52 @@ class Workbench extends Component {
         this.getOneAlarm();
     };
     remarks=()=>{
-      var remarks=document.getElementById("remarks").value;
-      post({url:"/api/alarmhandle/get_handle"},(res)=>{
-          if(res.success){
-
-          }
-      })
+        var remarks=document.getElementById("remarks").value;
+        if(this.state.code){
+            post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,memo:remarks}},(res)=>{
+                if(res.success){
+                    var memo=this.state.memo;
+                    memo=remarks;
+                    this.setState({memo},()=>{
+                        this.getOneAlarm();
+                    });
+                    message.success("备注信息添加成功!");
+                }else{
+                    message.error("备注信息添加失败!");
+                }
+            })
+        }else{
+            message.warning("报警code不存在");
+        }
+    };
+    //挂载还原
+    mountRestore=(code)=>{
+        post({url:"/api/alarmhandle/get_hangup",data:{code:code}},(res)=>{
+            if(res.success){
+                this.setState({
+                    oldHstatus:res.alarmhandle.hstatus,
+                    code:res.data.code,
+                    companycode:res.data.companycode,
+                    eid:res.data.eid,
+                    memo:res.data.memo,
+                    videopath:res.data.videopath,
+                    picpath:res.data.picpath,
+                    atime:res.data.atime,
+                    field:res.data.field,
+                    finalresult1:res.data.finalresult1,
+                    picWidth:res.data.pic_width,
+                    picHeight:res.data.pic_height,
+                    videoFalse:false
+                },()=>{
+                    this.paintingBoundary();//围界
+                });
+            }
+        })
+    };
+    playPause=()=>{
+        this.setState({
+            videoFalse:!this.state.videoFalse,
+        })
     };
     handleCancelTips=()=>{
         this.setState({
@@ -175,10 +227,13 @@ class Workbench extends Component {
                         <div className="processingAlarm-left">
                             <p><span>{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span></p>
                             <div className="alarmImg">
-                                <canvas id="myCanvas" style={{backgroundImage:'url('+this.state.picpath+')',backgroundSize:"100% 100%"}} />
+                                <canvas id="myCanvas" style={{backgroundImage:'url('+this.state.picpath+')',backgroundSize:"100% 100%",display:this.state.videoFalse?"none":"block"}} />
+                                <video id="videopath" src={this.state.videopath} controls="controls" autoPlay="autoplay" style={{display:this.state.videoFalse?"block":"none"}} />
                             </div>
                             <div className="alarm-video">
-                                <Button type="primary">短视频</Button>
+                                {
+                                    this.state.videopath?<Button type="primary" onClick={()=>this.playPause()}>{this.state.videoFalse?"图片":"短视频"}</Button>:""
+                                }
                                 <Button type="primary">直播</Button>
                             </div>
                         </div>
@@ -188,7 +243,7 @@ class Workbench extends Component {
                             <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(2,"误报")}>误报</Button></div>
                             <div className="alarm-btn Push"><Button type="primary" onClick={()=>this.typeAlarm(3,"报警")}>推送</Button></div>
                             <textarea className="remarks" id="remarks" placeholder="备注信息" onBlur={()=>this.remarks()} />
-                            <div className="nextPage"><Icon type="right-circle" title="下一页" style={{fontSize:"80px",float:"right",color:"#2E75E4",cursor:"pointer"}} onClick={()=>this.nextPage()} /></div>
+                            <div className="nextPage"><Icon type="right-circle" title="下一页" style={{fontSize:"75px",color:"#2E75E4",cursor:"pointer",padding:"10px 0"}} onClick={()=>this.nextPage()} /></div>
                         </div>
                     </div>
 
@@ -199,7 +254,7 @@ class Workbench extends Component {
                             <div className="hangUpPanel">
                                 {
                                     this.state.pending.map((v,i)=>(
-                                        <Row key={i}>
+                                        <Row key={i} onClick={()=>this.mountRestore(v.code)} className="mountRestore">
                                             <Col xxl={15} xl={14}>
                                                 <div className="hangUpImg"><img src={v.pic_min} alt="" /></div>
                                             </Col>
