@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Switch, Icon, notification, message } from 'antd';
+import {Button, Switch, Icon } from 'antd';
 import {post} from "../../axios/tools";
 import "../../style/ztt/css/police.css";
 const ButtonGroup = Button.Group;
@@ -51,32 +51,62 @@ class Alarmdetails extends React.Component{
       }        
   }
   request=()=>{
-    // post({url:"/api/alarm/getone_foradmin",data:this.state.faths},(res)=>{        
-    //   let data={
-    //       cid:res.data.cid,
-    //       src:res.data.picpath,
-    //       field:res.data.field,
-    //       name:res.data.name,
-    //       alarmtype:res.data.alarmtype,
-    //       finalresult:res.data.finalresult1,
-    //       atime:res.data.atime,
-    //       type:res.data.status,   
-    //       tags:res.data.tags, 
-    //       pic_width:res.data.pic_width, //报警宽
-    //       pic_height:res.data.pic_height, //报警高  
-    //       videopath:res.data.videopath, //视频地址 
-  
-    //     }
-    //     this.setState({
-    //       data:data,
-    //       prev:res.data.last,
-    //       next:res.data.next, 
-    //   },()=>{
-    //     this.draw();
-    //   });
-    // })
-  }
+    post({url:"/api/alarmhandle/getOne",data:this.state.faths},(res)=>{   
 
+      let data={
+          cid:res.data.cid,
+          src:res.data.picpath,
+          field:res.data.field,
+          name:res.data.name,
+          alarmtype:res.data.alarmtype,
+          finalresult:res.data.finalresult1,
+          atime:res.data.atime,
+          type:res.data.status,   
+          tags:res.data.tags, 
+          pic_width:res.data.pic_width, //报警宽
+          pic_height:res.data.pic_height, //报警高  
+          videopath:res.data.videopath, //视频地址 
+       
+        }
+        this.setState({
+          data:data,
+          prev:res.data.last,
+          next:res.data.next, 
+          videoopen:false,
+          memo:res.data.memo,
+          atype:res.alarmhandle.hstatus, 
+      },()=>{
+        this.draw();
+        this.typetext()
+      });
+    })
+  }
+  typetext=()=>{//处理状态显示
+  	let text=''; 
+    let color=''; 
+  	switch(this.state.data.type){
+  		case 1:
+  			text='确认';
+        color='#2A8E39'
+  			break;
+  		case 2:
+  			text='忽略';
+        color='#00B5D0'
+  			break;
+  		case 3:
+  			text='虚警';
+        color='#F22727 '
+  			break;
+      default:
+        text='未处理';
+        color='rgb(247, 195, 93)'
+        break;
+    }
+    this.setState({
+  		typetext:text,
+        color:color,
+  	})
+  }
   onChange=(checked,text)=>{ //控制显示围界与对象
   	this.setState({
         [text]: checked,
@@ -90,6 +120,7 @@ class Alarmdetails extends React.Component{
     }); 
   }
   looknew=(text)=>{ //查看上下一条
+
     let faths=this.state.faths;
     faths.code=this.state[text];
   	this.setState({
@@ -140,7 +171,6 @@ class Alarmdetails extends React.Component{
   	}
   }
   drawSelectObj=(el)=>{ //画出当前选中的围界
-    console.log('dddd')
     const x=604/this.state.data.pic_width, y=476/this.state.data.pic_height;
     let ele = document.getElementById("canvasobj");
     let area = ele.getContext("2d");
@@ -152,121 +182,65 @@ class Alarmdetails extends React.Component{
     area.stroke();
     area.closePath();
   }
-  getcoord = (coords) => { //获取坐标
-        let ele = document.getElementById("canvasobj");
-        let canvsclent = ele.getBoundingClientRect();
-        let x= coords.clientX - canvsclent.left * (ele.width / canvsclent.width);
-        let y= coords.clientY - canvsclent.top * (ele.height / canvsclent.height)
-        let pre=[x,y]
-        return pre;
-    }
-  clickgetcorrd =(e)=>{ //点击
-    e.preventDefault();
-    const finalresult=this.state.data.finalresult;
-        if(finalresult.length){
-          let getcord=this.getcoord(e); //获取点击的坐标
-          const xi=604/this.state.data.pic_width, yi=476/this.state.data.pic_height;
-          let x=parseInt(getcord[0]/xi),y=parseInt(getcord[1]/yi);
-          const crut=this.selectObj(x,y);
-          if(crut){
-            console.log(crut);
-            this.setState({crut})
-            this.drawSelectObj(crut);
-            this.openNotification();
-          } 
-          
+      //报警状态
+      atypetext =(code) =>{
+        if(code === 0){
+            return "未处理";
+        }else if(code === 1){
+            return "虚警";
+        }else if(code === 2){
+            return "误报";
+        }else if(code === 3){
+            return "警报";
+        }else if(code === -1){
+            return "已获取未处理";
+        }else if(code === -2){
+            return "挂起";
+        }else if(code === -3){
+            return "已过期";
         }
-        
-  }
-  selectObj=(x,y)=>{
-    var crut='';
-    const finalresult=this.state.data.finalresult;
-    finalresult.some((el,i)=>{
-      if(el.x<=x && x<=(el.x+el.w) && el.y<=y && y<=(el.y+el.h) ){
-        return crut=el;
       }
-    })
-    return crut;
-  }
-
-  openNotification = () => { //确认误报弹层
-    const _this=this;
-     const btn = (
-        <div>
-          <Button type="primary" size="small"  onClick={() => _this.selectobjOk('newalarm')}>确认</Button>
-          <Button type="primary" size="small" onClick={() => _this.selectobjCancel('newalarm')}>取消</Button>
-        </div>      
-    );
-      notification.open({
-          key:'newalarm',
-          message: '信息',
-          description: (
-            <div>
-                确认将此条报警对象置为误报？
-            </div>
-        ),
-        onClose:function(){
-          _this.selectobjCancel()
-        },
-        btn,
-        duration: 0,
-        placement:'topLeft',
-        left:100,
-        top:300,
-      });
-  };
-  selectobjOk =(key)=>{ //误报提交
-    const _this=this;
-    const data={
-      finalinfo:'',
-      aid:_this.state.code,
-      cid:_this.state.data.cid,
-      finalarea:JSON.stringify(_this.state.crut),
-      picpath:_this.state.data.src,
-      pic_width:_this.state.data.pic_width,
-      pic_height:_this.state.data.pic_height
+      //报警状态颜色
+      sanjiaose = (status)=>{
+        if(status === 0){
+            return("triangleOr");
+        }else if(status === 1){
+            return("trianglegg");
+        }else if(status === 2){
+            return(" trianglebl");
+        }else if(status === 3){
+            return(" trianglerr");
+        }else if(status === -1){
+            return(" trianglecc");
+        }else if(status === -2){
+            return(" trianglebb");
+        }else if(status === -3){
+            return(" triangleaa");
+        }
     }
-    //  post({url:"/api/Misinformation/add",data:data},(res)=>{
-    //   if(res.success){
-    //     notification.close(key);
-    //     message.success('操作成功');
-    //     _this.draw();
-    //   }
-    //  })
-    
-  }
-  selectobjCancel =(key)=>{ //误报确认取消
-    this.setState({
-      crut:{}
-    },()=>{
-      this.draw();
-      notification.close(key);
-    })
-    
-  }
     render(){      
         return(
             <div className="AlarmDetail">
             	<div className="alarmflex">
             		<div className="flexleft" id="flexleft">
-            			<canvas id="canvasobj" width="604px" height="476px" onClick={this.clickgetcorrd} style={{backgroundImage:'url('+this.state.data.src+')',backgroundSize:"100% 100%"}} />
-            			<div style={{textAlign:'center'}}>
+                  <canvas id="canvasobj" width="604px" height="476px" style={{backgroundImage:'url('+this.state.data.src+')',backgroundSize:"100% 100%",display:this.state.videoopen?'none':'block'}} />
+                	<div style={{display:this.state.videoopen?'block':'none',width:'604px',height:'513px'}}>
+                      <video src={this.state.data.videopath} autoPlay="autoplay" controls="controls" width="600px"></video>
+                    </div>
+                  <div style={{textAlign:'center',marginTop:'10px'}}>
             				<ButtonGroup>
       							  <Button type="primary" onClick={()=>this.looknew('prev')} disabled={this.state.prev?false:true}>
       								<Icon type="left" />上一条
       							  </Button>&nbsp;&nbsp;&nbsp;
       							  <Button type="primary" onClick={()=>this.looknew('next')} disabled={this.state.next?false:true}>
-      								下一条<Icon type="right" />
+      								 下一条<Icon type="right" />
       							  </Button> 　
-                      <Button type="primary" onClick={()=>this.onChangeVideo()} style={{marginLeft:'20px'}}>
-                      查看视频
-                      </Button>
-                      
-                      {/* {this.state.data.videopath
+                     
+                       {this.state.data.videopath
                       ?<Button type="primary" onClick={()=>this.onChangeVideo()} style={{marginLeft:'20px'}}>
                       {this.state.videoopen?"查看图片":"查看视频"}
                       </Button>
-                       :''} */}
+                       :''} 
       							</ButtonGroup> 
             			</div>
             		</div>	
@@ -276,14 +250,14 @@ class Alarmdetails extends React.Component{
             				<p><label>围界信息: <Switch size="small" checked={this.state.field} onChange={(checked)=>this.onChange(checked,'field')} /></label></p>
             				<p><label>报警信息: <Switch size="small" checked={this.state.obj} onChange={(checked)=>this.onChange(checked,'obj')} /></label></p>
             				<p><label>报警时间：<span>{this.state.data.atime}</span></label></p>
-                            <p><label>报警处理：</label><span>误报</span></p>
-                            <p><div style={{float:'left',color:'#444'}}>　　备注：</div>
-                                <span>
-                                    <textarea placeholder="备注内容" id="" cols="50" rows="6">
-                                    
-                                    </textarea> 
-                                </span>
-                             </p>
+                    <p><label>报警处理：</label><span className={this.sanjiaose(this.state.atype)}>
+                        {this.atypetext(this.state.atype)}
+                    </span></p>
+                    <div><label style={{float:'left',color:'#444'}}>备注：</label>
+                        <div className="memo">
+                        {this.state.memo?this.state.memo:'暂无备注'}
+                        </div> 
+                      </div>
             		</div>
             	</div>
             </div>

@@ -151,15 +151,14 @@
 }
 .word-row{
     font-family: MicrosoftYaHei;
-    height: 61px;
-    line-height: 61px;
+    height: 40px;
+    line-height: 40px;
 }
 .fontstyle{
     font-size: 13px;
-    height: 54px;
-    line-height: 54px;
+    height:40px;
+    line-height: 40px;
     margin: 0 !important;
-    padding-left: 10px
 }
 .fontstyletime{
     font-size: 12px!important;
@@ -169,9 +168,10 @@
         width: 100%;
         background: #ffffff;
         cursor: pointer;
+        border-radius: 10px;
     }
     .pliceImgyal img{
-        width: 90%;
+        width: 94%;
         border-top-left-radius: 2px;
         border-bottom-left-radius: 2px;
     }
@@ -269,22 +269,54 @@
     width: 0;
     height: 0;
     border-color: transparent white;
+    /* border-top-right-radius: 10px; */
     border-width: 0px 60px 60px 0px;
     border-style: solid;
     position: absolute;
     right: 0;
+    
+}
+.trianglec{
+    border-color:transparent  #4DA1FF!important;
+}
+.trianglecc{
+   color: #4DA1FF!important;
+}
+.triangleb{
+    border-color:transparent  #9587F1!important;
+}
+.trianglebb{
+   color:  #9587F1!important;
+}
+.trianglea{
+    border-color:transparent  #83D587!important;
+}
+.triangleaa{
+   color: #83D587!important;
 }
 .trianglegreen{
     border-color:transparent  #2a8e39!important;
 }
+.trianglegg{
+    color: #2a8e39!important;
+}
 .trianglered{
     border-color:transparent #f22727!important;
+}
+.trianglerr{
+   color: #f22727!important;
 }
 .triangleblue{
     border-color:transparent #00b5d0!important;
 }
+.trianglebl{
+    color: #00b5d0!important;
+}
 .triangleOrange{
     border-color:transparent #d99e00!important;
+}
+.triangleOr{
+    color: #d99e00!important;
 }
 .triangle{
     width: 0;
@@ -308,16 +340,20 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.listmargintop{
+
+.listmargintop {
+    background: #fff;
+    border-radius: 6px;
     margin-bottom: 20px;
     box-shadow: 0px 0px 25px rgba(34,34,34,0.4);
+    overflow: hidden;
 }
 .xuanzhuan{
     position: absolute;
     color: #000;
-    right: -57px;
+    right: -60px;
     display: inline-block;
-    top: 16px;
+    top: 10px;
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
     color: white;
@@ -341,7 +377,9 @@
     border-color: transparent;
     box-shadow:none;
 }
-
+.flexright{  
+   width: 100%;
+}
 .rednum{
     width:12%;
     float:left;
@@ -355,12 +393,14 @@
 /* //help部分 */
 .right_linr{
     float:left;
-    width:46%
+    width:50%;
 }
 .remark{
     float:left;
     width:90%;
-    margin-top:20px;
+    margin-top:2px;
+    height: 30px;
+    line-height: 30px;
 }
 .remark>input{
   border: 0;
@@ -368,7 +408,6 @@
 }
 .formstyle{
  margin-top:20px;
- margin-left:20px;
  margin-bottom:20px;
 }
 
@@ -381,4 +420,16 @@
   border: 1px solid #5298F5;
   color:#5298F5;
   border-radius: 6px;
+  margin-left: 20px;
+}
+.memo{
+    width:50%;
+    height:100px;
+    border:1px solid #333;
+    padding:6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }

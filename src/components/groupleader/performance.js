@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table,DatePicker, Row, Col, Button, Modal, Pagination, Form,LocaleProvider,Spin, Select,Input,Icon } from "antd";
+import { Table,DatePicker, Row, Col, Button, Form,LocaleProvider,Spin, Select,Input} from "antd";
 import "../../style/ztt/css/police.css";
 import "../../style/publicStyle/publicStyle.css";
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
@@ -79,12 +79,12 @@ class performance extends Component {
             ,{
                 title: '警报',
                 dataIndex: 'createon',
-                key: 'manage'
+                key: 'manage1'
             }
             ,{
                 title: '查询用户详情次数',
                 dataIndex: 'createon',
-                key: 'manage'
+                key: 'manage2'
             }];
 
         return (
@@ -92,18 +92,15 @@ class performance extends Component {
                  <LocaleProvider locale={zh_CN}>
                     <Row className="formstyle">
                         <Form onSubmit={this.handleSubmit} layout="inline">
-                            <Col xl={6} xxl={6}>
-                                <Form.Item label="日期" >
-                                    {getFieldDecorator('date')(
-                                        <RangePicker
-                                            showTime={{ format: 'HH:00:00' }}
-                                            format="YYYY-MM-DD HH:00:00"
-                                            placeholder={['开始时间', '结束时间']}
-                                        />
-                                    )}
-                                </Form.Item>
-                            </Col>
-                            <Col xl={5} xxl={5}>
+                            <Form.Item label="日期" >
+                                {getFieldDecorator('date')(
+                                    <RangePicker
+                                        showTime={{ format: 'HH:00:00' }}
+                                        format="YYYY-MM-DD HH:00:00"
+                                        placeholder={['开始时间', '结束时间']}
+                                    />
+                                )}
+                            </Form.Item>
                             <Form.Item
                                label="姓名"
                             >
@@ -112,16 +109,9 @@ class performance extends Component {
                                 })(
                                     <Input placeholder="请输入姓名" />
                                 )}
-                                </Form.Item>
-
-                            </Col>
-                          
-                            <Col xl={2} xxl={2} lg={4} className="mt">
+                            </Form.Item>
                                 <Button type="primary" htmlType="submit" className="queryBtn">查询</Button>
-                            </Col>
-                            <Col xl={2} xxl={2} lg={4} className="mt">
                                 <a href="#/app/groupleader/dataCharts" className="tjt">查看统计图</a>
-                            </Col>
                         </Form>
                     </Row>
                 </LocaleProvider>
