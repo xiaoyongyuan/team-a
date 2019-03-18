@@ -276,17 +276,47 @@
     right: 0;
     
 }
+.trianglec{
+    border-color:transparent  #4DA1FF!important;
+}
+.trianglecc{
+   color: #4DA1FF!important;
+}
+.triangleb{
+    border-color:transparent  #9587F1!important;
+}
+.trianglebb{
+   color:  #9587F1!important;
+}
+.trianglea{
+    border-color:transparent  #83D587!important;
+}
+.triangleaa{
+   color: #83D587!important;
+}
 .trianglegreen{
     border-color:transparent  #2a8e39!important;
+}
+.trianglegg{
+    color: #2a8e39!important;
 }
 .trianglered{
     border-color:transparent #f22727!important;
 }
+.trianglerr{
+   color: #f22727!important;
+}
 .triangleblue{
     border-color:transparent #00b5d0!important;
 }
+.trianglebl{
+    color: #00b5d0!important;
+}
 .triangleOrange{
     border-color:transparent #d99e00!important;
+}
+.triangleOr{
+    color: #d99e00!important;
 }
 .triangle{
     width: 0;

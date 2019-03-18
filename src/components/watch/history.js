@@ -162,13 +162,11 @@ class history extends React.Component {
         }else if(status === 3){
             return("triangle-topright-green trianglered");
         }else if(status === -1){
-            return("triangle-topright-green trianglered");
-        }
-        else if(status === -2){
-            return("triangle-topright-green trianglered");
-        }
-        else if(status === -3){
-            return("triangle-topright-green trianglered");
+            return("triangle-topright-green trianglec");
+        }else if(status === -2){
+            return("triangle-topright-green triangleb");
+        }else if(status === -3){
+            return("triangle-topright-green trianglea");
         }
     }
       //报警状态
@@ -189,7 +187,7 @@ class history extends React.Component {
             return "已过期";
         }
     };
-      //报警状态
+     
       atypetext =(type) =>{
             switch(type){
               case 1:

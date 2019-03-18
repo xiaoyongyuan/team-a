@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Switch, Icon, notification, message } from 'antd';
+import {Button, Switch, Icon } from 'antd';
 import {post} from "../../axios/tools";
 import "../../style/ztt/css/police.css";
 const ButtonGroup = Button.Group;
@@ -66,7 +66,7 @@ class Alarmdetails extends React.Component{
           pic_width:res.data.pic_width, //报警宽
           pic_height:res.data.pic_height, //报警高  
           videopath:res.data.videopath, //视频地址 
-  
+       
         }
         this.setState({
           data:data,
@@ -74,6 +74,7 @@ class Alarmdetails extends React.Component{
           next:res.data.next, 
           videoopen:false,
           memo:res.data.memo,
+          atype:res.alarmhandle.hstatus, 
       },()=>{
         this.draw();
         this.typetext()
@@ -181,7 +182,42 @@ class Alarmdetails extends React.Component{
     area.stroke();
     area.closePath();
   }
-
+      //报警状态
+      atypetext =(code) =>{
+        if(code === 0){
+            return "未处理";
+        }else if(code === 1){
+            return "虚警";
+        }else if(code === 2){
+            return "误报";
+        }else if(code === 3){
+            return "警报";
+        }else if(code === -1){
+            return "已获取未处理";
+        }else if(code === -2){
+            return "挂起";
+        }else if(code === -3){
+            return "已过期";
+        }
+      }
+      //报警状态颜色
+      sanjiaose = (status)=>{
+        if(status === 0){
+            return("triangleOr");
+        }else if(status === 1){
+            return("trianglegg");
+        }else if(status === 2){
+            return(" trianglebl");
+        }else if(status === 3){
+            return(" trianglerr");
+        }else if(status === -1){
+            return(" trianglecc");
+        }else if(status === -2){
+            return(" trianglebb");
+        }else if(status === -3){
+            return(" triangleaa");
+        }
+    }
     render(){      
         return(
             <div className="AlarmDetail">
@@ -214,7 +250,9 @@ class Alarmdetails extends React.Component{
             				<p><label>围界信息: <Switch size="small" checked={this.state.field} onChange={(checked)=>this.onChange(checked,'field')} /></label></p>
             				<p><label>报警信息: <Switch size="small" checked={this.state.obj} onChange={(checked)=>this.onChange(checked,'obj')} /></label></p>
             				<p><label>报警时间：<span>{this.state.data.atime}</span></label></p>
-                    <p><label>报警处理：</label><span style={{color:this.state.color}}>{this.state.typetext}</span></p>
+                    <p><label>报警处理：</label><span className={this.sanjiaose(this.state.atype)}>
+                        {this.atypetext(this.state.atype)}
+                    </span></p>
                     <div><label style={{float:'left',color:'#444'}}>备注：</label>
                         <div className="memo">
                         {this.state.memo?this.state.memo:'暂无备注'}
