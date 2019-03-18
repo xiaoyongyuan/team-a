@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table,DatePicker, Row, Col, Button, Modal, Pagination, Form,LocaleProvider,Spin, Select,Input,Icon } from "antd";
+import { Table,DatePicker, Row, Col, Button, Form,LocaleProvider,Spin, Select,Input} from "antd";
 import "../../style/ztt/css/police.css";
 import "../../style/publicStyle/publicStyle.css";
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
