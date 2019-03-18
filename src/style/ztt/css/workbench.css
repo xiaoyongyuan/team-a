@@ -149,6 +149,11 @@
         width: 20%;
     }
 }
+@media screen and (max-width: 1600px){
+    .workBench .processingAlarm{
+        width: 70%;
+    }
+}
 .workBench .mountRestore{
     cursor: pointer;
 }
