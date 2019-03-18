@@ -62,7 +62,7 @@
     height: 5%;
     position: absolute;
     left: 10%;
-    top:1%;
+    top:2%;
     background-color: #437EDB;
     border-radius: 20px;
 }
@@ -84,7 +84,7 @@
 .workBench .hangUpImg{
     width: 100%;
     height: 100%;
-    padding: 20px 20px;
+    padding: 10px 10px;
 }
 .workBench .hangUpImg img{
     width: 100%;
@@ -149,13 +149,30 @@
         width: 20%;
     }
 }
+@media screen and (max-width: 1600px){
+    .workBench .processingAlarm{
+        width: 70%;
+    }
+}
 .workBench .mountRestore{
     cursor: pointer;
 }
-.workBench .anticon-right svg{
-    display: none!important;
-}
-.ant-collapse-header{
+.workBench .ant-collapse-header{
+    width: 85%;
     text-align: center;
+}
+.workBench .garden{
+    width: 40px;
+    height:40px;
+    border-radius: 50%;
+    background: white;
+    position: absolute;
+    left: 43%;
+    top:-0.5%;
+    line-height: 40px;
+    text-align: center;
+    z-index: 2;
+    border:2px solid #437EDB;
+    border-bottom:none;
 }
 

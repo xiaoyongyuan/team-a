@@ -248,10 +248,11 @@ class Workbench extends Component {
                     </div>
 
                 </div>
-                <div className="hangUp workbenchBorder">
-                    <div className="mountUp"></div>
-                    <Collapse accordion defaultActiveKey={['1']}>
-                        <Panel header="挂载" key="1">
+                <div className="hangUp">
+                    <div className="garden">挂</div>
+                    <div className="mountUp" />
+                    <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"30px"}}>
+                        <Panel  key="1" showArrow={false}>
                             <div className="hangUpPanel" >
                                 {
                                     this.state.pending.map((v,i)=>(
