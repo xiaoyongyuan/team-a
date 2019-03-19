@@ -243,7 +243,7 @@ class Workbench extends Component {
                             <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(2,"误报")}>误报</Button></div>
                             <div className="alarm-btn Push"><Button type="primary" onClick={()=>this.typeAlarm(3,"报警")}>推送</Button></div>
                             <textarea className="remarks" id="remarks" placeholder="备注信息" onBlur={()=>this.remarks()} />
-                            <div className="nextPage"><Icon type="right-circle" title="下一页" style={{fontSize:"75px",float:"right",color:"#2E75E4",cursor:"pointer",padding:"10px 0"}} onClick={()=>this.nextPage()} /></div>
+                            <div className="nextPage"><Icon type="right-circle" theme="filled" title="下一页" style={{fontSize:"75px",float:"right",color:"#2E75E4",cursor:"pointer",padding:"10px 0"}} onClick={()=>this.nextPage()} /></div>
                         </div>
                     </div>
 
