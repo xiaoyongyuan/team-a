@@ -1,53 +1,51 @@
+
 import React, { Component } from 'react';
-import { Table,DatePicker, Row, Col, Button, Form,LocaleProvider,Spin, Select,Input} from "antd";
+import { Table,DatePicker, Row,Button, Form,LocaleProvider,Input} from "antd";
 import "../../style/ztt/css/police.css";
 import "../../style/publicStyle/publicStyle.css";
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
 import 'moment/locale/zh-cn';
 import {post} from "../../axios/tools";
 const { RangePicker } = DatePicker ;
-const Option = Select.Option;
-class performance extends Component {
-    constructor(props) {
+class Performance extends Component {
+    constructor(props){
         super(props);
-        
+        this.state={
+        };
     }
-    
+    componentDidMount() {
+        this.requestdata()
+    }
+    requestdata=() => {//取数据
+        post({url:"/api/company/getlist"}, (res)=>{
+            if(res.success){
+                this.setState({
+                    list:res.data,
+                })
+            }
+        })
+    }
+    selectopt = (e) => { //检索search
+        e.preventDefault();
+        console.log('clouddata',);
+        this.props.form.validateFields((err, values) => {
+            if(!err){
+                    var dataUseres = {
+                        bdate: values.clouddata&&values.clouddata.length?values.clouddata[0].format('YYYY-MM-DD')+' 00:00:00':'',
+                        edate: values.clouddata&&values.clouddata.length?values.clouddata[1].format('YYYY-MM-DD')+' 23:59:59':'',
+                        adminname: values.adminname,
+                    }
+                post({url:"/api/company/getlist",data:dataUseres}, (res)=>{
+                    if(res.success){
+                        this.setState({
+                            list: res.data
+                        })
+                    }
+                })
+            }
+        })
+    }
     render() {  
-        const list=[
-                {
-                code: 1000281,
-                companycode: 1000002,
-                createon: "562",
-                echange: "",
-                ecode: "张三",
-                estatus: 0,
-                etype: 0,
-                pname: "11",
-               },
-               {
-                code: 1000281,
-                companycode: 1000002,
-                createon: "562",
-                echange: "",
-                ecode: "张三",
-                estatus: 0,
-                etype: 0,
-                pname: "11",
-               },
-               {
-                code: 1000281,
-                companycode: 1000002,
-                createon: "562",
-                echange: "",
-                ecode: "张三",
-                estatus: 0,
-                etype: 0,
-                pname: "11",
-               },
-               
-
-        ]  
         const { getFieldDecorator } = this.props.form;
         const columns = [
             {
@@ -55,17 +53,15 @@ class performance extends Component {
                 dataIndex: 'index',
                 key: 'index',
                 render: (text,record,index) => <span>{index+1}</span>,
-
             },{
                 title: '姓名',
-                dataIndex: 'ecode',
-                key: 'ecode',
-                render: text => <span>{text}</span>,
+                dataIndex: 'adminname',
+                key: 'adminname',
             },{
                 title: '总数',
                 dataIndex: 'etype',
                 key: 'etype',
-                render: text => <span>树莓派</span>,
+                render: text => <span>45</span>,
             },{
                 title: '误报',
                 dataIndex: 'pname',
@@ -84,19 +80,17 @@ class performance extends Component {
             ,{
                 title: '查询用户详情次数',
                 dataIndex: 'createon',
-                key: 'manage2'
-            }];
-
+                key: 'manage2',
+            }
+        ];
         return (
             <div className="performance">
                  <LocaleProvider locale={zh_CN}>
                     <Row className="formstyle">
-                        <Form onSubmit={this.handleSubmit} layout="inline">
+                        <Form onSubmit={this.selectopt} layout="inline">
                             <Form.Item label="日期" >
-                                {getFieldDecorator('date')(
+                                {getFieldDecorator('clouddata')(
                                     <RangePicker
-                                        showTime={{ format: 'HH:00:00' }}
-                                        format="YYYY-MM-DD HH:00:00"
                                         placeholder={['开始时间', '结束时间']}
                                     />
                                 )}
@@ -104,7 +98,7 @@ class performance extends Component {
                             <Form.Item
                                label="姓名"
                             >
-                                {getFieldDecorator('setuser', {
+                                {getFieldDecorator('adminname', {
                                     rules: [{ required: false, message: '请输入操作人' }],
                                 })(
                                     <Input placeholder="请输入姓名" />
@@ -115,11 +109,9 @@ class performance extends Component {
                         </Form>
                     </Row>
                 </LocaleProvider>
-                 <Table columns={columns} dataSource={list} bordered={true}/> 
-
+                 <Table rowKey={record => record.code} columns={columns} dataSource={this.state.list} bordered={true}/> 
             </div>
         )
     }
-
 }
-export default performance= Form.create()(performance);
+export default Performance= Form.create()(Performance);

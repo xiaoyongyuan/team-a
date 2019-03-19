@@ -23,7 +23,7 @@ export default {
             key: '/app/groupleader', title: '组长', icon: 'bars',
             subs: [
                 { key: '/app/groupleader/groupleader', title: '首页', component: 'groupleader'},
-                { key: '/app/groupleader/performance', title: '业绩统计', component: 'performance'},               
+                { key: '/app/groupleader/performance', title: '业绩统计', component: 'Performance'},               
             ],
         },
         {

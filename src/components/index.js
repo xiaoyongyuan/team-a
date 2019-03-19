@@ -27,7 +27,7 @@ import AlarmDetail from './watch/Alarmdetails';
 
 //组长
 import groupleader from './groupleader/Groupleader';
-import performance from './groupleader/performance';
+import Performance from './groupleader/Performance';
 import dataCharts from './groupleader/dataCharts';
 
 
@@ -43,6 +43,6 @@ export default {
     , Teamhome, Teammange, Teamdeveice, Callalarm, Adopt, Auditing, Department, Comemploye
 
     , WatchIndex, Workbench, history, AlarmDetail
-    , groupleader, performance, dataCharts
+    , groupleader, Performance, dataCharts
 
 }
