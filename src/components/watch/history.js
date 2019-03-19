@@ -271,7 +271,7 @@ class history extends React.Component {
                 <Row style={{marginLeft:"10px",marginTop:"20px"}}>
                     {
                         this.state.policeList.map((v,i)=>(
-                            <Col xl={11} xxl={7} key={v.code} style={{margin:"0px 10px",display:this.state.displaysearch=== true?" block":"none"}}>
+                            <Col lg={11} xl={11} xxl={7} key={v.code} style={{margin:"0px 10px",display:this.state.displaysearch=== true?" block":"none"}}>
                                 <div className="listmargintop">
                                     <div >
                                         <Row>
