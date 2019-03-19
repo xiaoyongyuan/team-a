@@ -10,7 +10,10 @@ class Workbench extends Component {
             visibleUser:false,
             visibleTips:false,
             pending:[],
-            videoFalse:false//视频开关
+            videoFalse:false,//视频开关
+            falseAlarmBtn:false,
+            falsePositivesBtn:false,
+            pushBtn:false
         };
     }
     componentDidMount() {
@@ -45,7 +48,7 @@ class Workbench extends Component {
         this.setState({
             name,
             visibleTips:true,
-            type
+            type,
         });
     };
     //围界
@@ -92,7 +95,8 @@ class Workbench extends Component {
           if(res.success){
             this.setState({
                 pending:res.data,
-                pendingCount:res.totalcount
+                pendingCount:res.totalcount,
+                mountLength:res.data.length
             })
           }else{
               message.warning(res.errorinfo);
@@ -113,23 +117,29 @@ class Workbench extends Component {
                     message.success("修改成功");
                     this.setState({
                         visibleTips:false,
-                        alarmold
-                    },()=>{
-                        this.pendingList();
+                        alarmold,
                     });
+                    if(this.state.type===1){
+                        this.setState({
+                            falseAlarmBtn:true,
+                        })
+                    }else if(this.state.type===2){
+                        this.setState({
+                            falsePositivesBtn:true,
+                        })
+                    }
                     if(this.state.type===3){
                         post({url:"/api/company/getinfo_maintain",data:{code:this.state.companycode}},(res)=>{
                             if(res.success){
                                 this.setState({
                                     userName:res.data.adminname,
-                                    userPhone:res.data.adminaccount
+                                    userPhone:res.data.adminaccount,
+                                    pushBtn:true
                                 })
                             }
                         });
                         this.setState({
                             visibleUser:true
-                        },()=>{
-                            this.pendingList();
                         })
                     }
                 }else{
@@ -149,7 +159,7 @@ class Workbench extends Component {
             post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:"-2"}},(res)=>{
                 if(res.success){
                     var old=this.state.oldHstatus=-2;
-                    this.setState({old},()=>{
+                    this.setState({old,},()=>{
                         this.pendingList();
                     });
                 }else {
@@ -201,7 +211,10 @@ class Workbench extends Component {
                     finalresult:res.data.finalresult1,
                     picWidth:res.data.pic_width,
                     picHeight:res.data.pic_height,
-                    videoFalse:false
+                    videoFalse:false,
+                    falseAlarmBtn:false,
+                    falsePositivesBtn:false,
+                    pushBtn:false
                 },()=>{
                     this.paintingBoundary();//围界
                 });
@@ -243,9 +256,9 @@ class Workbench extends Component {
                         </div>
                         <div className="processingAlarm-right">
                             <div className="mount"><Icon type="paper-clip" title="挂载" style={{fontSize:"30px",float:"right",color:"#6188C1",cursor:"pointer"}} onClick={()=>this.mountProcessing()} /></div>
-                            <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(1,"虚警")}>虚警</Button></div>
-                            <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(2,"误报")}>误报</Button></div>
-                            <div className="alarm-btn Push"><Button type="primary" onClick={()=>this.typeAlarm(3,"报警")}>推送</Button></div>
+                            <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(1,"虚警")} disabled={this.state.falseAlarmBtn}>虚警</Button></div>
+                            <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(2,"误报")} disabled={this.state.falsePositivesBtn}>误报</Button></div>
+                            <div className="alarm-btn Push"><Button type="primary" onClick={()=>this.typeAlarm(3,"报警")} disabled={this.state.pushBtn}>推送</Button></div>
                             <textarea className="remarks" id="remarks" placeholder="备注信息" onBlur={()=>this.remarks()} />
                             <div className="nextPage"><Icon type="right-circle" theme="filled" title="下一页" style={{fontSize:"75px",float:"right",color:"#2E75E4",cursor:"pointer",padding:"10px 0"}} onClick={()=>this.nextPage()} /></div>
                         </div>
@@ -253,7 +266,7 @@ class Workbench extends Component {
 
                 </div>
                 <div className="hangUp">
-                    <div className="garden">挂</div>
+                    <div className="garden">{this.state.mountLength}</div>
                     <div className="mountUp" />
                     <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"30px"}}>
                         <Panel  key="1" showArrow={false}>
