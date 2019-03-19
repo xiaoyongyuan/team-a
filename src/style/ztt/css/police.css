@@ -156,8 +156,8 @@
 }
 .fontstyle{
     font-size: 13px;
-    height:40px;
-    line-height: 40px;
+    height:35px;
+    line-height: 35px;
     margin: 0 !important;
 }
 .fontstyletime{
@@ -394,6 +394,10 @@
 .right_linr{
     float:left;
     width:50%;
+}
+.right_linr1{
+    float:left;
+    width:90%;
 }
 .remark{
     float:left;
