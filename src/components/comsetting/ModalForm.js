@@ -11,16 +11,15 @@ class ModalForm extends Component {
         this.state={
             visible:props.visible || false,
             form:false,
-            value:1,
-        };
+          };
     }
     componentDidMount() {
         //编辑  数据回填
         this.setState({
             code:this.props.code,
-            zh:this.props.zh,
+            account:this.props.account,
+            
         },()=>{
-            console.log('*record.accound',this.state.zh);
             this.requestdata()
         });
     }
@@ -30,29 +29,34 @@ class ModalForm extends Component {
             if(nextProps.visible){
                 vis=nextProps.visible;
                 this.setState({
-                    code:nextProps.code
+                    code:nextProps.code,
+                    account:nextProps.account,
                 }, () => {
                     this.requestdata()});
             }
         }
-             
     }
-
     requestdata=() => {//取数据
         if(this.state.code){
-            post({url:"/api/userworker/getone",data:{code:this.state.code,zh:this.state.zh,user:'admin'} }, (res)=>{
-
+            const data={
+                code:this.state.code,
+                account:this.state.account,
+                user:'admin'
+            }
+            post({url:"/api/userworker/getone",data:data }, (res)=>{
                     this.props.form.setFieldsValue({
-                    realname: `${res.data.realname}`,
-                    account: `${res.data.account}`,
-                    emailaddress: `${res.data.emailaddress}`,
+                        usergender:res.data.usergender,//性别
+                        realname: res.data.realname,//姓名
+                        account: res.data.account,//账号
+                        emailaddress: res.data.emailaddress,//邮箱
+                        job_number: res.data.job_number,//工号
+                        memo: res.data.memo,//备注
+                        ctype: Number(res.data.userpower),//类型
                     });
             })
-           
         }
     }
     onChangeradio = (e) => {
-        console.log('radio checked', e.target.value);
         this.setState({
           value: e.target.value,
         });
@@ -115,28 +119,23 @@ class ModalForm extends Component {
                         )}
                     </FormItem>
                 </Col>
+         
                 <Col>
-                    <FormItem label="工号"{...formItemLayout}>
-                        {getFieldDecorator('job_number', {
-                            rules: [{
-                                required: false, message: '请输入工号!',
-                              
-                            }],
+                
+                    <FormItem label="权限"{...formItemLayout}>
+                        {getFieldDecorator('ctype', {
+                            initialValue: "1",
+                            rules: [{ required: true }],
                         })(
-                            <Input type="number" />
+                            <RadioGroup onChange={this.onChangeradio}>
+                                <Radio value={1}>管理员</Radio>
+                                <Radio value={2}>组长</Radio>
+                                <Radio value={3}>值守人员</Radio>
+                            </RadioGroup>
                         )}
                     </FormItem>
-                </Col>
-                <Col>
-                    <Row>
-                        <Col xs={24} sm={6} style={{textAlign:'right',marginBottom:'20px'}}><label>权限：</label></Col>
-                        <Col xs={24} sm={18}><RadioGroup onChange={this.onChangeradio} value={this.state.value}>
-                            <Radio value={1}>管理员</Radio>
-                            <Radio value={2}>组长</Radio>
-                            <Radio value={3}>值守人员</Radio>
-                        </RadioGroup>
-                        </Col>
-                    </Row>
+
+
                 </Col>
                 <Col>
                     <FormItem label="邮箱"{...formItemLayout}>
