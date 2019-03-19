@@ -124,8 +124,8 @@ class history extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             this.setState({
-                bdate:values.date?values.date[0].format('YYYY-MM-DD'):'',
-                edate:values.date?values.date[1].format('YYYY-MM-DD'):'',
+                bdate:values.date?values.date[0].format('YYYY-MM-DD')+" 00:00:00":'',
+                edate:values.date?values.date[1].format('YYYY-MM-DD')+" 23:59:59":'',
                 hstatus:values.hstatus,
                 account:values.account,
                 pageindex:this.state.page,
@@ -248,9 +248,13 @@ class history extends React.Component {
                                     } )(
                                         <Select style={{ width: 120 }}>
                                             <Option value="" >所有</Option>
+                                            <Option value="0" >未处理</Option>
                                             <Option value="1" >虚警</Option>
-                                            <Option value="2" >误警</Option>
+                                            <Option value="2" >误报</Option>
                                             <Option value="3" >警报</Option>
+                                            <Option value="-1" >已获取未处理</Option>
+                                            <Option value="-2" >挂起</Option>
+                                            <Option value="-3" >已过期</Option>
                                         </Select>
                                     )}
                                 </Form.Item>
@@ -267,7 +271,7 @@ class history extends React.Component {
                 <Row style={{marginLeft:"10px",marginTop:"20px"}}>
                     {
                         this.state.policeList.map((v,i)=>(
-                            <Col xm={11} sm={11} md={11} lg={11} xl={11} xxl={7} key={v.code} style={{margin:"0px 10px",display:this.state.displaysearch=== true?" block":"none"}}>
+                            <Col lg={11} xl={11} xxl={7} key={v.code} style={{margin:"0px 10px",display:this.state.displaysearch=== true?" block":"none"}}>
                                 <div className="listmargintop">
                                     <div >
                                         <Row>
@@ -288,7 +292,7 @@ class history extends React.Component {
                                                             </p>
                                                         </div>
                                                         <div style={{float:'left',width:'100%'}}>
-                                                            <p className="fontstyle right_linr">{v.atime}</p>
+                                                            <p className="fontstyle right_linr1">{v.atime}</p>
                                                         </div>
                                                         <div className="remark">
                                                         {v.memo?v.memo:'暂无备注'}

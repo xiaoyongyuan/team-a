@@ -27,17 +27,18 @@ class Comemploye extends Component {
             if(res.success){
                 this.setState({
                     list: res.data,
-                    zh:res.account
+                    account:res.account
                 })
             }
         })
     }
-    showModalEdit= (code,record,index) => {        
+    showModalEdit= (code,record,index) => { //编辑用户       
         this.setState({
             visible: true,
             codetype:code,
             index:index,
-            zh:record.account,
+            account:record.account,
+            type:1,
         });
     };
     showModal = (e) => { //新增弹窗
@@ -45,26 +46,48 @@ class Comemploye extends Component {
         this.setState({
             visible: true,
             type:0,
+            account:'',
+            codetype:'',
         });
     };
     handleCreate = (e) => {//modal提交
-        console.log('新增接口');
-        const formquanxian=this.formRef.formquanxian();
-        console.log('e.target.value111111111111111',formquanxian);
+        this.setState({
+            value:1    
+        })
         e.preventDefault();
         const forms=this.formRef.formref();
         forms.validateFields((err, values) => {
-            console.log('******************',values);
             if (!err) {
                 if(this.state.type){
-                }else{
+                    //编辑接口');
                     const data={
                         realname:values.realname,
                         account:values.account,
                         emailaddress:values.emailaddress,
                         memo:values.memo,
                         usergender:values.usergender,
-                        userpower:formquanxian,
+                        userpower:values.ctype,
+                        code:this.state.codetype,
+                        user:'admin'
+                    }
+                    post({url:"/api/userworker/update",data:data}, (res)=>{
+                        if(res.success){
+                            let list=this.state.list;
+                            list[this.state.index]=res.data[0];                        
+                            this.setState({
+                                list:list,
+                            })
+                        }   
+                    })                   
+                }else{
+                    //新增接口');
+                    const data={
+                        realname:values.realname,
+                        account:values.account,
+                        emailaddress:values.emailaddress,
+                        memo:values.memo,
+                        usergender:values.usergender,
+                        userpower:values.ctype,
                         user:'admin'
                     }
                     post({url:"/api/userworker/add",data:data}, (res)=>{
@@ -85,6 +108,7 @@ class Comemploye extends Component {
                 forms.resetFields() //清空
             }
         });
+        forms.resetFields() //清空
     };
     handleCancel = (e) => { //modal取消
         const forms=this.formRef.formref();
@@ -94,16 +118,18 @@ class Comemploye extends Component {
         });
         forms.resetFields();
     };
-    showModaldelete = (code,index,record) =>{ //删除弹层
+    showModaldelete = (code,record,index) =>{ //删除弹层
         this.setState({
             deleteshow: true,
             index:index,
-            code:code
+            code:code,
+            account:record.account,
         });
     }
     deleteOk = (code,index) =>{//确认删除
         const data={
             code:this.state.code,
+            account:this.state.account,
             ifdel:1,
             user:'admin'
         }
@@ -205,8 +231,8 @@ class Comemploye extends Component {
                     if(record.ctype){
                         return (
                             <div>
-                                <Button style={{marginRight:'20px'}} onClick={()=>_this.showModalEdit(text, record,index)}>编辑</Button>
-                                <Button style={this.state.utype?{display:"inline-block"}:{display:"none"}} onClick={()=>_this.showModaldelete(text,index)}>删除</Button>
+                                <Button style={{marginRight:'20px'}} onClick={()=>_this.showModalEdit(text,record,index)}>编辑</Button>
+                                <Button style={this.state.utype?{display:"inline-block"}:{display:"none"}} onClick={()=>_this.showModaldelete(text,record,index)}>删除</Button>
                             </div>
                         )
                     }
@@ -252,10 +278,10 @@ class Comemploye extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Table columns={columns} dataSource={this.state.list} bordered={true}/>
+                        <Table style={{marginTop:'20px'}} columns={columns} dataSource={this.state.list} bordered={true}/>
                     </Row>
                 </div>
-                <Modal title={this.state.type?'查看维护团队':'新增用户管理'}
+                <Modal title={this.state.type?'查看用户管理':'新增用户管理'}
                        visible={this.state.visible}
                        onOk={this.handleCreate}
                        onCancel={this.handleCancel}
@@ -264,7 +290,8 @@ class Comemploye extends Component {
                 >
                     <ModalForm visible={this.state.visible}
                                code={this.state.codetype}
-                               zh={this.state.zh}
+                               value={this.state.value}
+                               account={this.state.account}
                                wrappedComponentRef={(form) => this.formRef = form}
                     />
                 </Modal>
