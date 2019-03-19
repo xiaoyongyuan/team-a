@@ -31,7 +31,7 @@ class Workbench extends Component {
                 picpath:res.data.picpath,
                 atime:res.data.atime,
                 field:res.data.field,
-                finalresult1:res.data.finalresult1,
+                finalresult:res.data.finalresult1,
                 picWidth:res.data.pic_width,
                 picHeight:res.data.pic_height,
                 videoFalse:false
@@ -51,27 +51,30 @@ class Workbench extends Component {
     //围界
     paintingBoundary=()=> {
         var c = document.getElementById("myCanvas");
-        var ctx1 = c.getContext("2d");
-        ctx1.lineWidth=1;
-        ctx1.clearRect(0,0,704,576);//清除之前的绘图
-
-        const datafield=this.state.field;
         var ctx = c.getContext("2d");
         ctx.lineWidth=1;
-        ctx.strokeStyle='#f00';
-        datafield.map((el,i)=>{
-            ctx.moveTo(parseInt(datafield[i][0][0]),parseInt(datafield[i][0][1]));
-            ctx.lineTo(parseInt(datafield[i][1][0]),parseInt(datafield[i][1][1]));
-            ctx.lineTo(parseInt(datafield[i][2][0]),parseInt(datafield[i][2][1]));
-            ctx.lineTo(parseInt(datafield[i][3][0]),parseInt(datafield[i][3][1]));
-            ctx.lineTo(parseInt(datafield[i][0][0]),parseInt(datafield[i][0][1]));
-            ctx.stroke();
-            ctx.closePath();
-            return '';
-        });
-        const objs = this.state.finalresult1;
-        var x=704/this.state.picWidth,y=576/this.state.picHeight;
+        ctx.clearRect(0,0,704,576);//清除之前的绘图
+
+        if(this.state.field){
+            const datafield=this.state.field;
+            ctx.strokeStyle='#f00';
+            ctx.lineWidth=1;
+            datafield.map((el,i)=>{
+                ctx.beginPath();
+                ctx.moveTo(parseInt(datafield[i][0][0]),parseInt(datafield[i][0][1]));
+                ctx.lineTo(parseInt(datafield[i][1][0]),parseInt(datafield[i][1][1]));
+                ctx.lineTo(parseInt(datafield[i][2][0]),parseInt(datafield[i][2][1]));
+                ctx.lineTo(parseInt(datafield[i][3][0]),parseInt(datafield[i][3][1]));
+                ctx.lineTo(parseInt(datafield[i][0][0]),parseInt(datafield[i][0][1]));
+                ctx.stroke();
+                ctx.closePath();
+                return '';
+            });
+        }
+
         if(this.state.finalresult){
+            const objs = this.state.finalresult;
+            const x=704/this.state.picWidth,y=576/this.state.picHeight;
             objs.map((el,)=>{
                 ctx.strokeStyle="#ff0";
                 ctx.beginPath();
@@ -81,6 +84,7 @@ class Workbench extends Component {
                 return '';
             })
         }
+
     };
     //挂在列表显示
     pendingList=()=>{
@@ -194,7 +198,7 @@ class Workbench extends Component {
                     picpath:res.data.picpath,
                     atime:res.data.atime,
                     field:res.data.field,
-                    finalresult1:res.data.finalresult1,
+                    finalresult:res.data.finalresult1,
                     picWidth:res.data.pic_width,
                     picHeight:res.data.pic_height,
                     videoFalse:false
@@ -227,7 +231,7 @@ class Workbench extends Component {
                         <div className="processingAlarm-left">
                             <p><span>{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span></p>
                             <div className="alarmImg">
-                                <canvas id="myCanvas" style={{backgroundImage:'url('+this.state.picpath+')',backgroundSize:"100% 100%",display:this.state.videoFalse?"none":"block"}} />
+                                <canvas id="myCanvas" width="704px" height="576px" style={{backgroundImage:'url('+this.state.picpath+')',backgroundSize:"100% 100%",display:this.state.videoFalse?"none":"block"}} />
                                 <video id="videopath" src={this.state.videopath} controls="controls" autoPlay="autoplay" style={{display:this.state.videoFalse?"block":"none"}} />
                             </div>
                             <div className="alarm-video">
