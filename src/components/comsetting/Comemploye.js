@@ -23,19 +23,21 @@ class Comemploye extends Component {
         })
     }
     requestdata=(params) => {//取数据
-        post({url:"/api/companyuser/getlist"}, (res)=>{
+        post({url:"/api/userworker/getlist"}, (res)=>{
             if(res.success){
                 this.setState({
-                    list: res.data
+                    list: res.data,
+                    zh:res.account
                 })
             }
         })
     }
-    showModalEdit= (code,index) => {
+    showModalEdit= (code,record,index) => {        
         this.setState({
             visible: true,
-            type:code,
+            codetype:code,
             index:index,
+            zh:record.account,
         });
     };
     showModal = (e) => { //新增弹窗
@@ -46,12 +48,13 @@ class Comemploye extends Component {
         });
     };
     handleCreate = (e) => {//modal提交
+        console.log('新增接口');
         const formquanxian=this.formRef.formquanxian();
-        // console.log('e.target.value111111111111111',formquanxian);
+        console.log('e.target.value111111111111111',formquanxian);
         e.preventDefault();
         const forms=this.formRef.formref();
         forms.validateFields((err, values) => {
-            // console.log('******************',values);
+            console.log('******************',values);
             if (!err) {
                 if(this.state.type){
                 }else{
@@ -59,12 +62,12 @@ class Comemploye extends Component {
                         realname:values.realname,
                         account:values.account,
                         emailaddress:values.emailaddress,
-                        job_number:values.job_number,
-                        remark:values.remark,
-                        sex:values.sex,
-                        quanxian:formquanxian
+                        memo:values.memo,
+                        usergender:values.usergender,
+                        userpower:formquanxian,
+                        user:'admin'
                     }
-                    post({url:"/api/companyuser/add",data:data}, (res)=>{
+                    post({url:"/api/userworker/add",data:data}, (res)=>{
                         if(res.success){
                             data.utype=1;
                             data.code=res.code;
@@ -101,12 +104,13 @@ class Comemploye extends Component {
     deleteOk = (code,index) =>{//确认删除
         const data={
             code:this.state.code,
+            ifdel:1,
+            user:'admin'
         }
         const list=this.state.list;
         list.splice(this.state.index,1);
-        post({url:"/api/companyuser/del",data:data}, (res)=>{
+        post({url:"/api/userworker/update",data:data}, (res)=>{
             if(res.success){
-
                 this.setState({
                     list:list,
                     deleteshow: false,
@@ -158,16 +162,30 @@ class Comemploye extends Component {
                 key: 'realname',
                 render: text => <span>{text}</span>,
             },{
-                title: '工号',
-                dataIndex: 'job_number',
-                key: 'job_number',
-                render: text => <span>{text}</span>,
+                title: '性别',
+                dataIndex: 'usergender',
+                key: 'usergender',
+                render:(text, record,index) => {
+                    if(record.usergender==0){
+                        return ("女")
+                    }else{
+                        return ("男")
+                    }
+                }
             }
             ,{
                 title: '权限',
-                dataIndex: 'quanxian',
-                key: 'quanxian',
-                render: text => <span>{text}</span>,
+                dataIndex: 'userpower',
+                key: 'userpower',
+                render:(text, record,index) => {
+                    if(record.userpower==1){
+                        return ("管理员")
+                    }else if(record.userpower==2){
+                        return ("组长")
+                    }else if(record.userpower==3){
+                        return ("值守人员")
+                    }
+                }
             }
             ,{
                 title: '邮箱',
@@ -176,18 +194,18 @@ class Comemploye extends Component {
                 render: text => <span>{text}</span>,
             },{
                 title: '备注',
-                dataIndex: 'remark',
-                key: 'remark',
+                dataIndex: 'memo',
+                key: 'memo',
                 render: text => <span>{text}</span>,
             },{
                 title: '操作',
                 dataIndex: 'code',
                 key: 'operation',
                 render: (text, record,index) => {
-                    if(record.utype){
+                    if(record.ctype){
                         return (
                             <div>
-                                <Button style={{marginRight:'20px'}} onClick={()=>_this.showModalEdit(text,index)}>编辑</Button>
+                                <Button style={{marginRight:'20px'}} onClick={()=>_this.showModalEdit(text, record,index)}>编辑</Button>
                                 <Button style={this.state.utype?{display:"inline-block"}:{display:"none"}} onClick={()=>_this.showModaldelete(text,index)}>删除</Button>
                             </div>
                         )
@@ -245,7 +263,8 @@ class Comemploye extends Component {
                        cancelText="取消"
                 >
                     <ModalForm visible={this.state.visible}
-                               code={this.state.type}
+                               code={this.state.codetype}
+                               zh={this.state.zh}
                                wrappedComponentRef={(form) => this.formRef = form}
                     />
                 </Modal>

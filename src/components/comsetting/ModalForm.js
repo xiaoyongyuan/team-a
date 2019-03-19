@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import {Form,Input,Radio,Row,Col } from 'antd';
+import {Select,Form,Input,Radio,Row,Col } from 'antd';
 import {post} from "../../axios/tools";
 const FormItem = Form.Item;
 let vis=false;
 const RadioGroup = Radio.Group;
+const Option = Select.Option;
 class ModalForm extends Component {
     constructor(props){
         super(props);
@@ -16,8 +17,10 @@ class ModalForm extends Component {
     componentDidMount() {
         //编辑  数据回填
         this.setState({
-            code:this.props.code
+            code:this.props.code,
+            zh:this.props.zh,
         },()=>{
+            console.log('*record.accound',this.state.zh);
             this.requestdata()
         });
     }
@@ -37,7 +40,7 @@ class ModalForm extends Component {
 
     requestdata=() => {//取数据
         if(this.state.code){
-            post({url:"/api/companyuser/getone",data:{code:this.state.code} }, (res)=>{
+            post({url:"/api/userworker/getone",data:{code:this.state.code,zh:this.state.zh,user:'admin'} }, (res)=>{
 
                     this.props.form.setFieldsValue({
                     realname: `${res.data.realname}`,
@@ -89,13 +92,16 @@ class ModalForm extends Component {
                     </FormItem>
                  </Col>
                 <Col>
-                    <FormItem label="性别"{...formItemLayout}>
-                        {getFieldDecorator('sex', {
-                            rules: [{ required: false, message: '请输入性别!' }],
-                        })(
-                            <Input />
+                    <Form.Item label="性别"{...formItemLayout} >
+                        {getFieldDecorator('usergender',{
+                            initialValue:"",
+                        } )(
+                            <Select style={{ width: 120 }}>
+                                <Option value="0" >女</Option>
+                                <Option value="1" >男</Option>
+                            </Select>
                         )}
-                    </FormItem>
+                    </Form.Item>
                 </Col>
                 <Col>
                     <FormItem label="账号(手机号)"{...formItemLayout}>
@@ -113,7 +119,7 @@ class ModalForm extends Component {
                     <FormItem label="工号"{...formItemLayout}>
                         {getFieldDecorator('job_number', {
                             rules: [{
-                                required: true, message: '请输入工号!',
+                                required: false, message: '请输入工号!',
                               
                             }],
                         })(
@@ -146,7 +152,7 @@ class ModalForm extends Component {
                 </Col>
                 <Col>
                     <FormItem label="备注"{...formItemLayout}>
-                        {getFieldDecorator('remark', {
+                        {getFieldDecorator('memo', {
                             rules: [{ required: false, message: '请输入姓名!' }],
                         })(
                             <Input />
