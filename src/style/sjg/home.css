@@ -14,7 +14,9 @@
 .download_btn{
     margin-left: 3%;
 }
-
+.margin_top20{
+    margin-top: 20px;
+}
 .margin_top80{
     margin-top: 80px;
 }
@@ -23,6 +25,9 @@
 }
 .margin_bottom40{
     margin-bottom: 40px;
+}
+.margin_bottom20{
+    margin-bottom: 20px;
 }
 .margin80 button{
    width: 100%;
