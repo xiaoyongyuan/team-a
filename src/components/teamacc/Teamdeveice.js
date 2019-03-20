@@ -170,7 +170,7 @@ class Teamdeveice extends Component {
         return (
             <div>
                 <BreadcrumbCustom first="账号管理" second="设备管理" />
-                <Row className="margin_top80 margin_bottom40">
+                <Row className="margin_top20 margin_bottom20">
                         <Col span={22}>
                             <Form layout="inline"onSubmit={this.selectopt}>
                                 <FormItem label="设备编号">

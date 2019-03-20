@@ -278,12 +278,12 @@ class history extends React.Component {
                                             <div className={this.sanjiaose(v.hstatus)} >  
                                                 <span className="xuanzhuan">{this.handleState(v.hstatus)}</span>
                                             </div>
-                                            <Col span={10}>
-                                                <div className="pliceImgyal" onClick={()=>this.alarmImg(v.code)}>
+                                            <Col lg={10} xl={11} className="minstyle" >
+                                                <div className="pliceImgyal"onClick={()=>this.alarmImg(v.code)}>
                                                     <img src={v.pic_min?v.pic_min:nodata} alt="" />
                                                 </div>
                                             </Col>
-                                            <Col span={14} className="r_flex">
+                                            <Col lg={14} xl={13} className="r_flex">
                                                 <div className="row-alarmlist-detail">
                                                         <div className="word-row">
                                                             <p className="fontstyle right_linr">{v.name}</p>

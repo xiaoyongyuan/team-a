@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Table,DatePicker, Row,Button, Form,LocaleProvider,Input} from "antd";
+import { Table,DatePicker, Row,Button, Form,LocaleProvider,Input,Pagination} from "antd";
 import "../../style/ztt/css/police.css";
 import "../../style/publicStyle/publicStyle.css";
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
@@ -11,18 +11,31 @@ class Performance extends Component {
     constructor(props){
         super(props);
         this.state={
+            page:1, //当前页
         };
     }
     componentDidMount() {
         this.requestdata()
     }
     requestdata=() => {//取数据
-        post({url:"/api/company/getlist"}, (res)=>{
+        const datar={
+            pagesize:10,
+            pageindex:this.state.page,
+        }
+        post({url:"/api/company/getlist",data:datar}, (res)=>{
             if(res.success){
                 this.setState({
                     list:res.data,
+                    total:res.totalcount,
                 })
             }
+        })
+    }
+    changePage=(page,pageSize)=>{ //分页  页码改变的回调，参数是改变后的页码及每页条数
+        this.setState({
+            page: page,
+        },()=>{
+            this.requestdata()
         })
     }
     selectopt = (e) => { //检索search
@@ -34,11 +47,14 @@ class Performance extends Component {
                         bdate: values.clouddata&&values.clouddata.length?values.clouddata[0].format('YYYY-MM-DD')+' 00:00:00':'',
                         edate: values.clouddata&&values.clouddata.length?values.clouddata[1].format('YYYY-MM-DD')+' 23:59:59':'',
                         adminname: values.adminname,
+                        pagesize:10,
+                        pageindex:this.state.page,
                     }
                 post({url:"/api/company/getlist",data:dataUseres}, (res)=>{
                     if(res.success){
                         this.setState({
-                            list: res.data
+                            list: res.data,
+                            page:1,
                         })
                     }
                 })
@@ -109,7 +125,9 @@ class Performance extends Component {
                         </Form>
                     </Row>
                 </LocaleProvider>
-                 <Table rowKey={record => record.code} columns={columns} dataSource={this.state.list} bordered={true}/> 
+                 <Table rowKey={record => record.code} columns={columns} dataSource={this.state.list} bordered={true}
+                  pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage}}
+                 /> 
             </div>
         )
     }

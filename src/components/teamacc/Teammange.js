@@ -250,7 +250,7 @@ searchCancel = () =>{//删除取消
         return (
             <div>
                 <BreadcrumbCustom first="账号管理" second="用户管理" />
-                    <Row className="margin_top80 margin_bottom40">
+                    <Row className="margin_top20 margin_bottom20">
                     <Col span={18}>
                         <Form layout="inline"onSubmit={this.selectopt}>
                             <FormItem label="名称">
