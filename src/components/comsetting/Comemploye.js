@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BreadcrumbCustom from '../BreadcrumbCustom';
 import ModalForm from './ModalForm.js';
-import {Form,Input, Row, Col, Button, Modal, Table} from 'antd';
+import {Form,Input, Row, Col, Button, Modal, Table,Pagination } from 'antd';
 // import '../../style/sjg/home.css';
 import {post} from "../../axios/tools";
 const FormItem = Form.Item;
@@ -11,7 +11,8 @@ class Comemploye extends Component {
         this.state={
             visible:false,
             list:[],
-            createinfo:[]
+            createinfo:[],
+            page:1, //当前页
         };
     }
     componentDidMount() {
@@ -23,11 +24,24 @@ class Comemploye extends Component {
         })
     }
     requestdata=(params) => {//取数据
-        post({url:"/api/userworker/getlist"}, (res)=>{
-            if(res.success){
-                this.setState({
-                    list: res.data,
-                    account:res.account
+
+
+        this.props.form.validateFields((err, values) => {
+            if(!err){
+                const datar={
+                    realname:values.realname,
+                    account:values.account,
+                    pagesize:10,
+                    pageindex:this.state.page,
+                }
+                post({url:"/api/userworker/getlist",data:datar}, (res)=>{
+                    if(res.success){
+                        this.setState({
+                            list: res.data,
+                            account:res.account,
+                            total:res.totalcount,
+                        })
+                    }
                 })
             }
         })
@@ -152,20 +166,33 @@ class Comemploye extends Component {
     }
     selectopt = (e) => { //检索search
         e.preventDefault();
+        this.setState({
+            page:1,
+        })
         this.props.form.validateFields((err, values) => {
             if(!err){
                 const data={
                     realname:values.realname,
                     account:values.account,
+                    pagesize:10,
+                    pageindex:this.state.page,
                 }
                 post({url:"/api/companyuser/getlist",data:data}, (res)=>{
                     if(res.success){
                         this.setState({
-                            list: res.data
+                            list: res.data,
+                            page:1,
                         })
                     }
                 })
             }
+        })
+    }
+    changePage=(page,pageSize)=>{ //分页  页码改变的回调，参数是改变后的页码及每页条数
+        this.setState({
+            page: page,
+        },()=>{
+            this.requestdata()
         })
     }
     render() {
@@ -278,7 +305,9 @@ class Comemploye extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Table style={{marginTop:'20px'}} columns={columns} dataSource={this.state.list} bordered={true}/>
+                        <Table style={{marginTop:'20px'}} columns={columns} dataSource={this.state.list} bordered={true}
+                         pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage}}
+                        />
                     </Row>
                 </div>
                 <Modal title={this.state.type?'查看用户管理':'新增用户管理'}
