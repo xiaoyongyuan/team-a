@@ -104,7 +104,7 @@ class Performance extends Component {
                                     <Input placeholder="请输入姓名" />
                                 )}
                             </Form.Item>
-                                <Button type="primary" htmlType="submit" className="queryBtn">查询</Button>
+                                <Button type="primary" htmlType="submit" className="queryBtn" style={{marginTop:'4px'}}>查询</Button>
                                 <a href="#/app/groupleader/dataCharts" className="tjt">查看统计图</a>
                         </Form>
                     </Row>
