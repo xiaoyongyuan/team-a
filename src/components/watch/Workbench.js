@@ -11,9 +11,11 @@ class Workbench extends Component {
             visibleTips:false,
             pending:[],
             videoFalse:false,//视频开关
-            falseAlarmBtn:false,
-            falsePositivesBtn:false,
-            pushBtn:false
+            falseAlarmBtn:false,//虚警按钮
+            falsePositivesBtn:false,//误报按钮
+            pushBtn:false,//推送按钮
+            nextPageBtn:false,//下一页
+            mountBtn:false,//挂载按钮图标,
         };
     }
     componentDidMount() {
@@ -37,7 +39,10 @@ class Workbench extends Component {
                 finalresult:res.data.finalresult1,
                 picWidth:res.data.pic_width,
                 picHeight:res.data.pic_height,
-                videoFalse:false
+                videoFalse:false,
+                falseAlarmBtn:false,
+                falsePositivesBtn:false,
+                mountBtn:false,
             },()=>{
                 this.paintingBoundary();//围界
             });
@@ -122,10 +127,21 @@ class Workbench extends Component {
                     if(this.state.type===1){
                         this.setState({
                             falseAlarmBtn:true,
+                        },()=>{
+                            this.pendingList();
+                            this.setState({
+                                nextPageBtn:false,
+                            })
                         })
                     }else if(this.state.type===2){
                         this.setState({
                             falsePositivesBtn:true,
+
+                        },()=>{
+                            this.pendingList();
+                            this.setState({
+                                nextPageBtn:false,
+                            })
                         })
                     }
                     if(this.state.type===3){
@@ -134,7 +150,9 @@ class Workbench extends Component {
                                 this.setState({
                                     userName:res.data.adminname,
                                     userPhone:res.data.adminaccount,
-                                    pushBtn:true
+                                    pushBtn:true,
+                                },()=>{
+                                    this.pendingList();
                                 })
                             }
                         });
@@ -161,6 +179,10 @@ class Workbench extends Component {
                     var old=this.state.oldHstatus=-2;
                     this.setState({old,},()=>{
                         this.pendingList();
+                        this.setState({
+                            mountBtn:true
+                        });
+                        message.success("挂载成功");
                     });
                 }else {
                     message.warning(res.errorinfo);
@@ -173,7 +195,30 @@ class Workbench extends Component {
     };
     //下一页
     nextPage=()=>{
-        this.getOneAlarm();
+      /*  this.setState({
+            falseAlarmBtn:false,
+            falsePositivesBtn:false,
+            pushBtn:false,
+            mountBtn:false
+        });*/
+        if(this.state.falseAlarmBtn===true || this.state.falsePositivesBtn===true || this.state.pushBtn===true || this.state.mountBtn===true){
+           this.setState({
+               nextPageBtn:true,
+               falseAlarmBtn:false,
+               falsePositivesBtn:false,
+               pushBtn:false,
+               mountBtn:false,
+           },()=>{
+               this.getOneAlarm();
+           })
+        }
+        if(this.state.falseAlarmBtn===false ||  this.state.falsePositivesBtn===true || this.state.pushBtn===false || this.state.mountBtn===false ){
+            message.info("请先处理报警！");
+            this.setState({
+                nextPageBtn:false,
+                mountBtn:false
+            })
+        }
     };
     remarks=()=>{
         var remarks=document.getElementById("remarks").value;
@@ -214,7 +259,8 @@ class Workbench extends Component {
                     videoFalse:false,
                     falseAlarmBtn:false,
                     falsePositivesBtn:false,
-                    pushBtn:false
+                    pushBtn:false,
+                    mountBtn:false,
                 },()=>{
                     this.paintingBoundary();//围界
                 });
@@ -228,12 +274,12 @@ class Workbench extends Component {
     };
     handleCancelTips=()=>{
         this.setState({
-            visibleTips:false
+            visibleTips:false,
         })
     };
     userHandleCancel=()=>{
         this.setState({
-            visibleUser:false
+            visibleUser:false,
         })
     };
     render() {
@@ -255,12 +301,14 @@ class Workbench extends Component {
                             </div>
                         </div>
                         <div className="processingAlarm-right">
-                            <div className="mount"><Icon type="paper-clip" title="挂载" style={{fontSize:"30px",float:"right",color:"#6188C1",cursor:"pointer"}} onClick={()=>this.mountProcessing()} /></div>
+                            <div className="mount"><Button icon="paper-clip" shape="circle"  size="large" title="挂载" disabled={this.state.mountBtn} style={{float:"right",color:"#6188C1",cursor:"pointer"}} onClick={()=>this.mountProcessing()} /></div>
                             <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(1,"虚警")} disabled={this.state.falseAlarmBtn}>虚警</Button></div>
                             <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(2,"误报")} disabled={this.state.falsePositivesBtn}>误报</Button></div>
                             <div className="alarm-btn Push"><Button type="primary" onClick={()=>this.typeAlarm(3,"报警")} disabled={this.state.pushBtn}>推送</Button></div>
                             <textarea className="remarks" id="remarks" placeholder="备注信息" onBlur={()=>this.remarks()} />
-                            <div className="nextPage"><Icon type="right-circle" theme="filled" title="下一页" style={{fontSize:"75px",float:"right",color:"#2E75E4",cursor:"pointer",padding:"10px 0"}} onClick={()=>this.nextPage()} /></div>
+                            <div className="nextPage">
+                                <Button type="primary" disabled={this.state.nextPageBtn} shape="circle" icon="right-circle" theme="filled" title="下一页" size="large" onClick={()=>this.nextPage()} />
+                            </div>
                         </div>
                     </div>
 

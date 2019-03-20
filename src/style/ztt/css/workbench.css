@@ -175,4 +175,11 @@
     border:2px solid #437EDB;
     border-bottom:none;
 }
+.workBench .nextPage Button{
+    float:right;
+    color:#fff;
+    cursor:pointer;
+    background:#2E75E4;
+    border:none;
+}
 

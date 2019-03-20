@@ -7,6 +7,7 @@ class AlarmAnalysis extends Component {
                 trigger: 'item',
                 formatter: "{a} <br/>{b} : {c} ({d}%)"
             },
+            color:["#5570FB","#FE6661","#43B4F8"],
             series : [
                 {
                     name: '访问来源',
