@@ -20,7 +20,7 @@ class Comemploye extends Component {
         let utypes= localStorage.getItem("teamuser");
         let utypeObj=JSON.parse(utypes);
         this.setState({
-            utype: utypeObj.utype
+            utype: utypeObj.userpower
         })
     }
     requestdata=(params) => {//取数据
@@ -65,64 +65,55 @@ class Comemploye extends Component {
         });
     };
     handleCreate = (e) => {//modal提交
+    	e.preventDefault();
         this.setState({
             value:1    
         })
-        e.preventDefault();
         const forms=this.formRef.formref();
         forms.validateFields((err, values) => {
             if (!err) {
-                if(this.state.type){
-                    //编辑接口');
-                    const data={
-                        realname:values.realname,
-                        account:values.account,
-                        emailaddress:values.emailaddress,
-                        memo:values.memo,
-                        usergender:values.usergender,
-                        userpower:values.ctype,
-                        code:this.state.codetype,
-                        user:'admin'
-                    }
-                    post({url:"/api/userworker/update",data:data}, (res)=>{
-                        if(res.success){
-                            let list=this.state.list;
-                            list[this.state.index]=res.data[0];                        
-                            this.setState({
-                                list:list,
-                            })
-                        }   
-                    })                   
-                }else{
-                    //新增接口');
-                    const data={
-                        realname:values.realname,
-                        account:values.account,
-                        emailaddress:values.emailaddress,
-                        memo:values.memo,
-                        usergender:values.usergender,
-                        userpower:values.ctype,
-                        user:'admin'
-                    }
-                    post({url:"/api/userworker/add",data:data}, (res)=>{
-                        if(res.success){
-                            data.utype=1;
-                            data.code=res.code;
-                            const list=this.state.list;
-                            list.unshift(data);
-                            this.setState({
-                                list:list,
-                            })
-                        }
-                    })
-                }
-                this.setState({
-                    visible: false,
-                });
-                forms.resetFields() //清空
+            	const data={
+                  realname:values.realname,
+                  account:values.account,
+                  emailaddress:values.emailaddress,
+                  memo:values.memo,
+                  usergender:values.usergender,
+                  userpower:values.ctype,
+                  user:'admin'
+              }
+              if(this.state.type){
+                  //编辑接口');
+                  data.code=this.state.codetype;
+                  post({url:"/api/userworker/update",data:data}, (res)=>{
+                      if(res.success){
+                          let list=this.state.list;
+                          list[this.state.index]=res.data[0];                        
+                          this.setState({
+                              list:list,
+                          })
+                      }   
+                  })                   
+              }else{
+                  //新增接口');
+                  data.account=values.account;
+                  post({url:"/api/userworker/add",data:data}, (res)=>{
+                      if(res.success){
+                          data.utype=1;
+                          data.code=res.code;
+                          const list=this.state.list;
+                          list.unshift(data);
+                          this.setState({
+                              list:list,
+                          })
+                      }
+                  })
+              }
+              this.setState({
+                  visible: false
+              });
+              forms.resetFields() //清空
             }
         });
-        forms.resetFields() //清空
     };
     handleCancel = (e) => { //modal取消
         const forms=this.formRef.formref();
@@ -231,11 +222,11 @@ class Comemploye extends Component {
                 dataIndex: 'userpower',
                 key: 'userpower',
                 render:(text, record,index) => {
-                    if(record.userpower==1){
+                    if(record.userpower=='admin_helper'){
                         return ("管理员")
-                    }else if(record.userpower==2){
-                        return ("组长")
-                    }else if(record.userpower==3){
+                    }else if(record.userpower=='chargehand_helper'){
+                        return ("值班组长")
+                    }else if(record.userpower=='onduty_helper'){
                         return ("值守人员")
                     }
                 }
@@ -255,14 +246,15 @@ class Comemploye extends Component {
                 dataIndex: 'code',
                 key: 'operation',
                 render: (text, record,index) => {
-                    if(record.ctype){
+                	if(this.state.utype=='admin_helper'){
                         return (
                             <div>
                                 <Button style={{marginRight:'20px'}} onClick={()=>_this.showModalEdit(text,record,index)}>编辑</Button>
-                                <Button style={this.state.utype?{display:"inline-block"}:{display:"none"}} onClick={()=>_this.showModaldelete(text,record,index)}>删除</Button>
+                                <Button style={record.userpower != 'admin_helper'?{display:"inline-block"}:{display:"none"}} onClick={()=>_this.showModaldelete(text,record,index)}>删除</Button>
                             </div>
                         )
-                    }
+                	}
+                    
                 }
             }
         ];
@@ -301,11 +293,11 @@ class Comemploye extends Component {
                             </Form>
                         </Col>
                         <Col span={2}>
-                            <Button style={this.state.utype?{display:"inline-block"}:{display:"none"}}type="primary" onClick={this.showModal}>新增</Button>
+                            <Button style={this.state.utype=='admin_helper'?{display:"inline-block"}:{display:"none"}} type="primary" onClick={this.showModal}>新增</Button>
                         </Col>
                     </Row>
                     <Row>
-                        <Table style={{marginTop:'20px'}} columns={columns} dataSource={this.state.list} bordered={true}
+                        <Table rowKey={record => record.code} style={{marginTop:'20px'}} columns={columns} dataSource={this.state.list} bordered={true}
                          pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage}}
                         />
                     </Row>

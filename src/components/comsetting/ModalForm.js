@@ -11,6 +11,7 @@ class ModalForm extends Component {
         this.state={
             visible:props.visible || false,
             form:false,
+            roles:[{rolename:'admin'}]
           };
     }
     componentDidMount() {
@@ -18,16 +19,16 @@ class ModalForm extends Component {
         this.setState({
             code:this.props.code,
             account:this.props.account,
-            
         },()=>{
             this.requestdata()
+            this.userroles()
         });
     }
+
     componentWillReceiveProps(nextProps){
         if( nextProps.visible != vis){
             vis=nextProps.visible;
             if(nextProps.visible){
-                vis=nextProps.visible;
                 this.setState({
                     code:nextProps.code,
                     account:nextProps.account,
@@ -35,6 +36,15 @@ class ModalForm extends Component {
                     this.requestdata()});
             }
         }
+    }
+    userroles =()=>{
+        post({url:"/api/userroles/getlist"}, (res)=>{
+            if(res.success){
+                this.setState({
+                    roles:res.data
+                })  
+            } 
+        })
     }
     requestdata=() => {//取数据
         if(this.state.code){
@@ -51,7 +61,7 @@ class ModalForm extends Component {
                         emailaddress: res.data.emailaddress,//邮箱
                         job_number: res.data.job_number,//工号
                         memo: res.data.memo,//备注
-                        ctype: Number(res.data.userpower),//类型
+                        userpower:res.data.userpower,//类型
                     });
             })
         }
@@ -119,23 +129,21 @@ class ModalForm extends Component {
                         )}
                     </FormItem>
                 </Col>
-         
                 <Col>
-                
                     <FormItem label="权限"{...formItemLayout}>
-                        {getFieldDecorator('ctype', {
-                            initialValue: "1",
+                        {getFieldDecorator('userpower', {
+                            initialValue: _this.state.roles[0].rolename,
                             rules: [{ required: true }],
                         })(
                             <RadioGroup onChange={this.onChangeradio}>
-                                <Radio value={1}>管理员</Radio>
-                                <Radio value={2}>组长</Radio>
-                                <Radio value={3}>值守人员</Radio>
+                            {this.state.roles.map(function(item,index){
+                                return(
+                                    <Radio value={item.rolename}>{item.roledescribe}</Radio>
+                                )
+                            })}
                             </RadioGroup>
                         )}
                     </FormItem>
-
-
                 </Col>
                 <Col>
                     <FormItem label="邮箱"{...formItemLayout}>
