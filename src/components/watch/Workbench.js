@@ -99,11 +99,13 @@ class Workbench extends Component {
     };
     //挂在列表显示
     pendingList=()=>{
-      post({url:"/api/alarmhandle/getlist",data:{hstatus:"-2",pageindex:this.state.page}},(res)=>{
+      post({url:"/api/alarmhandle/getlist",data:{hstatus:"-2",pageindex:this.state.page,pagesize:10}},(res)=>{
           if(res.success){
-              if(res.data.length>1){
+              if(res.data.length>0){
+                  var listPending=this.state.pending;
+                  const alist = listPending.concat(res.data);
                   this.setState({
-                      pending:res.data,
+                      pending:alist,
                       pendingCount:res.totalcount,
                   });
               }else{
