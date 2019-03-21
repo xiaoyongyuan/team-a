@@ -16,11 +16,13 @@ class Workbench extends Component {
             pushBtn:false,//推送按钮
             nextPageBtn:false,//下一页
             mountBtn:false,//挂载按钮图标,
+            page:1
         };
     }
     componentDidMount() {
         this.getOneAlarm();
         this.pendingList();
+        this.padingLoad();
     }
     //值班人员报警
     getOneAlarm=()=>{
@@ -40,9 +42,10 @@ class Workbench extends Component {
                 picWidth:res.data.pic_width,
                 picHeight:res.data.pic_height,
                 videoFalse:false,
-                falseAlarmBtn:false,
-                falsePositivesBtn:false,
-                mountBtn:false,
+                falseAlarmBtn:false,//虚警按钮
+                pushBtn:false,//推送按钮
+                falsePositivesBtn:false,//误报按钮
+                mountBtn:false,//挂载按钮图标,
             },()=>{
                 this.paintingBoundary();//围界
             });
@@ -96,18 +99,38 @@ class Workbench extends Component {
     };
     //挂在列表显示
     pendingList=()=>{
-      post({url:"/api/alarmhandle/getlist",data:{hstatus:"-2"}},(res)=>{
+      post({url:"/api/alarmhandle/getlist",data:{hstatus:"-2",pageindex:this.state.page}},(res)=>{
           if(res.success){
-            this.setState({
-                pending:res.data,
-                pendingCount:res.totalcount,
-                mountLength:res.data.length
-            })
+              if(res.data.length>1){
+                  this.setState({
+                      pending:res.data,
+                      pendingCount:res.totalcount,
+                  });
+              }else{
+                  message.info("没有更多了");
+              }
           }else{
               message.warning(res.errorinfo);
           }
       })
     };
+    padingLoad=()=>{
+        let page=1;
+        document.getElementById("hangUpPanel").onscroll=()=>{
+            var pending=document.getElementById("hangUpPanel").scrollHeight;//内容的总体高度
+            var scroll=document.getElementById("hangUpPanel").scrollTop;//距离顶部的高度
+            var clice=document.getElementById("hangUpPanel").clientHeight;//可视的高度
+            var bottom=pending-clice;
+            var foot=bottom-scroll;//滚动条距离底部的高度
+            console.log(pending,scroll,clice,bottom,foot)
+            if(foot==0 && pending>700){
+                page++;
+                this.setState({ page},()=>{
+                    this.pendingList();
+                });
+            }
+        }
+    }
     /*
     * 改变报警类型
     * 1虚警 2误报 3报警 -2挂起 -1以获取未处理 0未处理
@@ -127,6 +150,9 @@ class Workbench extends Component {
                     if(this.state.type===1){
                         this.setState({
                             falseAlarmBtn:true,
+                            falsePositivesBtn:true,
+                            pushBtn:true,
+                            mountBtn:true,
                         },()=>{
                             this.pendingList();
                             this.setState({
@@ -135,8 +161,10 @@ class Workbench extends Component {
                         })
                     }else if(this.state.type===2){
                         this.setState({
+                            falseAlarmBtn:true,
                             falsePositivesBtn:true,
-
+                            pushBtn:true,
+                            mountBtn:true,
                         },()=>{
                             this.pendingList();
                             this.setState({
@@ -150,7 +178,10 @@ class Workbench extends Component {
                                 this.setState({
                                     userName:res.data.adminname,
                                     userPhone:res.data.adminaccount,
+                                    falseAlarmBtn:true,
+                                    falsePositivesBtn:true,
                                     pushBtn:true,
+                                    mountBtn:true,
                                 },()=>{
                                     this.pendingList();
                                 })
@@ -180,7 +211,10 @@ class Workbench extends Component {
                     this.setState({old,},()=>{
                         this.pendingList();
                         this.setState({
-                            mountBtn:true
+                            mountBtn:true,
+                            falseAlarmBtn:true,
+                            falsePositivesBtn:true,
+                            pushBtn:true,
                         });
                         message.success("挂载成功");
                     });
@@ -195,29 +229,10 @@ class Workbench extends Component {
     };
     //下一页
     nextPage=()=>{
-      /*  this.setState({
-            falseAlarmBtn:false,
-            falsePositivesBtn:false,
-            pushBtn:false,
-            mountBtn:false
-        });*/
-        if(this.state.falseAlarmBtn===true || this.state.falsePositivesBtn===true || this.state.pushBtn===true || this.state.mountBtn===true){
-           this.setState({
-               nextPageBtn:true,
-               falseAlarmBtn:false,
-               falsePositivesBtn:false,
-               pushBtn:false,
-               mountBtn:false,
-           },()=>{
-               this.getOneAlarm();
-           })
-        }
-        if(this.state.falseAlarmBtn===false ||  this.state.falsePositivesBtn===true || this.state.pushBtn===false || this.state.mountBtn===false ){
+        if(this.state.falseAlarmBtn===true && this.state.falsePositivesBtn===true && this.state.pushBtn===true && this.state.mountBtn===true){
+            this.getOneAlarm();
+        }else if(this.state.falseAlarmBtn===false && this.state.falsePositivesBtn===false && this.state.pushBtn===false && this.state.mountBtn===false ){
             message.info("请先处理报警！");
-            this.setState({
-                nextPageBtn:false,
-                mountBtn:false
-            })
         }
     };
     remarks=()=>{
@@ -257,10 +272,10 @@ class Workbench extends Component {
                     picWidth:res.data.pic_width,
                     picHeight:res.data.pic_height,
                     videoFalse:false,
-                    falseAlarmBtn:false,
-                    falsePositivesBtn:false,
-                    pushBtn:false,
-                    mountBtn:false,
+                    falseAlarmBtn:false,//虚警按钮
+                    pushBtn:false,//推送按钮
+                    falsePositivesBtn:false,//误报按钮
+                    mountBtn:false,//挂载按钮图标,
                 },()=>{
                     this.paintingBoundary();//围界
                 });
@@ -314,11 +329,11 @@ class Workbench extends Component {
 
                 </div>
                 <div className="hangUp">
-                    <div className="garden">{this.state.mountLength}</div>
+                    <div className="garden">{this.state.pendingCount}</div>
                     <div className="mountUp" />
                     <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"30px"}}>
                         <Panel  key="1" showArrow={false}>
-                            <div className="hangUpPanel" >
+                            <div className="hangUpPanel" id="hangUpPanel">
                                 {
                                     this.state.pending.map((v,i)=>(
                                         <Row key={i} onClick={()=>this.mountRestore(v.code)} className="mountRestore">

@@ -105,7 +105,8 @@
 .workBench .hangUpPanel{
     width: 100%;
     height: 700px;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 .workBench .remarks{
     width: 60%;
