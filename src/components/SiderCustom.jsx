@@ -65,6 +65,7 @@ class SiderCustom extends Component {
         })
     };
     render() {
+        const meuns=JSON.parse(localStorage.getItem('teammeun'));
         return (
             <Sider
                 trigger={null}
@@ -77,7 +78,7 @@ class SiderCustom extends Component {
                 </div>
                 <SiderMenu
                     identify="admin"
-                    menus={routes.menus}
+                    menus={meuns}
                     onClick={this.menuClick}
                     mode="inline"
                     selectedKeys={[this.state.selectedKey]}

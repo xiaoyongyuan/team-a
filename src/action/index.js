@@ -22,18 +22,13 @@ export const receiveData = (data, category) => ({
  * @param funcName      请求接口的函数名
  * @param params        请求接口的参数
  */
-// export const fetchData = ({funcName, params, stateName}) => dispatch => { //已更改，后期删除
-//     !stateName && (stateName = funcName);
-//     dispatch(requestData(stateName));
-//     return http[funcName](params).then(res => dispatch(receiveData(res, stateName)));
-// };
+
 
 export const fetchData = ({funcName, url, params, stateName}) => dispatch => {   //lff  登录在用
-		console.log('sss',params)
     !stateName && (stateName = funcName); 
     dispatch(requestData(stateName));
 
-    axios.post('http://login.aokecloud.cn'+url,params).then(res => {
+    axios.post(window.g.loginurl+url,params).then(res => {
       if(res.data.success==1){
         dispatch(receiveData(res.data, stateName))
         return res.data
