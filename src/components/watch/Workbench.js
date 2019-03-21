@@ -122,7 +122,6 @@ class Workbench extends Component {
             var clice=document.getElementById("hangUpPanel").clientHeight;//可视的高度
             var bottom=pending-clice;
             var foot=bottom-scroll;//滚动条距离底部的高度
-            console.log(pending,scroll,clice,bottom,foot)
             if(foot==0 && pending>700){
                 page++;
                 this.setState({ page},()=>{
@@ -316,7 +315,7 @@ class Workbench extends Component {
                             </div>
                         </div>
                         <div className="processingAlarm-right">
-                            <div className="mount"><Button icon="paper-clip" shape="circle"  size="large" title="挂载" disabled={this.state.mountBtn} style={{float:"right",color:"#6188C1",cursor:"pointer"}} onClick={()=>this.mountProcessing()} /></div>
+                            <div className="mount"><Button icon="paper-clip" shape="circle"  size="large" title="挂载" disabled={this.state.mountBtn}  onClick={()=>this.mountProcessing()} /></div>
                             <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(1,"虚警")} disabled={this.state.falseAlarmBtn}>虚警</Button></div>
                             <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(2,"误报")} disabled={this.state.falsePositivesBtn}>误报</Button></div>
                             <div className="alarm-btn Push"><Button type="primary" onClick={()=>this.typeAlarm(3,"报警")} disabled={this.state.pushBtn}>推送</Button></div>
