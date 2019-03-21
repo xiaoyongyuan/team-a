@@ -1,6 +1,5 @@
 export default {
     menus: [ 
-
         //维护团队
         { key: '/app/teamhome/index', title: '维护团队首页', icon: 'mobile', component: 'Teamhome' },
         {
@@ -33,15 +32,17 @@ export default {
                 { key: '/app/comsettings/department', title: '部门管理', component: 'Department'},        
             ],
         },
+        { key: '/app/meunHome', title: '首页',component: 'meunHome' },
 
     ],
     // 非菜单相关路由
-    others: [
-            { key: '/app/groupleader/dataCharts', title: '统计图', component: 'dataCharts'}, 
+    others: [ 
+            
             {
                 key: '/subs4', title: '页面', icon: 'switcher',
                 subs: [
                     { key: '/login', title: '登录' },
+                    
                     { key: '/404', title: '404' },
                 ],
             },

@@ -24,8 +24,6 @@ class Comemploye extends Component {
         })
     }
     requestdata=(params) => {//取数据
-
-
         this.props.form.validateFields((err, values) => {
             if(!err){
                 const datar={

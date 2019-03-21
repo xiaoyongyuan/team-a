@@ -82,21 +82,24 @@ class Performance extends Component {
                 title: '误报',
                 dataIndex: 'pname',
                 key: 'pname',
-                render: text => <span>{text}</span>,
+                render: text => <span>{9}</span>,
             },{
                 title: '虚报',
                 dataIndex: 'createon',
-                key: 'manage'
+                key: 'manage',
+                render: text => <span>{9}</span>,
             }
             ,{
                 title: '警报',
                 dataIndex: 'createon',
-                key: 'manage1'
+                key: 'manage1',
+                render: text => <span>{9}</span>,
             }
             ,{
                 title: '查询用户详情次数',
                 dataIndex: 'createon',
                 key: 'manage2',
+                render: text => <span>{19}</span>,
             }
         ];
         return (
