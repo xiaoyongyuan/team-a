@@ -14,8 +14,7 @@ import './style/index.less';
 // redux 注入操作
 const middleware = [thunk];
 const store = createStore(reducer, applyMiddleware(...middleware));
-console.log(store.getState());
-
+const meuns=JSON.parse(localStorage.getItem('teammeun'));
 
 // const render = Component => { // 增加react-hot-loader保持状态刷新操作，如果不需要可去掉并把下面注释的打开
 //     ReactDOM.render(
@@ -53,7 +52,7 @@ console.log(store.getState());
 ReactDOM.render(
     <AppContainer>
         <Provider store={store}>
-            <Page store={store} />
+            <Page store={store}/>
         </Provider>
     </AppContainer>
  ,

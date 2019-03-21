@@ -43,6 +43,7 @@ class HeaderCustom extends Component {
     };
     logout = () => { //退出
         localStorage.removeItem('teamuser');
+        localStorage.removeItem('teammeun');
         this.props.history.push('/login')
     };
     popoverHide = () => {
