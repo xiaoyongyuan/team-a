@@ -252,8 +252,8 @@ searchCancel = () =>{//删除取消
                 <BreadcrumbCustom first="账号管理" second="用户管理" />
                     <Row className="margin_top20 margin_bottom20">
                     <Col span={18}>
-                        <Form layout="inline"onSubmit={this.selectopt}>
-                            <FormItem label="名称">
+                        <Form layout="inline" onSubmit={this.selectopt}>
+                            <FormItem label="名称：">
                                 {getFieldDecorator('name', {
                                     rules: [{ required: false, message: '请输入名称!' }],
                                 })(
@@ -261,12 +261,11 @@ searchCancel = () =>{//删除取消
                                 )}
                             </FormItem>
                             <LocaleProvider locale={zh_CN}>
-                                <FormItem label="云服务到期日期">
+                                <FormItem label="云服务到期日期：">
                                 {getFieldDecorator('clouddata', {
                                     rules: [{ required: false, message: '请选择日期!' }],
                                 })(
-                                    <RangePicker
-                                        onChange={onChange_time} format={dateFormat} />
+                                    <RangePicker onChange={onChange_time} format={dateFormat} />
                                 )}
                             </FormItem>
                             </LocaleProvider>

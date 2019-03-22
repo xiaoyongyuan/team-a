@@ -94,7 +94,36 @@ class ModaBianhao extends Component {
         function onChangecheck(checkedValues) {
             console.log('checked = ', checkedValues);
         }
-
+        const formItemLayout = {
+            labelCol: {
+                xs: { span: 24 },
+                sm: { span: 5 },
+            },
+            wrapperCol: {
+                xs: { span: 24 },
+                sm: { span: 18 },
+            },
+        };
+        const formItemLayout1 = {
+            labelCol: {
+                xs: { span: 12 },
+                sm: { span:6 },
+            },
+            wrapperCol: {
+                xs: { span: 24 },
+                sm: { span: 18 },
+            },
+        };
+        const formItemLayout2 = {
+            labelCol: {
+                xs: { span: 12 },
+                sm: { span:3 },
+            },
+            wrapperCol: {
+                xs: { span: 24 },
+                sm: { span: 18 },
+            },
+        };
         function onChangeD(date, dateString) {
             console.log(date, dateString);
         }
@@ -119,21 +148,21 @@ class ModaBianhao extends Component {
         return (
             <Form layout="vertical" onSubmit={this.handleSubmit}>
                 <div>
-                <FormItem label="名称">
+                <FormItem label="名称" {...formItemLayout2}>
                     {getFieldDecorator('cname', {
                         rules: [{ required: true, message: '请输入名称!' }],
                     })(
                         <Input />
                     )}
                 </FormItem>
-                    <FormItem label="联系人">
+                    <FormItem label="联系人" {...formItemLayout2}>
                         {getFieldDecorator('adminname', {
                             rules: [{ required: true, message: '请输入联系人!' }],
                         })(
                             <Input />
                         )}
                     </FormItem>
-                    <FormItem label="联系人手机号">
+                    <FormItem label="手机号" {...formItemLayout2}>
                         {getFieldDecorator('adminaccount', {
                             rules: [{
                             required: true, message: '请输入有效手机号!' ,
@@ -144,7 +173,7 @@ class ModaBianhao extends Component {
                             <Input />
                         )}
                     </FormItem>
-                    <FormItem label="用户类型">
+                    <FormItem label="用户类型" {...formItemLayout}>
                         {getFieldDecorator('ctype', {
                             initialValue: "4",
                             rules: [{ required: true, message: '请输入用户类型!' }],
@@ -156,7 +185,7 @@ class ModaBianhao extends Component {
                             </RadioGroup>
                         )}
                     </FormItem>
-                    <FormItem label="开通功能">
+                    <FormItem label="开通功能" {...formItemLayout}>
                         {getFieldDecorator('opening', {
                             rules: [{ required: true}],
                         })(
@@ -164,7 +193,7 @@ class ModaBianhao extends Component {
                         )}
                     </FormItem>
                     <div style={{display:this.state.istrue?"block":"none"}}>
-                        <FormItem label="场景">
+                        <FormItem label="场景" {...formItemLayout2} >
                             {getFieldDecorator('scene', {
                                 initialValue: "",
                                 rules: [{ required: false, message: '请上传图片!' }],
@@ -177,7 +206,7 @@ class ModaBianhao extends Component {
                             )}
                         </FormItem>
                     </div>
-                    <FormItem label="经度">
+                    <FormItem label="经度" {...formItemLayout2}>
                         {getFieldDecorator('clng', {
                             rules: [{
                                 required: true, message: '请输入经度/只能输入数字',
@@ -188,7 +217,7 @@ class ModaBianhao extends Component {
                             <Input />
                         )}
                     </FormItem>
-                    <FormItem label="纬度">
+                    <FormItem label="纬度" {...formItemLayout2}>
                         {getFieldDecorator('clat', {
                             rules: [{ required: true, message: '请输入经度/只能输入数字!',
                                 pattern: new RegExp(/^\d*\.{0,6}\d{0,6}$/, "g"),
@@ -197,14 +226,14 @@ class ModaBianhao extends Component {
                             <Input />
                         )}
                     </FormItem>
-                    <FormItem label="云服务到期日期">
+                    <FormItem label="云服务到期日期" {...formItemLayout1}>
                         {getFieldDecorator('cloudvaliddate', {
                             rules: [{ required: false, message: '请输入云服务到期日期!' }],
                         })(
                             <DatePicker onChange={onChangeD} />
                         )}
                     </FormItem>
-                    <FormItem label="备注">
+                    <FormItem label="备注" {...formItemLayout2}>
                         {getFieldDecorator('memo', {
                             rules: [{ required:false, message: '请输入备注!' }],
                         })(
