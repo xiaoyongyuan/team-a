@@ -102,9 +102,17 @@ class Callalarm extends Component {
             {
                 title: '操作',
                 key: 'option',
-                render: (text, record) => 
-                    <Link to={"/app/teamacc/adopt?code="+text.code } > <Button>查看</Button></Link>
-                ,
+                render: (text, record) =>{
+                    if(record.rhandle){
+                        return (<Link to={"/app/teamacc/adopt?code="+text.code } > <Button>查看</Button></Link>)
+                    }else{
+                        return (<div>
+                                <Link to={"/app/teamacc/adopt?code="+text.code } > <Button>查看</Button></Link>
+                                <Link to={"/app/teamacc/auditing?code="+text.code } > <Button>编辑</Button></Link>
+                            </div>
+                            )
+                    }
+                }
             }];
 
         function onChange_time(date, dateString) {
