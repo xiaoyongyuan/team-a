@@ -124,8 +124,8 @@ class history extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             this.setState({
-                bdate:values.date?values.date[0].format('YYYY-MM-DD')+" 00:00:00":'',
-                edate:values.date?values.date[1].format('YYYY-MM-DD')+" 23:59:59":'',
+                bdate:values.date&&values.date.length?values.date[0].format('YYYY-MM-DD')+" 00:00:00":'',
+                edate:values.date&&values.date.length?values.date[1].format('YYYY-MM-DD')+" 23:59:59":'',
                 hstatus:values.hstatus,
                 account:values.account,
                 pageindex:this.state.page,

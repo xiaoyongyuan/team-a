@@ -76,11 +76,11 @@ class Comemploye extends Component {
                   emailaddress:values.emailaddress,
                   memo:values.memo,
                   usergender:values.usergender,
-                  userpower:values.ctype,
+                  userpower:values.userpower,
                   user:'admin'
               }
               console.log('data',data)
-              return;
+              
               if(this.state.type){
                   //编辑接口');
                   data.code=this.state.codetype;
