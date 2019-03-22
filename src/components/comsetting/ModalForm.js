@@ -118,13 +118,8 @@ class ModalForm extends Component {
                     </Form.Item>
                 </Col>
                 <Col>
-                    <FormItem label="账号(手机号)"{...formItemLayout}>
-                        {getFieldDecorator('account', {
-                            rules: [{
-                                required: true, message: '请输入合法的手机号!',
-                                pattern: new RegExp(/^1(3|4|5|7|8)\d{9}$/, "g"),
-                            }],
-                        })(
+                    <FormItem label="账号" {...formItemLayout}>
+                        {getFieldDecorator('account')(
                             <Input disabled={_this.state.code?true:false} />
                         )}
                     </FormItem>
