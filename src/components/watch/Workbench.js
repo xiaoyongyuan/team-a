@@ -16,7 +16,8 @@ class Workbench extends Component {
             pushBtn:false,//推送按钮
             nextPageBtn:false,//下一页
             mountBtn:false,//挂载按钮图标,
-            page:1
+            page:1,
+            ifPedding:true
         };
     }
     componentDidMount() {
@@ -99,22 +100,27 @@ class Workbench extends Component {
     };
     //挂在列表显示
     pendingList=()=>{
-      post({url:"/api/alarmhandle/getlist",data:{hstatus:"-2",pageindex:this.state.page,pagesize:10}},(res)=>{
-          if(res.success){
-              if(res.data.length>0){
-                  var listPending=this.state.pending;
-                  const alist = listPending.concat(res.data);
-                  this.setState({
-                      pending:alist,
-                      pendingCount:res.totalcount,
-                  });
-              }else{
-                  message.info("没有更多了");
-              }
-          }else{
-              message.warning(res.errorinfo);
-          }
-      })
+        if(this.state.ifPedding){
+            post({url:"/api/alarmhandle/getlist",data:{hstatus:"-2",pageindex:this.state.page,pagesize:10}},(res)=>{
+                if(res.success){
+                    if(res.data.length>0){
+                        var listPending=this.state.pending;
+                        const alist = listPending.concat(res.data);
+                        this.setState({
+                            pending:alist,
+                            pendingCount:res.totalcount,
+                        });
+                    }else{
+                        message.info("没有更多了");
+                        this.setState({
+                            ifPedding:false
+                        })
+                    }
+                }else{
+                    message.warning(res.errorinfo);
+                }
+            })
+        }
     };
     padingLoad=()=>{
         let page=1;
@@ -126,9 +132,9 @@ class Workbench extends Component {
             var foot=bottom-scroll;//滚动条距离底部的高度
             if(foot==0 && pending>700){
                 page++;
-                this.setState({ page},()=>{
+                this.setState({page},()=>{
                     this.pendingList();
-                });
+                })
             }
         }
     }
