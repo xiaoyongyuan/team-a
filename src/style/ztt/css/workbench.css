@@ -24,6 +24,11 @@
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     background-color: #555;
 }
+.workBench .overflow{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .workBench,.processing-title{
     width: 100%;
     height:800px;
@@ -40,8 +45,9 @@
     width: 56%;
 }
 .workBench .hangUp{
-    width: 18%;
+    width: 20%;
     position: relative;
+    margin:0 10px;
 }
 .workBench .processing-title{
     width: 100%;
@@ -58,13 +64,16 @@
     position: relative;
 }
 .workBench .mountUp{
-    width: 80%;
-    height: 5%;
+    width: 106%;
+    height: 41px;
     position: absolute;
-    left: 10%;
+    left: -3%;
     top:2%;
     background-color: #437EDB;
     border-radius: 20px;
+    color: #ffffff;
+    line-height: 60px;
+    text-align: center;
 }
 .workBench .alarm-btn Button{
     width: 60%;
@@ -168,6 +177,7 @@
     border-radius: 50%;
     background: white;
     position: absolute;
+    color: red;
     left: 43%;
     top:-0.5%;
     line-height: 40px;
@@ -194,5 +204,8 @@
     float:right;
     color:#6188C1;
     cursor:pointer;
+    border: none;
+    margin-top: -15px;
+    background: #F0F2F5;
 }
 

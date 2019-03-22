@@ -249,9 +249,7 @@ class Workbench extends Component {
                 if(res.success){
                     var memo=this.state.memo;
                     memo=remarks;
-                    this.setState({memo},()=>{
-                        this.getOneAlarm();
-                    });
+                    this.setState({memo});
                     message.success("备注信息添加成功!");
                 }else{
                     message.error("备注信息添加失败!");
@@ -313,7 +311,7 @@ class Workbench extends Component {
                             <p><span>{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span></p>
                             <div className="alarmImg">
                                 <canvas id="myCanvas" width="704px" height="576px" style={{backgroundImage:'url('+this.state.picpath+')',backgroundSize:"100% 100%",display:this.state.videoFalse?"none":"block"}} />
-                                <video id="videopath" src={this.state.videopath} controls="controls" autoPlay="autoplay" style={{display:this.state.videoFalse?"block":"none"}} />
+                                <video id="videopath" src={this.state.videopath} controls="controls" autoPlay="autoplay" loop="loop" style={{display:this.state.videoFalse?"block":"none"}} />
                             </div>
                             <div className="alarm-video">
                                 {
@@ -337,7 +335,7 @@ class Workbench extends Component {
                 </div>
                 <div className="hangUp">
                     <div className="garden">{this.state.pendingCount}</div>
-                    <div className="mountUp" />
+                    <div className="mountUp">挂载列表</div>
                     <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"30px"}}>
                         <Panel  key="1" showArrow={false}>
                             <div className="hangUpPanel" id="hangUpPanel">
@@ -348,8 +346,8 @@ class Workbench extends Component {
                                                 <div className="hangUpImg"><img src={v.pic_min} alt="" /></div>
                                             </Col>
                                             <Col  xxl={9} xl={10}>
-                                                <p>{v.name}</p>
-                                                <p>{v.memo?v.memo:"无"}</p>
+                                                <p className="overflow">{v.name}</p>
+                                                <p>{v.atime}</p>
                                             </Col>
                                         </Row>
                                     ))
