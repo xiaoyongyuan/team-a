@@ -6,7 +6,7 @@ import Login from './pages/Login';
 
 class meunHome extends Component {
     render() {
-        const meuns=JSON.parse(localStorage.getItem('teammeun'));
+        const meuns=localStorage.getItem('teammeun')?JSON.parse(localStorage.getItem('teammeun')):[];
         if(meuns[0]){
            if(meuns[0].menuaddress=='/app/teamhome/index')return (<Teamhome />)
             else if(meuns[0].menuaddress=='/app/watch/watchIndex')return (<WatchIndex />)
