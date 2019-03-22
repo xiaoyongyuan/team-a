@@ -52,6 +52,7 @@
 }
 .watchIndex .pending-list{
     height: 780px;
+    overflow: hidden;
 }
 .watchIndex .group-alarm{
     height: 400px;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Button,Collapse,Row,Col, Modal,message,Icon} from "antd";
+import {Button,Collapse,Row,Col, Modal,message} from "antd";
 import "../../style/ztt/css/workbench.css";
 import {post} from "../../axios/tools";
 const Panel = Collapse.Panel;
@@ -336,7 +336,7 @@ class Workbench extends Component {
                 <div className="hangUp">
                     <div className="garden">{this.state.pendingCount}</div>
                     <div className="mountUp">挂载列表</div>
-                    <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"30px"}}>
+                    <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"31px"}}>
                         <Panel  key="1" showArrow={false}>
                             <div className="hangUpPanel" id="hangUpPanel">
                                 {

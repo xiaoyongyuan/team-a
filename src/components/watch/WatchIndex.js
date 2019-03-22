@@ -2,16 +2,26 @@ import React, { Component } from 'react';
 import {Col, Row} from "antd";
 import WorkStatistics from "../groupleader/WorkStatistics";
 import "../../style/ztt/css/watchIndex.css";
+import {post} from "../../axios/tools";
 import ClassifiedStatistics from "./ClassifiedStatistics";
 class WatchIndex extends Component {
     constructor(props) {
         super(props);
         this.state={
-
+            hangUp:[]
         };
     }
-    
-    render() {      
+    componentDidMount() {
+        post({url:"/api/alarmhandle/getlist",data:{hstatus:"-2"}},(res)=>{
+            if(res.success){
+                this.setState({
+                    hangUp:res.data
+                })
+            }
+        })
+    }
+
+    render() {
 
         return (
             <div className="watchIndex">
@@ -72,28 +82,22 @@ class WatchIndex extends Component {
                     <Col span={12}>
                       <div className="pending-list watchIndex-border groupLeader-border">
                           <p className="alarm-top">挂起列表</p>
-                          <Row className="alarmList">
-                                  <Col span={6} className="listImg textCenter">
-                                      <div><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313105209.jpg" alt=""/></div></Col>
-                                  <Col span={8} className="textCenter">
-                                      <Row className="Camera">摄像头</Row>
-                                      <Row className="Camera">12:45:34 挂起</Row>
-                                      <Row className="Camera">备注内容</Row>
-                                  </Col>
-                                  <Col span={4} className="textCenter">警报</Col>
-                                  <Col span={6} className="textCenter">2019-3-12 14:34:00</Col>
-                          </Row>
-                          <Row className="alarmList">
-                              <Col span={6} className="listImg textCenter">
-                                  <div><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313105209.jpg" alt=""/></div></Col>
-                              <Col span={8} className="textCenter">
-                                  <Row className="Camera">摄像头</Row>
-                                  <Row className="Camera">12:45:34 挂起</Row>
-                                  <Row className="Camera">备注内容</Row>
-                              </Col>
-                              <Col span={4} className="textCenter">警报</Col>
-                              <Col span={6} className="textCenter">2019-3-12 14:34:00</Col>
-                          </Row>
+                          {
+                              this.state.hangUp.map((v,i)=>(
+                                  <Row className="alarmList">
+                                      <Col span={6} className="listImg textCenter">
+                                          <div><img src={v.pic_min} alt=""/></div></Col>
+                                      <Col span={8} className="textCenter">
+                                          <Row className="Camera">摄像头</Row>
+                                          <Row className="Camera">12:45:34 挂起</Row>
+                                          <Row className="Camera">备注内容</Row>
+                                      </Col>
+                                      <Col span={4} className="textCenter">警报</Col>
+                                      <Col span={6} className="textCenter">{v.atime}</Col>
+                                  </Row>
+                              ))
+                          }
+                         {/*
                           <Row className="alarmList">
                               <Col span={6} className="listImg textCenter">
                                   <div><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313105209.jpg" alt=""/></div></Col>
@@ -116,6 +120,17 @@ class WatchIndex extends Component {
                               <Col span={4} className="textCenter">警报</Col>
                               <Col span={6} className="textCenter">2019-3-12 14:34:00</Col>
                           </Row>
+                          <Row className="alarmList">
+                              <Col span={6} className="listImg textCenter">
+                                  <div><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313105209.jpg" alt=""/></div></Col>
+                              <Col span={8} className="textCenter">
+                                  <Row className="Camera">摄像头</Row>
+                                  <Row className="Camera">12:45:34 挂起</Row>
+                                  <Row className="Camera">备注内容</Row>
+                              </Col>
+                              <Col span={4} className="textCenter">警报</Col>
+                              <Col span={6} className="textCenter">2019-3-12 14:34:00</Col>
+                          </Row>*/}
                       </div>
                     </Col>
                 </Row>
