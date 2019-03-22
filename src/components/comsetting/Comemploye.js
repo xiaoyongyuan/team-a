@@ -79,6 +79,8 @@ class Comemploye extends Component {
                   userpower:values.ctype,
                   user:'admin'
               }
+              console.log('data',data)
+              return;
               if(this.state.type){
                   //编辑接口');
                   data.code=this.state.codetype;
