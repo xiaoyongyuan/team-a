@@ -230,3 +230,9 @@ margin: 20px 0;
 .clearInfo row col{
     text-align: center;
 }
+.modaTeam .ant-form-item-required{
+    margin-left: 30%;
+}
+.modaTeam .scene label{
+    margin-left: 40%;
+}
