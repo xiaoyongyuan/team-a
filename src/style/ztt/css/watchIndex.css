@@ -73,7 +73,7 @@
     padding: 15px 10px;
 }
 .watchIndex .police-number{
-    font-size: 17px;
+    font-size: 18px;
     font-weight: bolder;
 }
 .watchIndex .listImg img{
@@ -91,4 +91,16 @@
 }
 .watchIndex .statisticsNumber{
     margin-left: 20px;
+}
+.watchIndex .policeFont1{
+    color:#7584F9;
+}
+.watchIndex .policeFont2{
+    color:#C999FD;
+}
+.watchIndex .policeFont3{
+    color:#FB9C89;
+}
+.watchIndex .policeFont4{
+    color:#81C0FC;
 }

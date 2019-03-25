@@ -67,16 +67,16 @@ class WatchIndex extends Component {
                                         <Col span={12} className="police-Name">虚警/条</Col>
                                     </Row>
                                     <Row>
-                                        <Col span={12} className="police-Name police-number">45</Col>
-                                        <Col span={12} className="police-Name police-number">43</Col>
+                                        <Col span={12} className="police-Name police-number policeFont1">45</Col>
+                                        <Col span={12} className="police-Name police-number policeFont2">43</Col>
                                     </Row>
                                     <Row>
                                         <Col span={12} className="police-Name">警报/条</Col>
                                         <Col span={12} className="police-Name">查询用户/条</Col>
                                     </Row>
                                     <Row>
-                                        <Col span={12} className="police-Name police-number">67</Col>
-                                        <Col span={12} className="police-Name police-number">23</Col>
+                                        <Col span={12} className="police-Name police-number policeFont3">67</Col>
+                                        <Col span={12} className="police-Name police-number policeFont4">23</Col>
                                     </Row>
                                 </div>
                             </Col>
