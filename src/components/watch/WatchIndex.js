@@ -20,7 +20,22 @@ class WatchIndex extends Component {
             }
         })
     }
-
+    peddingType=(atype)=>{
+        switch (atype) {
+            case 0:
+                return "未处理";
+            case 1:
+                return "虚警";
+            case 2:
+                return "误报";
+            case 3:
+                return "报警";
+            case -1:
+                return "已获取未处理";
+            case -2:
+                return "挂起";
+        }
+    };
     render() {
 
         return (
@@ -88,49 +103,15 @@ class WatchIndex extends Component {
                                       <Col span={6} className="listImg textCenter">
                                           <div><img src={v.pic_min} alt=""/></div></Col>
                                       <Col span={8} className="textCenter">
-                                          <Row className="Camera">摄像头</Row>
-                                          <Row className="Camera">12:45:34 挂起</Row>
-                                          <Row className="Camera">备注内容</Row>
+                                          <Row className="Camera">{v.name}</Row>
+                                          <Row className="Camera">{v.gettime} 挂起</Row>
+                                          <Row className="Camera">{v.memo?v.memo:"无"}</Row>
                                       </Col>
-                                      <Col span={4} className="textCenter">警报</Col>
+                                      <Col span={4} className="textCenter">{this.peddingType(v.atype)}</Col>
                                       <Col span={6} className="textCenter">{v.atime}</Col>
                                   </Row>
                               ))
                           }
-                         {/*
-                          <Row className="alarmList">
-                              <Col span={6} className="listImg textCenter">
-                                  <div><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313105209.jpg" alt=""/></div></Col>
-                              <Col span={8} className="textCenter">
-                                  <Row className="Camera">摄像头</Row>
-                                  <Row className="Camera">12:45:34 挂起</Row>
-                                  <Row className="Camera">备注内容</Row>
-                              </Col>
-                              <Col span={4} className="textCenter">警报</Col>
-                              <Col span={6} className="textCenter">2019-3-12 14:34:00</Col>
-                          </Row>
-                          <Row className="alarmList">
-                              <Col span={6} className="listImg textCenter">
-                                  <div><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313105209.jpg" alt=""/></div></Col>
-                              <Col span={8} className="textCenter">
-                                  <Row className="Camera">摄像头</Row>
-                                  <Row className="Camera">12:45:34 挂起</Row>
-                                  <Row className="Camera">备注内容</Row>
-                              </Col>
-                              <Col span={4} className="textCenter">警报</Col>
-                              <Col span={6} className="textCenter">2019-3-12 14:34:00</Col>
-                          </Row>
-                          <Row className="alarmList">
-                              <Col span={6} className="listImg textCenter">
-                                  <div><img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190313//1000020_20190313105209.jpg" alt=""/></div></Col>
-                              <Col span={8} className="textCenter">
-                                  <Row className="Camera">摄像头</Row>
-                                  <Row className="Camera">12:45:34 挂起</Row>
-                                  <Row className="Camera">备注内容</Row>
-                              </Col>
-                              <Col span={4} className="textCenter">警报</Col>
-                              <Col span={6} className="textCenter">2019-3-12 14:34:00</Col>
-                          </Row>*/}
                       </div>
                     </Col>
                 </Row>

@@ -208,4 +208,7 @@
     margin-top: -15px;
     background: #F0F2F5;
 }
+.workBench .ant-collapse-content-box{
+    height: 712px!important;
+}
 

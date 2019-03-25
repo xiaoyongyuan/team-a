@@ -331,12 +331,11 @@ class Workbench extends Component {
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div className="hangUp">
                     <div className="garden">{this.state.pendingCount}</div>
                     <div className="mountUp">挂载列表</div>
-                    <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"31px"}}>
+                    <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"52px"}}>
                         <Panel  key="1" showArrow={false}>
                             <div className="hangUpPanel" id="hangUpPanel">
                                 {
