@@ -34,9 +34,8 @@ class HeaderCustom extends Component {
     
     };
     screenFull = () => { //全屏
-        if (screenfull.enabled) {
-            screenfull.request();
-        }
+        screenfull.toggle();
+        this.props.toggle();
     };
     menuClick = e => {
         e.key === 'logout' && this.logout();
