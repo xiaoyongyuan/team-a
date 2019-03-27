@@ -339,8 +339,8 @@ class Workbench extends Component {
                 <div className="processingAlarm workbenchBorder">
                     <div className="processing-title">
                         <div className="processingAlarm-left">
-                            <p style={{display:this.state.name?"block":"none"}}><span style={{fontWeight:"bolder"}}>名称：</span><span style={{color:"#5587EC"}}>{this.state.name}</span></p>
-                            <p style={{display:this.state.oldHstatus?"block":"none"}}><span>{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span><span style={{float:"right"}}><span className="atype">状态:</span><span style={{color:"red"}}>{this.alarmType(this.state.oldHstatus)}</span></span></p>
+                            <p style={{display:this.state.name?"block":"none"}}><span style={{fontWeight:"bolder"}}>名称：</span><span style={{color:"#184a79"}}>{this.state.name}</span></p>
+                            <p style={{display:this.state.oldHstatus?"block":"none"}}><span style={{color:"#184a79"}}>{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span><span style={{float:"right"}}><span className="atype">状态：</span><span style={{color:"red"}}>{this.alarmType(this.state.oldHstatus)}</span></span></p>
                             <div className="alarmImg">
                                 <canvas id="myCanvas" width="704px" height="576px" style={{backgroundImage:'url('+this.state.picpath+')',backgroundSize:"100% 100%",display:this.state.videoFalse?"none":"block"}} />
                                 <video id="videopath" src={this.state.videopath} controls="controls" autoPlay="autoplay" loop="loop" style={{display:this.state.videoFalse?"block":"none"}} />
@@ -353,10 +353,10 @@ class Workbench extends Component {
                             </div>
                         </div>
                         <div className="processingAlarm-right">
-                            <div className="mount" style={{display:this.state.mountBtn?"none":"block"}}><Icon className="IconMount" type="tag"  size="large" theme="filled" title="挂载"  onClick={()=>this.mountProcessing()} /></div>
-                            <div className="alarm-btn" style={{marginTop:"17px"}}><Button type="primary" onClick={()=>this.typeAlarm(1,"虚警")} disabled={this.state.falseAlarmBtn}>虚警</Button></div>
+                            <div className="mount" style={{visibility:this.state.mountBtn?"hidden":"visible"}}><Icon className="IconMount" type="tag"  size="large" theme="filled" title="挂载"  onClick={()=>this.mountProcessing()} /></div>
+                            <div className="alarm-btn" style={{marginTop:"15px"}}><Button type="primary" onClick={()=>this.typeAlarm(1,"虚警")} disabled={this.state.falseAlarmBtn}>虚警</Button></div>
                             <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(2,"误报")} disabled={this.state.falsePositivesBtn}>误报</Button></div>
-                            <div className="alarm-btn Push"><Button type="primary" onClick={()=>this.typeAlarm(3,"报警")} disabled={this.state.pushBtn}>警情推送</Button></div>
+                            <div className="alarm-btn pushAlarm"><Button type="primary" onClick={()=>this.typeAlarm(3,"报警")} disabled={this.state.pushBtn}>警情推送</Button></div>
                             <div className="noteTriangle" />
                             <textarea className="remarks" id="remarks" placeholder="备注信息" onBlur={()=>this.remarks()} />
                             <div className="nextPage">
