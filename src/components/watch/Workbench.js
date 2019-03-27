@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Button,Collapse,Row,Col, Modal,message} from "antd";
 import "../../style/ztt/css/workbench.css";
+import nodata from "../../style/imgs/nopic.png";
 import {post} from "../../axios/tools";
 const Panel = Collapse.Panel;
 class Workbench extends Component {
@@ -29,27 +30,31 @@ class Workbench extends Component {
     getOneAlarm=()=>{
       post({url:"/api/alarmhandle/get_handle"},(res)=>{
           if(res.success){
-            this.setState({
-                oldHstatus:res.alarmhandle.hstatus,
-                code:res.data.code,
-                companycode:res.data.companycode,
-                eid:res.data.eid,
-                memo:res.data.memo,
-                videopath:res.data.videopath,
-                picpath:res.data.picpath,
-                atime:res.data.atime,
-                field:res.data.field,
-                finalresult:res.data.finalresult1,
-                picWidth:res.data.pic_width,
-                picHeight:res.data.pic_height,
-                videoFalse:false,
-                falseAlarmBtn:false,//虚警按钮
-                pushBtn:false,//推送按钮
-                falsePositivesBtn:false,//误报按钮
-                mountBtn:false,//挂载按钮图标,
-            },()=>{
-                this.paintingBoundary();//围界
-            });
+             /* clearInterval(()=>this.getOneAlarm());*/
+              this.setState({
+                  oldHstatus:res.alarmhandle.hstatus,
+                  code:res.data.code,
+                  companycode:res.data.companycode,
+                  eid:res.data.eid,
+                  name:res.data.name,
+                  memo:res.data.memo,
+                  videopath:res.data.videopath,
+                  picpath:res.data.picpath,
+                  atime:res.data.atime,
+                  field:res.data.field,
+                  finalresult:res.data.finalresult1,
+                  picWidth:res.data.pic_width,
+                  picHeight:res.data.pic_height,
+                  videoFalse:false,
+                  falseAlarmBtn:false,//虚警按钮
+                  pushBtn:false,//推送按钮
+                  falsePositivesBtn:false,//误报按钮
+                  mountBtn:false,//挂载按钮图标,
+              },()=>{
+                  this.paintingBoundary();//围界
+              });
+          }else{
+              /*setInterval(()=>this.getOneAlarm(),1000);*/
           }
       })
     };
@@ -104,10 +109,10 @@ class Workbench extends Component {
             post({url:"/api/alarmhandle/getlist",data:{hstatus:"-2",pageindex:this.state.page,pagesize:10}},(res)=>{
                 if(res.success){
                     if(res.data.length>0){
-                        var listPending=this.state.pending;
-                        const alist = listPending.concat(res.data);
+                        var  listPending=this.state.pending;
+                        const pending =listPending.concat(res.data);
                         this.setState({
-                            pending:alist,
+                            pending,
                             pendingCount:res.totalcount,
                         });
                     }else{
@@ -159,6 +164,7 @@ class Workbench extends Component {
                             falseAlarmBtn:true,
                             falsePositivesBtn:true,
                             pushBtn:true,
+                            oldHstatus:1,
                             mountBtn:true,
                         },()=>{
                             this.pendingList();
@@ -171,6 +177,7 @@ class Workbench extends Component {
                             falseAlarmBtn:true,
                             falsePositivesBtn:true,
                             pushBtn:true,
+                            oldHstatus:2,
                             mountBtn:true,
                         },()=>{
                             this.pendingList();
@@ -189,6 +196,7 @@ class Workbench extends Component {
                                     falsePositivesBtn:true,
                                     pushBtn:true,
                                     mountBtn:true,
+                                    oldHstatus:3,
                                 },()=>{
                                     this.pendingList();
                                 })
@@ -209,7 +217,7 @@ class Workbench extends Component {
             })
         }
     };
-    //挂载列表
+    //置该条数据状态为挂起
     mountProcessing=()=>{
         if(this.state.code){
             post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:"-2"}},(res)=>{
@@ -222,6 +230,7 @@ class Workbench extends Component {
                             falseAlarmBtn:true,
                             falsePositivesBtn:true,
                             pushBtn:true,
+                            oldHstatus:-2
                         });
                         message.success("挂载成功");
                     });
@@ -244,19 +253,21 @@ class Workbench extends Component {
     };
     remarks=()=>{
         var remarks=document.getElementById("remarks").value;
-        if(this.state.code){
-            post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,memo:remarks}},(res)=>{
-                if(res.success){
-                    var memo=this.state.memo;
-                    memo=remarks;
-                    this.setState({memo});
-                    message.success("备注信息添加成功!");
-                }else{
-                    message.error("备注信息添加失败!");
-                }
-            })
-        }else{
-            message.warning("报警code不存在");
+        if(this.state.memo!=remarks && this.state.memo){
+            if(this.state.code){
+                post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,memo:remarks}},(res)=>{
+                    if(res.success){
+                        var memo=this.state.memo;
+                        memo=remarks;
+                        this.setState({memo});
+                        message.success("备注信息添加成功!");
+                    }else{
+                        message.error("备注信息添加失败!");
+                    }
+                })
+            }else{
+                message.warning("报警code不存在");
+            }
         }
     };
     //挂载还原
@@ -268,7 +279,8 @@ class Workbench extends Component {
                     code:res.data.code,
                     companycode:res.data.companycode,
                     eid:res.data.eid,
-                    memo:res.data.memo,
+                    name:res.data.name,
+                    memo:res.alarmhandle.memo,
                     videopath:res.data.videopath,
                     picpath:res.data.picpath,
                     atime:res.data.atime,
@@ -282,10 +294,30 @@ class Workbench extends Component {
                     falsePositivesBtn:false,//误报按钮
                     mountBtn:false,//挂载按钮图标,
                 },()=>{
+                   document.getElementById("remarks").value=this.state.memo;
                     this.paintingBoundary();//围界
                 });
             }
         })
+    };
+    //报警类型
+    alarmType=(type)=>{
+        switch (type) {
+            case 0:
+                return "未处理";
+            case 1:
+                return "虚警";
+            case 2:
+                return "误报";
+            case 3:
+                return "警报";
+            case -1:
+                return "已获取未处理";
+            case -2:
+                return "挂起";
+            case -3:
+                return "已过期";
+        }
     };
     playPause=()=>{
         this.setState({
@@ -308,7 +340,8 @@ class Workbench extends Component {
                 <div className="processingAlarm workbenchBorder">
                     <div className="processing-title">
                         <div className="processingAlarm-left">
-                            <p><span>{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span></p>
+                            <p>名称：{this.state.name}</p>
+                            <p><span>{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span><span className="atype">{this.alarmType(this.state.oldHstatus)}</span></p>
                             <div className="alarmImg">
                                 <canvas id="myCanvas" width="704px" height="576px" style={{backgroundImage:'url('+this.state.picpath+')',backgroundSize:"100% 100%",display:this.state.videoFalse?"none":"block"}} />
                                 <video id="videopath" src={this.state.videopath} controls="controls" autoPlay="autoplay" loop="loop" style={{display:this.state.videoFalse?"block":"none"}} />
@@ -342,7 +375,7 @@ class Workbench extends Component {
                                     this.state.pending.map((v,i)=>(
                                         <Row key={i} onClick={()=>this.mountRestore(v.code)} className="mountRestore">
                                             <Col xxl={15} xl={14}>
-                                                <div className="hangUpImg"><img src={v.pic_min} alt="" /></div>
+                                                <div className="hangUpImg"><img src={v.pic_min?v.pic_min:nodata} alt="" /></div>
                                             </Col>
                                             <Col  xxl={9} xl={10}>
                                                 <p className="overflow">{v.name}</p>
@@ -365,8 +398,8 @@ class Workbench extends Component {
                         <p><label>姓名：</label><span>{this.state.userName}</span></p>
                         <p><label>联系电话：</label><span>{this.state.userPhone}</span></p>
                         <p><label>地址：</label><span>西安雁塔区西安理工大科技园</span></p>
-                        <p><label>紧急联系人1：</label><span>李**</span><span>***********</span></p>
-                        <p><label>紧急联系人2：</label><span>王**</span><span>***********</span></p>
+                       {/* <p><label>紧急联系人1：</label><span>李**</span><span>***********</span></p>
+                        <p><label>紧急联系人2：</label><span>王**</span><span>***********</span></p>*/}
                     </div>
                 </Modal>
                 <Modal
