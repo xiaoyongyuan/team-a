@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Button,Collapse,Row,Col, Modal,message,Icon} from "antd";
+import {Button,Collapse,Row,Col, Modal,message,Icon,Switch} from "antd";
 import "../../style/ztt/css/workbench.css";
 import nodata from "../../style/imgs/nopic.png";
 import {post} from "../../axios/tools";
@@ -18,7 +18,9 @@ class Workbench extends Component {
             nextPageBtn:false,//下一页
             mountBtn:false,//挂载按钮图标,
             page:1,
-            ifPedding:true
+            ifPedding:true,
+            field:true, //是否显示围界信息
+            obj:true,
         };
     }
     componentDidMount() {
@@ -71,8 +73,8 @@ class Workbench extends Component {
         ctx.lineWidth=1;
         ctx.clearRect(0,0,704,576);//清除之前的绘图
 
-        if(this.state.field){
-            const datafield=this.state.field;
+        const datafield=this.state.field;
+        if(this.state.field && datafield.length){
             ctx.strokeStyle='#f00';
             ctx.lineWidth=1;
             datafield.map((el,i)=>{
@@ -87,9 +89,8 @@ class Workbench extends Component {
                 return '';
             });
         }
-
-        if(this.state.finalresult){
-            const objs = this.state.finalresult;
+        const objs = this.state.finalresult;
+        if(this.state.obj && objs.length){
             const x=704/this.state.picWidth,y=576/this.state.picHeight;
             objs.map((el,)=>{
                 ctx.strokeStyle="#ff0";
@@ -333,14 +334,22 @@ class Workbench extends Component {
             visibleUser:false,
         })
     };
+    onChange=(checked,text)=>{ //控制显示围界与对象
+        console.log(checked,[text]);
+        this.setState({
+            [text]: checked,
+        },()=>{
+            this.paintingBoundary();
+        });
+    }
     render() {
         return (
             <div className="workBench workToP">
                 <div className="processingAlarm workbenchBorder">
                     <div className="processing-title">
                         <div className="processingAlarm-left">
-                            <p style={{display:this.state.name?"block":"none"}}><span style={{fontWeight:"bolder"}}>名称：</span><span style={{color:"#184a79"}}>{this.state.name}</span></p>
-                            <p style={{display:this.state.oldHstatus?"block":"none"}}><span style={{color:"#184a79"}}>{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span><span style={{float:"right"}}><span className="atype">状态：</span><span style={{color:"red"}}>{this.alarmType(this.state.oldHstatus)}</span></span></p>
+                            <p style={{display:this.state.name?"block":"none"}}><span style={{fontWeight:"bolder"}}>名称：</span><span style={{color:"#184a79"}}>{this.state.name}</span><span style={{float:"right"}}><span className="atype">状态：</span><span style={{color:"red"}}>{this.alarmType(this.state.oldHstatus)}</span></span></p>
+                            <p style={{display:this.state.oldHstatus?"block":"none"}}><span style={{color:"#184a79"}}>{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span><span style={{float:"right"}}><span className="information">围界信息：<Switch size="small" checked={this.state.field} onChange={(checked)=>this.onChange(checked,'field')} /></span><span>报警信息：<Switch size="small" checked={this.state.obj} onChange={(checked)=>this.onChange(checked,'obj')} /></span></span></p>
                             <div className="alarmImg">
                                 <canvas id="myCanvas" width="704px" height="576px" style={{backgroundImage:'url('+this.state.picpath+')',backgroundSize:"100% 100%",display:this.state.videoFalse?"none":"block"}} />
                                 <video id="videopath" src={this.state.videopath} controls="controls" autoPlay="autoplay" loop="loop" style={{display:this.state.videoFalse?"block":"none"}} />
@@ -377,7 +386,7 @@ class Workbench extends Component {
                                             <Col xxl={15} xl={14}>
                                                 <div className="hangUpImg"><img src={v.pic_min?v.pic_min:nodata} alt="" /></div>
                                             </Col>
-                                            <Col  xxl={9} xl={10}>
+                                            <Col xxl={9} xl={10}>
                                                 <p className="overflow">{v.name}</p>
                                                 <p>{v.atime}</p>
                                             </Col>

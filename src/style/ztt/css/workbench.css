@@ -236,6 +236,6 @@
 .workBench .ant-collapse-content-box{
     height: 712px!important;
 }
-/*.information{
-    margin: 0 5px;
-}*/
+.information{
+   margin-right: 25px;
+}
