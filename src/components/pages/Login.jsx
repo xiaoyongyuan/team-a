@@ -3,18 +3,30 @@ import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchData, receiveData } from '@/action';  //action->index按需取
-import bg from '../../style/imgs/bg.jpg';
+import bg from '../../style/imgs/bg.png';
 import axios from 'axios';
 
 const FormItem = Form.Item;
+const logincomcode=localStorage.getItem('logincomcode');
+const loginaccount=localStorage.getItem('loginaccount');
+
 class Login extends React.Component {
     componentWillMount() {
         const { receiveData } = this.props;
         receiveData(null, 'auth');
     }
+    componentDidMount(){
+        this.props.form.setFieldsValue({
+            comid:logincomcode&&logincomcode != 'undefined'?logincomcode:null,
+            account: loginaccount&&loginaccount != 'undefined'?loginaccount:null
+        });
+
+    }
     componentDidUpdate(prevProps) { 
         const { auth: nextAuth = {}, history } = this.props;
         if (nextAuth.data && nextAuth.data.success) {
+            localStorage.setItem('logincomcode', nextAuth.data.data.companycode);
+            localStorage.setItem('loginaccount', nextAuth.data.data.account);
             localStorage.setItem('teamtoken', nextAuth.data.token);
             localStorage.setItem('teamuser', JSON.stringify(nextAuth.data.data));
             localStorage.setItem('teamcomid', nextAuth.data.data.companycode);
@@ -28,6 +40,7 @@ class Login extends React.Component {
         //在从此处登录，并记录下来
         this.props.form.validateFields((err, values) => {
             if (!err) {
+
                 //获取到的表单的值values
                 const { fetchData } = this.props;
                 fetchData({funcName: 'webapp', url:'/login/verifyforhelper', params:values, stateName:'auth'});
