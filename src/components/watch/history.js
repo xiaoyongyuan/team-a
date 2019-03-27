@@ -6,7 +6,7 @@ import zh_CN from 'antd/lib/locale-provider/zh_CN';
 import 'moment/locale/zh-cn';
 import {post} from "../../axios/tools";
 import AlarmDetail from "./Alarmdetails";
-import nodata from "../../style/imgs/nodata.png";
+import nodata from "../../style/imgs/nopic320180.png";
 import banditpic from "../../style/imgs/banditpic.png";
 import firepic from "../../style/imgs/firepic.png";
 const { RangePicker } = DatePicker ;
@@ -53,7 +53,11 @@ class history extends React.Component {
             var toson={
                 code:code,
                 bdate:this.state.bdate,
-                edate:this.state.edate
+                edate:this.state.edate,
+                hstatus:this.state.hstatus,
+                account:this.state.account,
+                pagesize:18,
+                pageindex:this.state.page,
             };
         }
         this.setState({
@@ -286,9 +290,9 @@ class history extends React.Component {
                                             <Col lg={14} xl={13} className="r_flex">
                                                 <div className="row-alarmlist-detail">
                                                         <div className="word-row">
-                                                            <p className="fontstyle right_linr">{v.name}</p>
+                                                            <p className="fontstyle right_linr">{v.name?v.name:'暂无信息'}</p>
                                                             <p className="fontstyle right_linr">
-                                                               {this.atypetext(v.atype?v.atype:'未处理')}
+                                                               {this.atypetext(v.atype?v.atype:'')}
                                                             </p>
                                                         </div>
                                                         <div style={{float:'left',width:'100%'}}>
