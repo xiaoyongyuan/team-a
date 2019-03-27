@@ -43,7 +43,7 @@
     background: #fff;
 }
 .workBench .atype{
-    float: right;
+   font-weight: bolder;
 }
 .workBench .processingAlarm{
     width: 56%;
@@ -82,7 +82,7 @@
 .workBench .alarm-btn Button{
     width: 60%;
     height: 55px;
-    margin: 40px 0;
+    margin: 20px 0;
     border-radius: 5px;
 }
 .workBench .alarmImg{
@@ -124,11 +124,22 @@
 .workBench .remarks{
     width: 60%;
     height:100px;
-    margin-top: 50px;
+    margin-top: 208px;
     resize: none;
     border-radius: 5px;
     background: #E5E5E5;
 }
+/*.workBench .remarks:before{
+
+}
+.workBench .noteTriangle{
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid #5587EC;
+    position: absolute;
+    bottom:120px;
+    left: 0;
+}*/
 .workBench .alarm-video{
     width: 100%;
     text-align: center;
@@ -195,24 +206,26 @@
     height:60px;
     color:#fff;
     cursor:pointer;
-    margin-top: 60px;
+    margin-top: 35px;
     float: right;
     font-size: 27px;
     background:#2E75E4;
     border:none;
 }
-.workBench .mount Button{
+.workBench .mount .IconMount{
     width: 50px;
     height:50px;
-    font-size: 25px;
+    font-size: 33px;
     float:right;
     color:#6188C1;
     cursor:pointer;
     border: none;
-    margin-top: -15px;
+    margin-top: -13px;
     background: #fff;
 }
 .workBench .ant-collapse-content-box{
     height: 712px!important;
 }
-
+/*.information{
+    margin: 0 5px;
+}*/
