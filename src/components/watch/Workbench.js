@@ -246,6 +246,7 @@ class Workbench extends Component {
     };
     //下一页
     nextPage=()=>{
+       document.getElementById("remarks").value="";
         if(this.state.falseAlarmBtn===true && this.state.falsePositivesBtn===true && this.state.pushBtn===true && this.state.mountBtn===true){
             this.getOneAlarm();
         }else if(this.state.falseAlarmBtn===false && this.state.falsePositivesBtn===false && this.state.pushBtn===false && this.state.mountBtn===false ){
@@ -254,7 +255,7 @@ class Workbench extends Component {
     };
     remarks=()=>{
         var remarks=document.getElementById("remarks").value;
-        if(this.state.memo!=remarks && this.state.memo){
+        if(this.state.memo!==remarks){
             if(this.state.code){
                 post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,memo:remarks}},(res)=>{
                     if(res.success){
