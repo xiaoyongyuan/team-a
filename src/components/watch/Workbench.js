@@ -38,7 +38,7 @@ class Workbench extends Component {
                   companycode:res.data.companycode,
                   eid:res.data.eid,
                   name:res.data.name,
-                  memo:res.data.memo,
+                  memo:res.alarmhandle.memo,
                   videopath:res.data.videopath,
                   picpath:res.data.picpath,
                   atime:res.data.atime,
@@ -92,7 +92,7 @@ class Workbench extends Component {
         const objs = this.state.finalresult;
         if(this.state.obj && objs.length){
             const x=704/this.state.picWidth,y=576/this.state.picHeight;
-            objs.map((el,)=>{
+            objs.map((el,i)=>{
                 ctx.strokeStyle="#ff0";
                 ctx.beginPath();
                 ctx.rect(parseInt(el.x*x),parseInt(el.y*y),parseInt(el.w*x),parseInt(el.h*y));
@@ -222,7 +222,8 @@ class Workbench extends Component {
         if(this.state.code){
             post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:"-2"}},(res)=>{
                 if(res.success){
-                    var old=this.state.oldHstatus=-2;
+                    var old=this.state.oldHstatus;
+                    old=-2;
                     this.setState({old,},()=>{
                         this.pendingList();
                         this.setState({
@@ -246,6 +247,7 @@ class Workbench extends Component {
     };
     //下一页
     nextPage=()=>{
+       document.getElementById("remarks").value="";
         if(this.state.falseAlarmBtn===true && this.state.falsePositivesBtn===true && this.state.pushBtn===true && this.state.mountBtn===true){
             this.getOneAlarm();
         }else if(this.state.falseAlarmBtn===false && this.state.falsePositivesBtn===false && this.state.pushBtn===false && this.state.mountBtn===false ){
@@ -254,7 +256,7 @@ class Workbench extends Component {
     };
     remarks=()=>{
         var remarks=document.getElementById("remarks").value;
-        if(this.state.memo!=remarks && this.state.memo){
+        if(this.state.memo!==remarks){
             if(this.state.code){
                 post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,memo:remarks}},(res)=>{
                     if(res.success){
@@ -273,33 +275,38 @@ class Workbench extends Component {
     };
     //挂载还原
     mountRestore=(code)=>{
-        post({url:"/api/alarmhandle/get_hangup",data:{code:code}},(res)=>{
-            if(res.success){
-                this.setState({
-                    oldHstatus:res.alarmhandle.hstatus,
-                    code:res.data.code,
-                    companycode:res.data.companycode,
-                    eid:res.data.eid,
-                    name:res.data.name,
-                    memo:res.alarmhandle.memo,
-                    videopath:res.data.videopath,
-                    picpath:res.data.picpath,
-                    atime:res.data.atime,
-                    field:res.data.field,
-                    finalresult:res.data.finalresult1,
-                    picWidth:res.data.pic_width,
-                    picHeight:res.data.pic_height,
-                    videoFalse:false,
-                    falseAlarmBtn:false,//虚警按钮
-                    pushBtn:false,//推送按钮
-                    falsePositivesBtn:false,//误报按钮
-                    mountBtn:false,//挂载按钮图标,
-                },()=>{
-                   document.getElementById("remarks").value=this.state.memo;
-                    this.paintingBoundary();//围界
-                });
-            }
-        })
+        if(code){
+            post({url:"/api/alarmhandle/get_hangup",data:{code:code}},(res)=>{
+                if(res.success){
+                    this.setState({
+                        oldHstatus:res.alarmhandle.hstatus,
+                        code:res.data.code,
+                        companycode:res.data.companycode,
+                        eid:res.data.eid,
+                        name:res.data.name,
+                        memo:res.alarmhandle.memo,
+                        videopath:res.data.videopath,
+                        picpath:res.data.picpath,
+                        atime:res.data.atime,
+                        fieldInfor:res.data.field,
+                        finalresult:res.data.finalresult1,
+                        picWidth:res.data.pic_width,
+                        picHeight:res.data.pic_height,
+                        videoFalse:false,
+                        falseAlarmBtn:false,//虚警按钮
+                        pushBtn:false,//推送按钮
+                        falsePositivesBtn:false,//误报按钮
+                        mountBtn:false,//挂载按钮图标,
+                    },()=>{
+                        document.getElementById("remarks").value=this.state.memo;
+                        this.paintingBoundary();//围界
+                    });
+                }
+            })
+        }else{
+            message.warning("报警code不存在");
+        }
+
     };
     //报警类型
     alarmType=(type)=>{
