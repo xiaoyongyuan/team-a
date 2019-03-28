@@ -42,7 +42,7 @@ class Workbench extends Component {
                   videopath:res.data.videopath,
                   picpath:res.data.picpath,
                   atime:res.data.atime,
-                  field:res.data.field,
+                  fieldInfor:res.data.field,
                   finalresult:res.data.finalresult1,
                   picWidth:res.data.pic_width,
                   picHeight:res.data.pic_height,
@@ -70,22 +70,22 @@ class Workbench extends Component {
     paintingBoundary=()=> {
         var c = document.getElementById("myCanvas");
         var ctx = c.getContext("2d");
-        ctx.lineWidth=1;
         ctx.clearRect(0,0,704,576);//清除之前的绘图
-
-        const datafield=this.state.field;
+        ctx.lineWidth=1;
+        const datafield=this.state.fieldInfor;
         if(this.state.field && datafield.length){
-            ctx.strokeStyle='#f00';
+            let areafield = c.getContext("2d");
             ctx.lineWidth=1;
+            areafield.strokeStyle='#f00';
             datafield.map((el,i)=>{
-                ctx.beginPath();
-                ctx.moveTo(parseInt(datafield[i][0][0]),parseInt(datafield[i][0][1]));
-                ctx.lineTo(parseInt(datafield[i][1][0]),parseInt(datafield[i][1][1]));
-                ctx.lineTo(parseInt(datafield[i][2][0]),parseInt(datafield[i][2][1]));
-                ctx.lineTo(parseInt(datafield[i][3][0]),parseInt(datafield[i][3][1]));
-                ctx.lineTo(parseInt(datafield[i][0][0]),parseInt(datafield[i][0][1]));
-                ctx.stroke();
-                ctx.closePath();
+                areafield.beginPath();
+                areafield.moveTo(parseInt(datafield[i][0][0]),parseInt(datafield[i][0][1]));
+                areafield.lineTo(parseInt(datafield[i][1][0]),parseInt(datafield[i][1][1]));
+                areafield.lineTo(parseInt(datafield[i][2][0]),parseInt(datafield[i][2][1]));
+                areafield.lineTo(parseInt(datafield[i][3][0]),parseInt(datafield[i][3][1]));
+                areafield.lineTo(parseInt(datafield[i][0][0]),parseInt(datafield[i][0][1]));
+                areafield.stroke();
+                areafield.closePath();
                 return '';
             });
         }
@@ -335,8 +335,7 @@ class Workbench extends Component {
         })
     };
     onChange=(checked,text)=>{ //控制显示围界与对象
-        console.log(checked,[text]);
-        this.setState({
+         this.setState({
             [text]: checked,
         },()=>{
             this.paintingBoundary();
@@ -356,15 +355,15 @@ class Workbench extends Component {
                             </div>
                             <div className="alarm-video">
                                 {
-                                    this.state.videopath?<Button type="primary" onClick={()=>this.playPause()}>{this.state.videoFalse?"图片":"短视频"}</Button>:""
+                                    this.state.videopath?<Button className="videoBtn" type="primary" onClick={()=>this.playPause()}>{this.state.videoFalse?"图片":"短视频"}</Button>:""
                                 }
                                 <Button type="primary">直播</Button>
                             </div>
                         </div>
                         <div className="processingAlarm-right">
                             <div className="mount" style={{visibility:this.state.mountBtn?"hidden":"visible"}}><Icon className="IconMount" type="tag"  size="large" theme="filled" title="挂载"  onClick={()=>this.mountProcessing()} /></div>
-                            <div className="alarm-btn" style={{marginTop:"15px"}}><Button type="primary" onClick={()=>this.typeAlarm(1,"虚警")} disabled={this.state.falseAlarmBtn}>虚警</Button></div>
-                            <div className="alarm-btn"><Button type="primary" onClick={()=>this.typeAlarm(2,"误报")} disabled={this.state.falsePositivesBtn}>误报</Button></div>
+                            <div className="alarm-btn xuJing" style={{marginTop:"15px"}}><Button type="primary" onClick={()=>this.typeAlarm(1,"虚警")} disabled={this.state.falseAlarmBtn}>虚警</Button></div>
+                            <div className="alarm-btn wuBao"><Button type="primary" onClick={()=>this.typeAlarm(2,"误报")} disabled={this.state.falsePositivesBtn}>误报</Button></div>
                             <div className="alarm-btn pushAlarm"><Button type="primary" onClick={()=>this.typeAlarm(3,"报警")} disabled={this.state.pushBtn}>警情推送</Button></div>
                             <div className="noteTriangle" />
                             <textarea className="remarks" id="remarks" placeholder="备注信息" onBlur={()=>this.remarks()} />
