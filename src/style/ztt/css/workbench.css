@@ -97,7 +97,7 @@
     border: 1px solid #313653;
 }
 .workBench .alarm-btn Button{
-    width: 60%;
+    width: 90%;
     height: 55px;
     margin: 20px 0;
     border-radius: 5px;
@@ -145,7 +145,7 @@
     overflow-y: scroll;
 }
 .workBench .remarks{
-    width: 60%;
+    width: 90%;
     height:100px;
     margin-top: 208px;
     resize: none;
