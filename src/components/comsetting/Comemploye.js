@@ -308,6 +308,7 @@ class Comemploye extends Component {
                        onCancel={this.handleCancel}
                        okText="确认"
                        cancelText="取消"
+                       width={550}
                 >
                     <ModalForm visible={this.state.visible}
                                code={this.state.codetype}

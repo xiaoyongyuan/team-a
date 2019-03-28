@@ -203,7 +203,7 @@ class history extends React.Component {
               case 12:
                 return '整点打卡';
               default:
-               return '未知类型：'+type;
+               return '未知类型 '+type;
             }
           }
     atypeimg =(type,img)=>{
@@ -292,7 +292,7 @@ class history extends React.Component {
                                                         <div className="word-row">
                                                             <p className="fontstyle right_linr">{v.name?v.name:'暂无信息'}</p>
                                                             <p className="fontstyle right_linr">
-                                                               {this.atypetext(v.atype?v.atype:'')}
+                                                               {this.atypetext(v.atype)}
                                                             </p>
                                                         </div>
                                                         <div style={{float:'left',width:'100%'}}>
