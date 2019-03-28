@@ -230,7 +230,8 @@ class Workbench extends Component {
                             falseAlarmBtn:true,
                             falsePositivesBtn:true,
                             pushBtn:true,
-                            oldHstatus:-2
+                            oldHstatus:-2,
+                            ifPedding:true
                         });
                         message.success("挂载成功");
                     });

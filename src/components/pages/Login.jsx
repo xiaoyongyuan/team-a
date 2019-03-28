@@ -3,7 +3,7 @@ import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchData, receiveData } from '@/action';  //action->index按需取
-import bg from '../../style/imgs/bg.png';
+import bg from '../../style/imgs/bg.jpg';
 import axios from 'axios';
 
 const FormItem = Form.Item;
