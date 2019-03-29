@@ -23,7 +23,7 @@ class WatchIndex extends Component {
         post({url:"/api/alarmhandle/getlist",data:{hstatus:"1"}},(res)=>{
             if(res.success){
                 this.setState({
-                    hangUp:res.data
+                    hangUp:res.data.slice(0,5)
                 })
             }
         })

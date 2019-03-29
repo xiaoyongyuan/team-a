@@ -44,7 +44,7 @@ class ClassifiedStatistics extends Component {
                             position: 'insideTop'
                         }
                     },
-                    data: [320]
+                    data: [0]
                 },
                 {
                     name: '虚报',
@@ -56,7 +56,7 @@ class ClassifiedStatistics extends Component {
                             position: 'insideTop'
                         }
                     },
-                    data: [120]
+                    data: [0]
                 },
                 {
                     name: '警报',
@@ -68,7 +68,7 @@ class ClassifiedStatistics extends Component {
                             position: 'insideTop'
                         }
                     },
-                    data: [220]
+                    data: [35]
                 },
                 {
                     name: '查询用户',
@@ -81,7 +81,7 @@ class ClassifiedStatistics extends Component {
                             position: 'insideTop'
                         }
                     },
-                    data: [150]
+                    data: [35]
                 }
             ]
         };
