@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
 class WorkStatistics extends Component {
-
     render() {
         let option={
             legend:{},
