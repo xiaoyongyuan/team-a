@@ -355,8 +355,8 @@ class Workbench extends Component {
                 <div className="processingAlarm workbenchBorder">
                     <div className="processing-title">
                         <div className="processingAlarm-left">
-                            <p style={{display:this.state.name?"block":"none"}}><span style={{fontWeight:"bolder"}}>名称：</span><span style={{color:"#184a79"}}>{this.state.name}</span><span style={{float:"right"}}><span className="atype">状态：</span><span style={{color:"red"}}>{this.alarmType(this.state.oldHstatus)}</span></span></p>
-                            <p style={{display:this.state.oldHstatus?"block":"none"}}><span style={{color:"#184a79"}}>{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span><span style={{float:"right"}}><span className="information">围界信息：<Switch size="small" checked={this.state.field} onChange={(checked)=>this.onChange(checked,'field')} /></span><span>报警信息：<Switch size="small" checked={this.state.obj} onChange={(checked)=>this.onChange(checked,'obj')} /></span></span></p>
+                            <p style={{display:this.state.name?"block":"none"}}><span className="nameWeight">名称：</span><span className="colorAlarmFont">{this.state.name}</span><span className="switchInfor"><span className="atype">状态：</span><span style={{color:"red"}}>{this.alarmType(this.state.oldHstatus)}</span></span></p>
+                            <p style={{display:this.state.oldHstatus?"block":"none"}}><span className="colorAlarmFont">{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span><span className="switchInfor"><span className="information">围界信息：<Switch size="small" checked={this.state.field} onChange={(checked)=>this.onChange(checked,'field')} /></span><span>报警信息：<Switch size="small" checked={this.state.obj} onChange={(checked)=>this.onChange(checked,'obj')} /></span></span></p>
                             <div className="alarmImg">
                                 <canvas id="myCanvas" width="704px" height="576px" style={{backgroundImage:'url('+this.state.picpath+')',backgroundSize:"100% 100%",display:this.state.videoFalse?"none":"block"}} />
                                 <video id="videopath" src={this.state.videopath} controls="controls" autoPlay="autoplay" loop="loop" style={{display:this.state.videoFalse?"block":"none"}} />
@@ -427,7 +427,7 @@ class Workbench extends Component {
                     okText="确认"
                     cancelText="取消"
                 >
-                   <span>为确定{this.state.name?this.state.name:""}吗?</span>
+                    <p><span>确定为</span><sapn>{this.state.name?this.state.name:""}</sapn>吗?</p>
                 </Modal>
             </div>
         )

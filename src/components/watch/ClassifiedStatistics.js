@@ -5,7 +5,8 @@ class ClassifiedStatistics extends Component {
         let option = {
             legend: {
                 data: ['误报', '虚报','警报','查询用户'],
-                right:"right"
+                orient:"vertical",
+                right:"right",
             },
             xAxis:  {
                 type: 'category',
@@ -78,7 +79,7 @@ class ClassifiedStatistics extends Component {
         return(
             <ReactEcharts
                 option={option}
-                style={{width:"100%"}}
+                style={{width:"100%",marginLeft:"-20%"}}
             />
         )
     }

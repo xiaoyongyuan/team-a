@@ -1,7 +1,15 @@
 .workToP{
     margin-top: 20px;
 }
-
+.workBench.nameWeight{
+    font-weight: bolder;
+}
+.workBench .switchInfor{
+    float: right;
+}
+.workBench .colorAlarmFont{
+    color: #184a79;
+}
 ::-webkit-scrollbar
 {
     width: 16px;
@@ -254,6 +262,6 @@
 .workBench .ant-collapse-content-box{
     height: 712px!important;
 }
-.information{
+.workBench .information{
    margin-right: 25px;
 }
