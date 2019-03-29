@@ -1,6 +1,9 @@
 .watchIndex{
     margin-top: 20px;
 }
+.watchIndex .nameWeight{
+    font-weight: bolder;
+}
 .watchIndex-border{
     margin: 10px 10px;
     border-radius: 5px;
@@ -52,7 +55,7 @@
 }
 .watchIndex .pending-list{
     height: 780px;
-    overflow: hidden;
+    overflow:hidden;
 }
 .watchIndex .group-alarm{
     height: 400px;
@@ -84,13 +87,24 @@
     text-align: center;
 }
 .watchIndex .alarmList{
-    padding: 15px 15px;
+    padding: 0 15px;
+}
+.alarmListBorder{
+   box-sizing: border-box;
+   padding: 11px 0;
+   border-bottom:1px dashed #cecaca;
+   display: flex;
+   align-items: center;
 }
 .watchIndex .Camera{
     padding: 7px 0;
 }
 .watchIndex .statisticsNumber{
-    margin-left: 20px;
+    text-align: center;
+    margin-left: -35%;
+}
+.watchIndex .yesterdayData{
+    margin-left: -20%;
 }
 .watchIndex .policeFont1{
     color:#7584F9;
@@ -103,4 +117,7 @@
 }
 .watchIndex .policeFont4{
     color:#81C0FC;
+}
+.handleUpImg{
+    border: 1px solid #dcd9d9;
 }

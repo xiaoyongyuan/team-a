@@ -3,6 +3,7 @@ import {Col, Row} from "antd";
 import WorkStatistics from "../groupleader/WorkStatistics";
 import "../../style/ztt/css/watchIndex.css";
 import {post} from "../../axios/tools";
+import nodata from "../../style/imgs/nopic.png";
 import ClassifiedStatistics from "./ClassifiedStatistics";
 class WatchIndex extends Component {
     constructor(props) {
@@ -40,7 +41,7 @@ class WatchIndex extends Component {
 
         return (
             <div className="watchIndex">
-                <Row className="group-flex">
+               {/* <Row className="group-flex">
                     <div className="group-height name groupLeader-border">
                         <div className="groupLeader-img">
                             <div className="groupIcon"><img src="http://ftp01.aokecloud.cn/alarm/1000021/photocatch/20190312/1000021_20190312163101.jpg" alt=""/></div>
@@ -54,9 +55,9 @@ class WatchIndex extends Component {
                         </div>
                     </div>
                     <div className="group-height count groupLeader-border alarm-type untreatedAlarm" />
-                </Row>
+                </Row>*/}
                 <Row>
-                    <Col span={12}>
+                    <Col span={11}>
                         <Row>
                             <Col span={12}>
                                 <div className="group-alarm groupLeader-border">
@@ -82,17 +83,19 @@ class WatchIndex extends Component {
                             </Col>
                             <Col span={12}>
                                 <div className="group-alarm groupLeader-border">
-                                    <p className="watch-alarm">昨日处理总数</p>
+                                    <p className="watch-alarm yesterdayData">昨日处理总数</p>
                                     <p className="watch-number statisticsNumber">454</p>
                                     <p className="statisticsNumber">分类统计</p>
-                                    <ClassifiedStatistics />
+                                    <ClassifiedStatistics style={{left:"-40px"}} />
                                 </div>
                             </Col>
                         </Row>
-                        <Row className="groupLeader-border">
-                            <p className="alarm-top">近七日工作统计</p>
-                            <WorkStatistics className="group-seven" />
-                        </Row>
+                        <Col span={24}>
+                            <Row className="groupLeader-border">
+                                <p className="alarm-top">近七日工作统计</p>
+                                <WorkStatistics className="group-seven" />
+                            </Row>
+                        </Col>
                     </Col>
                     <Col span={12}>
                       <div className="pending-list watchIndex-border groupLeader-border">
@@ -100,15 +103,17 @@ class WatchIndex extends Component {
                           {
                               this.state.hangUp.map((v,i)=>(
                                   <Row className="alarmList">
-                                      <Col span={6} className="listImg textCenter">
-                                          <div><img src={v.pic_min} alt=""/></div></Col>
-                                      <Col span={8} className="textCenter">
-                                          <Row className="Camera">{v.name}</Row>
-                                          <Row className="Camera">{v.gettime} 挂起</Row>
-                                          <Row className="Camera">{v.memo?v.memo:"无"}</Row>
-                                      </Col>
-                                      <Col span={4} className="textCenter">{this.peddingType(v.atype)}</Col>
-                                      <Col span={6} className="textCenter">{v.atime}</Col>
+                                      <div className="alarmListBorder">
+                                          <Col span={6} className="listImg textCenter">
+                                              <div className="handleUpImg"><img src={v.pic_min?v.pic_min:nodata} alt=""/></div></Col>
+                                          <Col span={8} className="textCenter">
+                                              <Row className="Camera" style={{display:v.name?"block":"none"}}><span className="nameWeight">名称：</span>{v.name}</Row>
+                                              <Row className="Camera">{v.gettime}</Row>
+                                              <Row className="Camera"><span className="nameWeight">备注信息：</span>{v.memo?v.memo:"无"}</Row>
+                                          </Col>
+                                          <Col span={3} className="textCenter">{this.peddingType(v.hstatus)?this.peddingType(v.hstatus):"未知类型"}</Col>
+                                          <Col span={6} className="textCenter">{v.atime?v.atime:"无"}</Col>
+                                      </div>
                                   </Row>
                               ))
                           }
