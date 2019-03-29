@@ -172,8 +172,8 @@
         border-radius: 10px;
     }
     .pliceImgyal img{
-        width: 95%;
-        height: 100%;
+        width: 96%;
+        height: auto;
         border-top-left-radius: 2px;
         border-bottom-left-radius: 2px;
     }
@@ -365,6 +365,7 @@
     transform: rotate(45deg);
     color: white;
     font-size: 24%;
+    padding:2px;
 }
 .loadding{
     width: 100%;

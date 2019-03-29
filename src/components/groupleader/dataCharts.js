@@ -32,7 +32,7 @@ class dataCharts extends Component {
                 }
             },
             legend: {
-                data:['昨日','人流增加','人流减少'],
+                data:['误报','虚报','警报'],
                 top:'30',
                 itemHeight :30,
                 itemWidth :50,
@@ -78,7 +78,7 @@ class dataCharts extends Component {
             ],
             series : [
                 {
-                    name:'昨日',
+                    name:'误报',
                     type:'bar',
                     barWidth:"30%",
                     stack: '1',
@@ -101,7 +101,7 @@ class dataCharts extends Component {
                     }
                 },
                 {
-                    name:'人流增加',
+                    name:'虚报',
                     type:'bar', 
                     barWidth:"30%",
                     stack: '1',
@@ -124,7 +124,7 @@ class dataCharts extends Component {
                     }
                 },
                 {
-                    name:'人流减少',
+                    name:'警报',
                     barWidth:"30%",
                     type:'bar',
                     stack: '1',
