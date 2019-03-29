@@ -1,0 +1,24 @@
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+img {
+  display: inline-block;
+}
+
+.logo {
+  margin-top: 60px;
+  margin-left: 80px;
+  color: #35eaff;
+  font-size: 46px;
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: bottom;
+}
