@@ -3,6 +3,7 @@ import { Row, Col } from 'antd';
 import WorkStatistics from "./WorkStatistics";
 import AlarmAnalysis from "./AlarmAnalysis";
 import "../../style/ztt/css/groupLeader.css";
+import {post} from "../../axios/tools";
 class Groupleader extends Component {
     constructor(props) {
         super(props);
@@ -10,88 +11,101 @@ class Groupleader extends Component {
             userRecord:[
                 {
                     name:"阿房宫",
-                    context:"电话1",
-                    time:"2019.03.12",
-                    operator:"李四"
+                    context:"***********",
+                    time:"2019.03.09",
+                    operator:"黄昌华"
                 },
                 {
                     name:"西安文物局",
-                    context:"电话2",
-                    time:"2019.03.12",
-                    operator:"王五"
+                    context:"***********",
+                    time:"2019.02.12",
+                    operator:"吕琳琳"
                 },
                 {
                     name:"阿房宫",
-                    context:"电话1",
-                    time:"2019.03.12",
-                    operator:"李四"
+                    context:"***********",
+                    time:"2019.03.24",
+                    operator:"黄昌华"
                 },
                 {
-                    name:"文艺路",
-                    context:"电话4",
-                    time:"2019.03.12",
-                    operator:"王二"
+                    name:"树莓派测试",
+                    context:"***********",
+                    time:"2019.03.10",
+                    operator:"李江"
                 },
                 {
                     name:"阿房宫",
-                    context:"电话1",
-                    time:"2019.03.12",
-                    operator:"李四"
+                    context:"***********",
+                    time:"2019.03.21",
+                    operator:"王城"
                 },
             ],
             detailsHandling:[
                 {
-                    name:"李四",
-                    count:"34",
-                    falsePositives:"56",
-                    falseReport:"67",
-                    alert:"89"
+                    count:"4",
+                    falsePositives:"0",
+                    falseReport:"2",
+                    alert:"2"
                 },
                 {
-                    name:"李四",
-                    count:"34",
-                    falsePositives:"56",
-                    falseReport:"67",
-                    alert:"89"
+                    count:"3",
+                    falsePositives:"0",
+                    falseReport:"3",
+                    alert:"0"
                 },
                 {
-                    name:"李四",
-                    count:"34",
-                    falsePositives:"56",
-                    falseReport:"67",
-                    alert:"89"
+                    count:"0",
+                    falsePositives:"0",
+                    falseReport:"0",
+                    alert:"0"
                 },
                 {
-                    name:"李四",
-                    count:"34",
-                    falsePositives:"56",
-                    falseReport:"67",
-                    alert:"89"
+                    count:"2",
+                    falsePositives:"0",
+                    falseReport:"0",
+                    alert:"2"
                 },
                 {
-                    name:"李四",
-                    count:"34",
-                    falsePositives:"56",
-                    falseReport:"67",
-                    alert:"89"
+                    count:"4",
+                    falsePositives:"1",
+                    falseReport:"3",
+                    alert:"1"
                 },
                 {
-                    name:"李四",
-                    count:"34",
-                    falsePositives:"56",
-                    falseReport:"67",
-                    alert:"89"
+                    count:"3",
+                    falsePositives:"2",
+                    falseReport:"1",
+                    alert:"0"
                 },
                 {
-                    name:"李四",
-                    count:"34",
-                    falsePositives:"56",
-                    falseReport:"67",
-                    alert:"89"
-                },
-            ]
+                    count:"1",
+                    falsePositives:"0",
+                    falseReport:"1",
+                    alert:"0"
+                }
+            ],
+            alarmhandle:[]
         };
     }
+    componentDidMount() {
+        post({url:"/api/alarmhandle/getinfo"},(res)=>{
+            if(res.success){
+                this.setState({
+                    cname:res.data.name,
+                    adminName:res.data.adminname,
+                    unhandle:res.unhandle,
+                    falsealarm:res.statsstics.falsealarm,
+                    emptyalarm:res.statsstics.emptyalarm,
+                    hangup:res.statsstics.hangup,
+                    alarmun:res.statsstics.alarmun,
+                    smpgr:res.data.smpgr,
+                    smpqy:res.data.smpqy,
+                    alarmhandle:res.alarmhandle
+                })
+            }
+        })
+    }
+
     render() {
         return (
             <div className="groupLeader">
@@ -99,46 +113,46 @@ class Groupleader extends Component {
                     <div className="group-height name groupLeader-border">
                         <div className="groupLeader-img">
                              <div className="groupIcon"><img src="http://ftp01.aokecloud.cn/alarm/1000021/photocatch/20190312/1000021_20190312163101.jpg" alt=""/></div>
-                             <p className="groupLeaderName">组长</p>
+                             <p className="groupLeaderName">{this.state.cname}</p>
                         </div>
                         <div className="groupLeader-img group-information">
                             <div>
-                                <p className="nickname">张晓</p>
-                                <p>开发管理</p>
+                                <p className="nickname">{this.state.cname}</p>
+                                <p>{this.state.adminName}</p>
                             </div>
                         </div>
                     </div>
                     <div className="group-height count groupLeader-border alarm-type untreatedAlarm">
                         <p className="alarm-type">未处理报警数</p>
-                        <p className="alarm-number">409</p>
+                        <p className="alarm-number">{this.state.unhandle}</p>
                     </div>
                     <div className="group-height count groupLeader-border alarm-type todayAlarm">
                         <p className="alarm-type">今日处理总数</p>
-                        <p className="alarm-number">253</p>
+                        <p className="alarm-number">{this.state.falsealarm+this.state.emptyalarm+this.state.hangup}</p>
                         <div className="misreporting">
                             <Row>
                                 <Col span={8}>误报</Col>
                                 <Col span={8}>虚警</Col>
-                                <Col span={8}>虚报</Col>
+                                <Col span={8}>挂起</Col>
                             </Row>
                             <Row>
-                                <Col span={8}>123</Col>
-                                <Col span={8}>454</Col>
-                                <Col span={8}>565</Col>
+                                <Col span={8}>{this.state.falsealarm}</Col>
+                                <Col span={8}>{this.state.emptyalarm}</Col>
+                                <Col span={8}>{this.state.hangup}</Col>
                             </Row>
                         </div>
                     </div>
                     <div className="group-height count groupLeader-border alarm-type userAlarm">
                         <p className="alarm-type">用户总数</p>
-                        <p className="alarm-number">34</p>
+                        <p className="alarm-number">{this.state.smpgr+this.state.smpqy}</p>
                         <div className="misreporting">
                             <Row>
                                 <Col span={8}>企业用户</Col>
                                 <Col span={8}>个人用户</Col>
                             </Row>
                             <Row>
-                                <Col span={8}>234</Col>
-                                <Col span={8}>454</Col>
+                                <Col span={8}>{this.state.smpgr}</Col>
+                                <Col span={8}>{this.state.smpqy}</Col>
                             </Row>
                         </div>
                     </div>
@@ -157,18 +171,16 @@ class Groupleader extends Component {
                                     <p className="alarm-top">查询用户记录</p>
                                     <div className="record">
                                         <Row>
-                                            <Col span={6} className="record-center">用户</Col>
-                                            <Col span={6} className="record-center">查询内容</Col>
-                                            <Col span={6} className="record-center">查询时间</Col>
-                                            <Col span={6} className="record-center">操作人</Col>
+                                            <Col span={8} className="record-center">用户</Col>
+                                            <Col span={8} className="record-center">查询时间</Col>
+                                            <Col span={8} className="record-center">操作人</Col>
                                         </Row>
                                         {
                                             this.state.userRecord.map((v,i)=>(
                                                 <Row ke={i}>
-                                                    <Col span={6} className="record-body">{v.name}</Col>
-                                                    <Col span={6} className="record-body">{v.context}</Col>
-                                                    <Col span={6} className="record-body">{v.time}</Col>
-                                                    <Col span={6} className="record-body">{v.operator}</Col>
+                                                    <Col span={8} className="record-body">{v.name}</Col>
+                                                    <Col span={8} className="record-body">{v.time}</Col>
+                                                    <Col span={8} className="record-body">{v.operator}</Col>
                                                 </Row>
                                             ))
                                         }
@@ -184,12 +196,12 @@ class Groupleader extends Component {
                     <Col span={8}>
                         <div className="group-img groupLeader-border">
                             <Row>
-                                <img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190312/1000020_20190312113157_320X180.jpg" alt=""/>
-                                <img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190312/1000020_20190312113157_320X180.jpg" alt=""/>
+                               <img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190329/EFGABC007_20190329185302_320X180.jpg" width="100%" alt="" />
+                               <img src="http://pic01.aokecloud.cn/alarm/1000012/pic/20190329/JTJL00019_20190329191644_640X360.jpg" width="100%" alt="" />
                             </Row>
                             <Row>
-                                <img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190312/1000020_20190312113157_320X180.jpg" alt=""/>
-                                <img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190312/1000020_20190312113157_320X180.jpg" alt=""/>
+                               <img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190329/EFGABC011_20190329191844_320X180.jpg" width="100%" alt="" />
+                              <img src="http://pic01.aokecloud.cn/alarm/1000020/pic/20190329/EFGABC012_20190329191340_640X360.jpg" width="100%" alt="" />
                             </Row>
                         </div>
                         <div className="group-details groupLeader-border">
@@ -203,13 +215,13 @@ class Groupleader extends Component {
                                     <td className="details-title">警报</td>
                                 </tr>
                                 {
-                                    this.state.detailsHandling.map((v,i)=>(
+                                    this.state.alarmhandle.map((v,i)=>(
                                         <tr key={i}>
-                                            <td className="details-body">{v.name}</td>
-                                            <td className="details-body">{v.count}</td>
-                                            <td className="details-body">{v.falsePositives}</td>
-                                            <td className="details-body">{v.falseReport}</td>
-                                            <td className="details-body">{v.alert}</td>
+                                            <td className="details-body">{v.account}</td>
+                                            <td className="details-body">{v.falsealarm+v.emptyalarm+v.alarm}</td>
+                                            <td className="details-body">{v.falsealarm}</td>
+                                            <td className="details-body">{v.emptyalarm}</td>
+                                            <td className="details-body">{v.alarm}</td>
                                         </tr>
                                     ))
                                 }

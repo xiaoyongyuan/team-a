@@ -8,6 +8,7 @@
     margin: 10px 10px;
     border-radius: 5px;
     box-shadow: 0 0 10px #bfbdbd
+
 }
 .watchIndex .group-height{
     height: 165px;
@@ -121,3 +122,12 @@
 .handleUpImg{
     border: 1px solid #dcd9d9;
 }
+.handupColor{
+    color:#096dd9;
+    font-weight: bolder;
+}
+.alarmUntreated{
+    color: #FF1533;
+    font-weight: bolder;
+}
+

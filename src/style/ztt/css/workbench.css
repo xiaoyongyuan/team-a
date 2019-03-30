@@ -265,3 +265,11 @@
 .workBench .information{
    margin-right: 25px;
 }
+.handupColor{
+    color:#096dd9;
+    font-weight: bolder;
+}
+.alarmUntreated{
+    color: #FF1533;
+    font-weight: bolder;
+}

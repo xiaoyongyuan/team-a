@@ -175,21 +175,24 @@ class history extends React.Component {
     }
       //报警状态
       handleState = (code)=>{
-        if(code === 0){
-            return "未处理";
-        }else if(code === 1){
-            return "虚警";
-        }else if(code === 2){
-            return "误报";
-        }else if(code === 3){
-            return "警报";
-        }else if(code === -1){
-            return "已获取未处理";
-        }else if(code === -2){
-            return "挂起";
-        }else if(code === -3){
-            return "已过期";
-        }
+          switch (code) {
+              case 0:
+                  return "未处理";
+              case 1:
+                  return "挂起";
+              case 2:
+                  return "报警未结束";
+              case 3:
+                  return "报警已结束";
+              case 4:
+                  return "虚警";
+              case 5:
+                  return "挂起";
+              case -1:
+                  return "待处理";
+              case -3:
+                  return "过期";
+          }
     };
      
       atypetext =(type) =>{

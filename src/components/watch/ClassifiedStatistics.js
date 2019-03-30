@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
+let vis=false;
 class ClassifiedStatistics extends Component {
+    constructor(props){
+        super(props);
+    }
+    componentWillReceiveProps(){
+        this.setState({
+            yesterdayHandled:this.props.yesterdayHandled
+        });
+    }
     render() {
         let option = {
             legend: {
@@ -35,7 +44,7 @@ class ClassifiedStatistics extends Component {
                             position: 'insideTop'
                         }
                     },
-                    data: [320, 302, 301, 334, 390, 330, 320]
+                    data: [0]
                 },
                 {
                     name: '虚报',
@@ -47,7 +56,7 @@ class ClassifiedStatistics extends Component {
                             position: 'insideTop'
                         }
                     },
-                    data: [120, 132, 101, 134, 90, 230, 210]
+                    data: [0]
                 },
                 {
                     name: '警报',
@@ -59,7 +68,7 @@ class ClassifiedStatistics extends Component {
                             position: 'insideTop'
                         }
                     },
-                    data: [220, 182, 191, 234, 290, 330, 310]
+                    data: [35]
                 },
                 {
                     name: '查询用户',
@@ -72,7 +81,7 @@ class ClassifiedStatistics extends Component {
                             position: 'insideTop'
                         }
                     },
-                    data: [150, 212, 201, 154, 190, 330, 410]
+                    data: [35]
                 }
             ]
         };
