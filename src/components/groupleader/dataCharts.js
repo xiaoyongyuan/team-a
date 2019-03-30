@@ -20,9 +20,54 @@ class dataCharts extends Component {
     }
     componentDidMount(){
         this.setState({
+            bdate:this.props.query.bdate,
+            edate:this.props.query.edate,
+            realname:this.props.query.realname,
             height:document.documentElement.clientHeight-200+"px"
+        },()=>{
+            this.requestdata()
         });
+        
     }
+    requestdata=() => {//取数据
+        var dataUseres = {
+            bdate: this.state.bdate?this.props.query.bdate:'',
+            edate: this.state.edate?this.state.edate:'',
+            realname: this.state.realname?this.state.realname:'',
+            pagesize:10,
+            pageindex:this.state.page,
+        }
+        
+        post({url:"/api/alarmhandlehistory/get_analysis_user",data:dataUseres}, (res)=>{
+            var rname=[];//姓名
+            var alarm=[];//报警
+            var emptyalarm=[];//虚警
+            var falsealarm=[];//误警
+            if(res.success){
+                this.setState({
+                    list:res.data,
+                },()=>{
+                    this.state.list.map((v,i)=>(
+                        rname.push(v.realname),
+                        alarm.push(v.alarm),
+                        emptyalarm.push(v.emptyalarm),
+                        falsealarm.push(v.falsealarm)
+                    ))
+                })
+            }
+            this.setState({
+                rname:rname,
+                alarm:alarm,
+                emptyalarm:emptyalarm,
+                falsealarm:falsealarm
+            },()=>{
+                console.log('rname22',this.state.rname);
+            });
+        })
+        
+        
+    }
+
     render() {      
         let option = {
             tooltip : {
@@ -57,7 +102,7 @@ class dataCharts extends Component {
                         }
                     },
                     type : 'category',
-                    data : ['张三','李四','王五','赵柳','周七','王八','啊就'],
+                    data : this.state.rname,
                     
                     nameTextStyle:{
                         fontSize:50
@@ -82,7 +127,7 @@ class dataCharts extends Component {
                     type:'bar',
                     barWidth:"30%",
                     stack: '1',
-                    data:[1800, 1320, 1010, 1340, 900, 2300, 2100],
+                    data:this.state.falsealarm,
                     itemStyle: { //上方显示数值
                         normal: {
                             color:'#68D4D5',
@@ -105,7 +150,7 @@ class dataCharts extends Component {
                     type:'bar', 
                     barWidth:"30%",
                     stack: '1',
-                    data:[2200,0, 1910,0, 2900, 0, 3100],
+                    data:this.state.emptyalarm,
                     itemStyle: {//上方显示数值
                         normal: {
                             color:'#FFB980',
@@ -128,7 +173,7 @@ class dataCharts extends Component {
                     barWidth:"30%",
                     type:'bar',
                     stack: '1',
-                    data:[0, 2320, 0, 1540, 0, 3300, 0],
+                    data:this.state.alarm,
                     itemStyle: { //上方显示数值
                         normal: {
                             color:'#C4B6E0',
