@@ -54,8 +54,6 @@ class ModalForm extends Component {
                 user:'admin'
             }
             post({url:"/api/userworker/getone",data:data }, (res)=>{
-                console.log('res.data.userpower',res.data.userpower);
-                
                     this.props.form.setFieldsValue({
                         usergender:res.data.usergender,//性别
                         realname: res.data.realname,//姓名
@@ -71,8 +69,6 @@ class ModalForm extends Component {
     onChangeradio = (e) => {
         this.setState({
           value: e.target.value,
-        },()=>{
-            console.log('this.state.value*',this.state.value);
         });
       }
     formquanxian = () => { //将form传给父组件由父组件控制表单提交
