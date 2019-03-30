@@ -91,7 +91,7 @@ class Groupleader extends Component {
         post({url:"/api/alarmhandle/getinfo"},(res)=>{
             if(res.success){
                 this.setState({
-                    cname:res.data.name,
+                    cname:res.data.cname,
                     adminName:res.data.adminname,
                     unhandle:res.unhandle,
                     falsealarm:res.statsstics.falsealarm,
