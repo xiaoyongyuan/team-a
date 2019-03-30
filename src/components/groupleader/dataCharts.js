@@ -60,8 +60,6 @@ class dataCharts extends Component {
                 alarm:alarm,
                 emptyalarm:emptyalarm,
                 falsealarm:falsealarm
-            },()=>{
-                console.log('rname22',this.state.rname);
             });
         })
         
