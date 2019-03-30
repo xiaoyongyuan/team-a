@@ -83,7 +83,8 @@ class Groupleader extends Component {
                     falseReport:"1",
                     alert:"0"
                 }
-            ]
+            ],
+            alarmhandle:[]
         };
     }
     componentDidMount() {
@@ -214,12 +215,13 @@ class Groupleader extends Component {
                                     <td className="details-title">警报</td>
                                 </tr>
                                 {
-                                    this.state.detailsHandling.map((v,i)=>(
+                                    this.state.alarmhandle.map((v,i)=>(
                                         <tr key={i}>
-                                            <td className="details-body">{v.count}</td>
-                                            <td className="details-body">{v.falsePositives}</td>
-                                            <td className="details-body">{v.falseReport}</td>
-                                            <td className="details-body">{v.alert}</td>
+                                            <td className="details-body">{v.account}</td>
+                                            <td className="details-body">{v.falsealarm+v.emptyalarm+v.alarm}</td>
+                                            <td className="details-body">{v.falsealarm}</td>
+                                            <td className="details-body">{v.emptyalarm}</td>
+                                            <td className="details-body">{v.alarm}</td>
                                         </tr>
                                     ))
                                 }
