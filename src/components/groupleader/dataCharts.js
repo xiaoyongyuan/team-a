@@ -130,7 +130,7 @@ class dataCharts extends Component {
                     data:this.state.falsealarm,
                     itemStyle: { //上方显示数值
                         normal: {
-                            color:'#68D4D5',
+                            color:'#C87FFF',
                             label: {
                                 show: true, //开启显示
                                 position: 'insideTop', //在上方显示
@@ -153,7 +153,7 @@ class dataCharts extends Component {
                     data:this.state.emptyalarm,
                     itemStyle: {//上方显示数值
                         normal: {
-                            color:'#FCD033',
+                            color:'#6475F9',
                             label: {
                                 show: true, //开启显示
                                 position: 'top', //在上方显示
@@ -176,7 +176,7 @@ class dataCharts extends Component {
                     data:this.state.alarm,
                     itemStyle: { //上方显示数值
                         normal: {
-                            color:'#FF7A8F',
+                            color:'#FA8068',
                             label: {
                                 show: true, //开启显示
                                 position: 'top', //在上方显示
