@@ -191,10 +191,8 @@ class dataCharts extends Component {
                         }
                     }
                 }
-             
             ]
         };
-
         return (
             <div className="dataCharts" style={{height:this.state.height}}>
                 <ReactEcharts
