@@ -47,7 +47,7 @@ class BeCuty extends Component {
     render() {
         return(
             <ReactEcharts
-                option={this.sevenDay(this.props.seveninfo?this.props.seveninfo:0)}
+                option={this.sevenDay(this.props.nearlySeven?this.props.nearlySeven:0)}
                 style={{width:"100%"}}
             />
         )

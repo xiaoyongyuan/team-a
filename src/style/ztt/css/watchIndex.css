@@ -98,7 +98,12 @@
    align-items: center;
 }
 .watchIndex .Camera{
-    padding: 7px 0;
+    width: 100%;
+    padding: 7px 10px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .watchIndex .statisticsNumber{
     text-align: center;
@@ -120,7 +125,11 @@
     color:#81C0FC;
 }
 .handleUpImg{
+    width: 93%;
     border: 1px solid #dcd9d9;
+}
+.handleUpImg img{
+    width: 100%;
 }
 .handupColor{
     color:#096dd9;

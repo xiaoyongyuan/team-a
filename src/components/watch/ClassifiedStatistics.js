@@ -1,21 +1,12 @@
 import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
-let vis=false;
 class ClassifiedStatistics extends Component {
-    constructor(props){
-        super(props);
-    }
-    componentWillReceiveProps(){
-        this.setState({
-            yesterdayHandled:this.props.yesterdayHandled
-        });
-    }
     render() {
         let option = {
             legend: {
-                data: ['误报', '虚报','警报','查询用户'],
+                data: ['误报', '虚报','警情','查询用户'],
                 orient:"vertical",
-                right:"right",
+                right:"right"
             },
             xAxis:  {
                 type: 'category',
@@ -44,7 +35,7 @@ class ClassifiedStatistics extends Component {
                             position: 'insideTop'
                         }
                     },
-                    data: [0]
+                    data: [this.props.yesterdayFalseList]
                 },
                 {
                     name: '虚报',
@@ -56,10 +47,10 @@ class ClassifiedStatistics extends Component {
                             position: 'insideTop'
                         }
                     },
-                    data: [0]
+                    data: [this.props.yesterdayEmptyList]
                 },
                 {
-                    name: '警报',
+                    name: '警情',
                     type: 'bar',
                     stack: '总量',
                     label: {
@@ -68,7 +59,7 @@ class ClassifiedStatistics extends Component {
                             position: 'insideTop'
                         }
                     },
-                    data: [35]
+                    data: [this.props.yesterdayList]
                 },
                 {
                     name: '查询用户',
@@ -81,7 +72,7 @@ class ClassifiedStatistics extends Component {
                             position: 'insideTop'
                         }
                     },
-                    data: [35]
+                    data: [this.props.yesterdayList]
                 }
             ]
         };
