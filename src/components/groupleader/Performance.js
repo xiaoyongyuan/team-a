@@ -5,6 +5,7 @@ import "../../style/ztt/css/police.css";
 import "../../style/publicStyle/publicStyle.css";
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
 import 'moment/locale/zh-cn';
+import moment from 'moment';
 import {post} from "../../axios/tools";
 const { RangePicker } = DatePicker ;
 class Performance extends Component {
@@ -12,6 +13,10 @@ class Performance extends Component {
         super(props);
         this.state={
             page:1, //当前页
+            total:{},
+            bdate:'',
+            edate:'',
+            realname:''
         };
     }
     componentDidMount() {
@@ -22,7 +27,7 @@ class Performance extends Component {
             pagesize:10,
             pageindex:this.state.page,
         }
-        post({url:"/api/company/getlist",data:datar}, (res)=>{
+        post({url:"/api/alarmhandlehistory/get_analysis_user",data:datar}, (res)=>{
             if(res.success){
                 this.setState({
                     list:res.data,
@@ -40,17 +45,16 @@ class Performance extends Component {
     }
     selectopt = (e) => { //检索search
         e.preventDefault();
-        console.log('clouddata',);
         this.props.form.validateFields((err, values) => {
             if(!err){
-                    var dataUseres = {
-                        bdate: values.clouddata&&values.clouddata.length?values.clouddata[0].format('YYYY-MM-DD')+' 00:00:00':'',
-                        edate: values.clouddata&&values.clouddata.length?values.clouddata[1].format('YYYY-MM-DD')+' 23:59:59':'',
-                        adminname: values.adminname,
-                        pagesize:10,
-                        pageindex:this.state.page,
-                    }
-                post({url:"/api/company/getlist",data:dataUseres}, (res)=>{
+                var dataUseres = {
+                    bdate: values.clouddata&&values.clouddata.length?values.clouddata[0].format('YYYY-MM-DD HH:mm:ss'):'',
+                    edate: values.clouddata&&values.clouddata.length?values.clouddata[1].format('YYYY-MM-DD HH:mm:ss'):'',
+                    realname: values.realname,
+                    pagesize:10,
+                    pageindex:this.state.page,
+                }
+                post({url:"/api/alarmhandlehistory/get_analysis_user",data:dataUseres}, (res)=>{
                     if(res.success){
                         this.setState({
                             list: res.data,
@@ -58,10 +62,21 @@ class Performance extends Component {
                         })
                     }
                 })
+                this.setState({
+                    bdate: values.clouddata&&values.clouddata.length?values.clouddata[0].format('YYYY-MM-DD HH:mm:ss'):'',
+                    edate: values.clouddata&&values.clouddata.length?values.clouddata[1].format('YYYY-MM-DD HH:mm:ss'):'',
+                    realname: values.realname?values.realname:'',
+                })
             }
         })
     }
+
     render() {  
+        function disabledDate(current) {
+            // Can not select days before today and today
+            return current && current > moment().endOf('day');
+          }
+          
         const { getFieldDecorator } = this.props.form;
         const columns = [
             {
@@ -71,35 +86,35 @@ class Performance extends Component {
                 render: (text,record,index) => <span>{index+1}</span>,
             },{
                 title: '姓名',
-                dataIndex: 'adminname',
-                key: 'adminname',
+                dataIndex: 'realname',
+                key: 'realname',
             },{
                 title: '总数',
                 dataIndex: 'etype',
                 key: 'etype',
-                render: text => <span>45</span>,
+                render:(text,record)=>{
+                    return(
+                       <div>{record.falsealarm+record.emptyalarm+record.alarm}</div>
+                    )
+                }
             },{
                 title: '误报',
-                dataIndex: 'pname',
-                key: 'pname',
-                render: text => <span>{9}</span>,
+                dataIndex: 'falsealarm',
+                key: 'falsealarm',
             },{
                 title: '虚报',
-                dataIndex: 'createon',
-                key: 'manage',
-                render: text => <span>{9}</span>,
+                dataIndex: 'emptyalarm',
+                key: 'emptyalarm',
             }
             ,{
                 title: '警报',
-                dataIndex: 'createon',
-                key: 'manage1',
-                render: text => <span>{9}</span>,
+                dataIndex: 'alarm',
+                key: 'alarm',
             }
             ,{
                 title: '查询用户详情次数',
-                dataIndex: 'createon',
-                key: 'manage2',
-                render: text => <span>{19}</span>,
+                dataIndex: 'alarm',
+                key: 'datai',
             }
         ];
         return (
@@ -109,22 +124,28 @@ class Performance extends Component {
                         <Form onSubmit={this.selectopt} layout="inline">
                             <Form.Item label="日期" >
                                 {getFieldDecorator('clouddata')(
-                                    <RangePicker
+                                    <RangePicker 
+                                        disabledDate={disabledDate}
                                         placeholder={['开始时间', '结束时间']}
+                                        showTime={{
+                                            hideDisabledOptions: true,
+                                            defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                                          }}
+                                        format="YYYY-MM-DD HH:mm:ss"
                                     />
                                 )}
                             </Form.Item>
                             <Form.Item
                                label="姓名"
                             >
-                                {getFieldDecorator('adminname', {
+                                {getFieldDecorator('realname', {
                                     rules: [{ required: false, message: '请输入操作人' }],
                                 })(
                                     <Input placeholder="请输入姓名" />
                                 )}
                             </Form.Item>
                                 <Button type="primary" htmlType="submit" className="queryBtn" style={{marginTop:'4px'}}>查询</Button>
-                                <a href="#/app/groupleader/dataCharts" className="tjt">查看统计图</a>
+                                <a href={"#/app/groupleader/dataCharts?bdate="+this.state.bdate+"&edate="+this.state.edate+"&realname="+this.state.realname} className="tjt">查看统计图</a>
                         </Form>
                     </Row>
                 </LocaleProvider>
