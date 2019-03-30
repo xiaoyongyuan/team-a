@@ -33,6 +33,7 @@ class Workbench extends Component {
       post({url:"/api/alarmhandle/get_handle"},(res)=>{
           if(res.success){
               this.setState({
+              		nextPageBtn:false,
                   oldHstatus:res.alarmhandle.hstatus,
                   code:res.data.code,
                   companycode:res.data.companycode,
@@ -160,43 +161,45 @@ class Workbench extends Component {
         if(this.state.code){
             post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:this.state.type}},(res)=>{
                 if(res.success){
+                	var currentPage= this.state.page;
+                	if(currentPage>1){
+                    	currentPage=1;
+                    }
                     var alarmold=this.state.oldHstatus;
                     alarmold=this.state.type;
                     this.setState({
+                    		nextPageBtn:true,
                         visibleTips:false,
                         alarmold,
-                    });
-                    console.log(this.state.page,"page");
-                    if(this.state.type===4 || this.state.page>1){
+                        page:currentPage
+                    },()=>this.pendingList());
+                    
+
+                    if(this.state.type===4){
                         this.setState({
                             falseAlarmBtn:true,
                             falsePositivesBtn:true,
                             pushBtn:true,
                             oldHstatus:4,
                             mountBtn:true,
-                            page:1
-                        },()=>{
-                            this.pendingList();
-                            this.setState({
-                                nextPageBtn:false,
-                            })
                         })
-                    }else if(this.state.type===5 || this.state.page>1){
+                    }else if(this.state.type===5){
                         this.setState({
                             falseAlarmBtn:true,
                             falsePositivesBtn:true,
                             pushBtn:true,
                             oldHstatus:5,
                             mountBtn:true,
-                            page:1
-                        },()=>{
-                            this.pendingList();
-                            this.setState({
-                                nextPageBtn:false,
-                            })
                         })
-                    }
-                    if(this.state.type===2 || this.state.page>1){
+                    }else if(this.state.type===1){
+                        this.setState({
+                            falseAlarmBtn:true,
+                            falsePositivesBtn:true,
+                            pushBtn:true,
+                            oldHstatus:1,
+                            mountBtn:true,
+                        })
+                    }else if(this.state.type===2){
                         post({url:"/api/company/getinfo_maintain",data:{code:this.state.companycode}},(res)=>{
                             if(res.success){
                                 this.setState({
@@ -207,9 +210,6 @@ class Workbench extends Component {
                                     pushBtn:true,
                                     mountBtn:true,
                                     oldHstatus:2,
-                                    page:1
-                                },()=>{
-                                    this.pendingList();
                                 })
                             }
                         });
@@ -229,44 +229,12 @@ class Workbench extends Component {
             })
         }
     };
-    //置该条数据状态为挂起
-    mountProcessing=()=>{
-        if(this.state.code){
-            post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:"1"}},(res)=>{
-                if(res.success){
-                    var old=this.state.oldHstatus;
-                    old=1;
-                    this.setState({
-                        old
-                    },()=>{
-                        this.pendingList();
-                        this.setState({
-                            mountBtn:true,
-                            falseAlarmBtn:true,
-                            falsePositivesBtn:true,
-                            pushBtn:true,
-                            oldHstatus:1,
-                            ifPedding:true
-                        });
-                        message.success("挂起成功");
-                    });
-                }else {
-                    message.warning(res.errorinfo);
-                }
-            })
-        }else{
-            message.warning("报警code不存在");
-        }
-
-    };
     //下一页
     nextPage=()=>{
-       document.getElementById("remarks").value="";
-        if(this.state.falseAlarmBtn===true && this.state.falsePositivesBtn===true && this.state.pushBtn===true && this.state.mountBtn===true){
+    	console.log('this.state.nextPageBtn',this.state.nextPageBtn)
+        if(this.state.nextPageBtn){
             this.getOneAlarm();
-        }else if(this.state.falseAlarmBtn===false && this.state.falsePositivesBtn===false && this.state.pushBtn===false && this.state.mountBtn===false ){
-            message.info("请先处理报警！");
-        }
+        }else message.info("请先处理当前报警！");
     };
     remarks=()=>{
         var remarks=document.getElementById("remarks").value;
@@ -289,10 +257,11 @@ class Workbench extends Component {
     };
     //挂载还原
     mountRestore=(code)=>{
-        if(code){
+        if(code && this.state.nextPageBtn){
             post({url:"/api/alarmhandle/get_hangup",data:{code:code}},(res)=>{
                 if(res.success){
                     this.setState({
+                    		nextPageBtn:false,
                         oldHstatus:res.alarmhandle.hstatus,
                         code:res.data.code,
                         companycode:res.data.companycode,
@@ -318,7 +287,7 @@ class Workbench extends Component {
                 }
             })
         }else{
-            message.warning("报警code不存在");
+            message.warning("请先处理当前报警！");
         }
 
     };
@@ -392,14 +361,14 @@ class Workbench extends Component {
                             </div>
                         </div>
                         <div className="processingAlarm-right">
-                            <div className="mount" style={{visibility:this.state.mountBtn?"hidden":"visible"}}><Icon className="IconMount" type="tag"  size="large" theme="filled" title="挂起"  onClick={()=>this.mountProcessing()} /></div>
+                            <div className="mount" style={{visibility:this.state.mountBtn?"hidden":"visible"}}><Icon className="IconMount" type="tag"  size="large" theme="filled" title="挂起"  onClick={()=>this.typeAlarm(1,"挂起")} /></div>
                             <div className="alarm-btn xuJing" style={{marginTop:"15px"}}><Button type="primary" onClick={()=>this.typeAlarm(4,"虚警")} disabled={this.state.falseAlarmBtn}>虚警</Button></div>
                             <div className="alarm-btn wuBao"><Button type="primary" onClick={()=>this.typeAlarm(5,"误报")} disabled={this.state.falsePositivesBtn}>误报</Button></div>
                             <div className="alarm-btn pushAlarm"><Button type="primary" onClick={()=>this.typeAlarm(2,"报警")} disabled={this.state.pushBtn}>警情推送</Button></div>
                             <div className="noteTriangle" />
                             <textarea className="remarks" id="remarks" placeholder="备注信息" onBlur={()=>this.remarks()} />
                             <div className="nextPage">
-                                <Button type="primary" disabled={this.state.nextPageBtn} shape="circle" icon="right-circle" theme="filled" title="下一页" size="large" onClick={()=>this.nextPage()} />
+                                <Button type="primary" shape="circle" icon="right-circle" theme="filled" title="下一页" size="large" onClick={()=>this.nextPage()} />
                             </div>
                         </div>
                     </div>
@@ -437,8 +406,6 @@ class Workbench extends Component {
                         <p><label>姓名：</label><span>{this.state.userName}</span></p>
                         <p><label>联系电话：</label><span>{this.state.userPhone}</span></p>
                         <p><label>地址：</label><span>西安雁塔区西安理工大科技园</span></p>
-                       {/* <p><label>紧急联系人1：</label><span>李**</span><span>***********</span></p>
-                        <p><label>紧急联系人2：</label><span>王**</span><span>***********</span></p>*/}
                     </div>
                 </Modal>
                 <Modal

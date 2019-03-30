@@ -1,6 +1,3 @@
-/**
- * Created by 叶子 on 2017/7/30.
- */
 import * as type from './type';
 // import * as http from '../axios/index';
 // import * as http from '../axios/tools';
@@ -22,7 +19,6 @@ export const receiveData = (data, category) => ({
  * @param funcName      请求接口的函数名
  * @param params        请求接口的参数
  */
-
 
 export const fetchData = ({funcName, url, params, stateName}) => dispatch => {   //lff  登录在用
     !stateName && (stateName = funcName); 
