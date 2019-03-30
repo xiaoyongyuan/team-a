@@ -20,7 +20,7 @@ class WatchIndex extends Component {
     }
     //挂载列表
     mountList=()=>{
-        post({url:"/api/alarmhandle/getlist",data:{hstatus:"1"}},(res)=>{
+        post({url:"/api/alarmhandle/getlist",data:{htype:"hangup"}},(res)=>{
             if(res.success){
                 this.setState({
                     hangUp:res.data.slice(0,5)
@@ -67,6 +67,13 @@ class WatchIndex extends Component {
                 return "过期";
         }
     };
+    alarmTypeColor=(colorType)=>{
+        if(colorType===1){
+            return "handupColor";
+        }else if(colorType===2){
+            return "alarmUntreated";
+        }
+    };
     render() {
 
         return (
@@ -91,22 +98,22 @@ class WatchIndex extends Component {
                         <Row>
                             <Col span={12}>
                                 <div className="group-alarm groupLeader-border">
-                                    <p className="watch-alarm">报警分析</p>
+                                    <p className="watch-alarm">今日报警分析</p>
                                     <p className="watch-number watch-alarm">{this.state.alarmCount?this.state.alarmCount:0}</p>
                                     <Row>
-                                        <Col span={12} className="police-Name">误报/条</Col>
+                                        <Col span={12} className="police-Name"> 警报/条</Col>
                                         <Col span={12} className="police-Name">虚警/条</Col>
                                     </Row>
                                     <Row>
-                                        <Col span={12} className="police-Name police-number policeFont1">{this.state.alarmFalseList?this.state.alarmFalseList:0}</Col>
+                                        <Col span={12} className="police-Name police-number policeFont1">{this.state.alarmList?this.state.alarmList:0}</Col>
                                         <Col span={12} className="police-Name police-number policeFont2">{this.state.alarmEmptyList?this.state.alarmEmptyList:0}</Col>
                                     </Row>
                                     <Row>
-                                        <Col span={12} className="police-Name">警报/条</Col>
+                                        <Col span={12} className="police-Name">误报/条</Col>
                                         <Col span={12} className="police-Name">查询用户/条</Col>
                                     </Row>
                                     <Row>
-                                        <Col span={12} className="police-Name police-number policeFont3">{this.state.alarmList?this.state.alarmList:0}</Col>
+                                        <Col span={12} className="police-Name police-number policeFont3">{this.state.alarmFalseList?this.state.alarmFalseList:0}</Col>
                                         <Col span={12} className="police-Name police-number policeFont4">{this.state.alarmList?this.state.alarmList:0}</Col>
                                     </Row>
                                 </div>
@@ -129,7 +136,7 @@ class WatchIndex extends Component {
                     </Col>
                     <Col span={12}>
                       <div className="pending-list watchIndex-border groupLeader-border">
-                          <p className="alarm-top">挂起列表</p>
+                          <p className="alarm-top"><span style={{float:"left"}}>挂起列表</span><span style={{float:"right",cursor:"pointer"}}><a href="#/app/watch/workbench">更多</a></span></p>
                           {
                               this.state.hangUp.map((v,i)=>(
                                   <Row className="alarmList" key={i}>
@@ -141,7 +148,7 @@ class WatchIndex extends Component {
                                               <Row className="Camera">{v.gettime}</Row>
                                               <Row className="Camera"><span className="nameWeight">备注信息：</span>{v.memo?v.memo:"无"}</Row>
                                           </Col>
-                                          <Col span={3} className="textCenter">{this.peddingType(v.hstatus)?this.peddingType(v.hstatus):"未知类型"}</Col>
+                                          <Col span={3} className="textCenter" className={this.alarmTypeColor(v.hstatus)}>{this.peddingType(v.hstatus)?this.peddingType(v.hstatus):"未知类型"}</Col>
                                           <Col span={6} className="textCenter">{v.atime?v.atime:"无"}</Col>
                                       </div>
                                   </Row>

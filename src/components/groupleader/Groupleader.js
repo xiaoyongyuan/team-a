@@ -98,7 +98,8 @@ class Groupleader extends Component {
                     hangup:res.statsstics.hangup,
                     alarmun:res.statsstics.alarmun,
                     smpgr:res.data.smpgr,
-                    smpqy:res.data.smpqy
+                    smpqy:res.data.smpqy,
+                    alarmhandle:res.alarmhandle
                 })
             }
         })
@@ -169,18 +170,16 @@ class Groupleader extends Component {
                                     <p className="alarm-top">查询用户记录</p>
                                     <div className="record">
                                         <Row>
-                                            <Col span={6} className="record-center">用户</Col>
-                                            <Col span={6} className="record-center">查询内容</Col>
-                                            <Col span={6} className="record-center">查询时间</Col>
-                                            <Col span={6} className="record-center">操作人</Col>
+                                            <Col span={8} className="record-center">用户</Col>
+                                            <Col span={8} className="record-center">查询时间</Col>
+                                            <Col span={8} className="record-center">操作人</Col>
                                         </Row>
                                         {
                                             this.state.userRecord.map((v,i)=>(
                                                 <Row ke={i}>
-                                                    <Col span={6} className="record-body">{v.name}</Col>
-                                                    <Col span={6} className="record-body">{v.context}</Col>
-                                                    <Col span={6} className="record-body">{v.time}</Col>
-                                                    <Col span={6} className="record-body">{v.operator}</Col>
+                                                    <Col span={8} className="record-body">{v.name}</Col>
+                                                    <Col span={8} className="record-body">{v.time}</Col>
+                                                    <Col span={8} className="record-body">{v.operator}</Col>
                                                 </Row>
                                             ))
                                         }
@@ -208,6 +207,7 @@ class Groupleader extends Component {
                             <p className="alarm-top">今日详情处理</p>
                             <table className="record todayDetails">
                                 <tr>
+                                    <td className="details-title">姓名</td>
                                     <td className="details-title">总数</td>
                                     <td className="details-title">误报</td>
                                     <td className="details-title">虚报</td>
