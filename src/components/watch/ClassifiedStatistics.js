@@ -1,21 +1,25 @@
 import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
-let vis=false;
 class ClassifiedStatistics extends Component {
-    constructor(props){
-        super(props);
-    }
-    componentWillReceiveProps(){
-        this.setState({
-            yesterdayHandled:this.props.yesterdayHandled
-        });
-    }
     render() {
+        const labelStyle={
+            normal: {
+                show: true,
+                position: 'insideTop',
+                formatter: function(params) {
+                    if (params.value > 0) {
+                        return params.value;
+                    } else {
+                        return '';
+                    }
+                },
+            }
+        };
         let option = {
             legend: {
-                data: ['误报', '虚报','警报','查询用户'],
+                data: ['误报', '虚报','警情','查询用户'],
                 orient:"vertical",
-                right:"right",
+                right:"right"
             },
             xAxis:  {
                 type: 'category',
@@ -38,50 +42,30 @@ class ClassifiedStatistics extends Component {
                     name: '误报',
                     type: 'bar',
                     stack: '总量',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'insideTop'
-                        }
-                    },
-                    data: [0]
+                    label: labelStyle,
+                    data: [this.props.yesterdayFalseList]
                 },
                 {
                     name: '虚报',
                     type: 'bar',
                     stack: '总量',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'insideTop'
-                        }
-                    },
-                    data: [0]
+                    label: labelStyle,
+                    data: [this.props.yesterdayEmptyList]
                 },
                 {
-                    name: '警报',
+                    name: '警情',
                     type: 'bar',
                     stack: '总量',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'insideTop'
-                        }
-                    },
-                    data: [35]
+                    label: labelStyle,
+                    data: [this.props.yesterdayList]
                 },
                 {
                     name: '查询用户',
                     type: 'bar',
                     barWidth:"40",
                     stack: '总量',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'insideTop'
-                        }
-                    },
-                    data: [35]
+                    label: labelStyle,
+                    data: [this.props.yesterdayList]
                 }
             ]
         };

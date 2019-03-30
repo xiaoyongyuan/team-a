@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Col, Row} from "antd";
-import WorkStatistics from "../groupleader/WorkStatistics";
+import BeCuty from "./BeCuty";
 import "../../style/ztt/css/watchIndex.css";
 import {post} from "../../axios/tools";
 import nodata from "../../style/imgs/nopic.png";
@@ -130,7 +130,7 @@ class WatchIndex extends Component {
                         <Col span={24}>
                             <Row className="groupLeader-border">
                                 <p className="alarm-top">近七日工作统计</p>
-                                <WorkStatistics nearlySeven={this.state.nearlySeven} className="group-seven" />
+                                <BeCuty nearlySeven={this.state.nearlySeven} className="group-seven" />
                             </Row>
                         </Col>
                     </Col>
@@ -142,14 +142,15 @@ class WatchIndex extends Component {
                                   <Row className="alarmList" key={i}>
                                       <div className="alarmListBorder">
                                           <Col span={6} className="listImg textCenter">
-                                              <div className="handleUpImg"><img src={v.pic_min?v.pic_min:nodata} alt=""/></div></Col>
-                                          <Col span={8} className="textCenter">
-                                              <Row className="Camera" style={{display:v.name?"block":"none"}}><span className="nameWeight">名称：</span>{v.name}</Row>
-                                              <Row className="Camera">{v.gettime}</Row>
-                                              <Row className="Camera"><span className="nameWeight">备注信息：</span>{v.memo?v.memo:"无"}</Row>
+                                              <div className="handleUpImg"><img src={v.pic_min?v.pic_min:nodata} alt=""/></div>
                                           </Col>
-                                          <Col span={3} className="textCenter" className={this.alarmTypeColor(v.hstatus)}>{this.peddingType(v.hstatus)?this.peddingType(v.hstatus):"未知类型"}</Col>
-                                          <Col span={6} className="textCenter">{v.atime?v.atime:"无"}</Col>
+                                          <Col span={6} className="textCenter">
+                                              <Row className="Camera" style={{display:v.name?"block":"none"}}><span className="nameWeight">名称：</span>{v.name}</Row>
+                                              <Row className="Camera" title={v.gettime}>{v.gettime}</Row>
+                                              <Row className="Camera" title={v.memo?v.memo:"无"}><span className="nameWeight">备注信息：</span>{v.memo?v.memo:"无"}</Row>
+                                          </Col>
+                                          <Col span={4} className="textCenter" className={this.alarmTypeColor(v.hstatus)}>{this.peddingType(v.hstatus)?this.peddingType(v.hstatus):"未知类型"}</Col>
+                                          <Col span={5} className="textCenter">{v.atime?v.atime:"无"}</Col>
                                       </div>
                                   </Row>
                               ))
