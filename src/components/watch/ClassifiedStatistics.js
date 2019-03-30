@@ -2,6 +2,19 @@ import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
 class ClassifiedStatistics extends Component {
     render() {
+        const labelStyle={
+            normal: {
+                show: true,
+                position: 'insideTop',
+                formatter: function(params) {
+                    if (params.value > 0) {
+                        return params.value;
+                    } else {
+                        return '';
+                    }
+                },
+            }
+        };
         let option = {
             legend: {
                 data: ['误报', '虚报','警情','查询用户'],
@@ -29,36 +42,21 @@ class ClassifiedStatistics extends Component {
                     name: '误报',
                     type: 'bar',
                     stack: '总量',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'insideTop'
-                        }
-                    },
+                    label: labelStyle,
                     data: [this.props.yesterdayFalseList]
                 },
                 {
                     name: '虚报',
                     type: 'bar',
                     stack: '总量',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'insideTop'
-                        }
-                    },
+                    label: labelStyle,
                     data: [this.props.yesterdayEmptyList]
                 },
                 {
                     name: '警情',
                     type: 'bar',
                     stack: '总量',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'insideTop'
-                        }
-                    },
+                    label: labelStyle,
                     data: [this.props.yesterdayList]
                 },
                 {
@@ -66,12 +64,7 @@ class ClassifiedStatistics extends Component {
                     type: 'bar',
                     barWidth:"40",
                     stack: '总量',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'insideTop'
-                        }
-                    },
+                    label: labelStyle,
                     data: [this.props.yesterdayList]
                 }
             ]
