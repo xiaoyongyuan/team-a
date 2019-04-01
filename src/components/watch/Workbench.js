@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import {Button,Collapse,Row,Col, Modal,message,Icon,Switch} from "antd";
+import {Button,Collapse,Row,Col, Modal,message,Icon,Switch,Avatar,Comment,Input} from "antd";
 import "../../style/ztt/css/workbench.css";
 import nodata from "../../style/imgs/nopic.png";
 import {post} from "../../axios/tools";
+import moment from "moment";
+
+const { TextArea } = Input;
 const Panel = Collapse.Panel;
 class Workbench extends Component {
     constructor(props) {
@@ -12,15 +15,14 @@ class Workbench extends Component {
             visibleTips:false,
             pending:[],
             videoFalse:false,//视频开关
-            falseAlarmBtn:false,//虚警按钮
-            falsePositivesBtn:false,//误报按钮
-            pushBtn:false,//推送按钮
             nextPageBtn:false,//下一页
-            mountBtn:false,//挂载按钮图标,
             page:1,
-            ifPedding:true,
             field:true, //是否显示围界信息
             obj:true,
+            newreturnSwitch:false,
+            lookretrunSwitch:false, //回访开关
+            returnmemo:[], //回访记录
+            returnChange:'' //新增回访记录
         };
     }
     componentDidMount() {
@@ -29,8 +31,8 @@ class Workbench extends Component {
         this.padingLoad();
     }
     //值班人员报警
-    getOneAlarm=()=>{
-      post({url:"/api/alarmhandle/get_handle"},(res)=>{
+    getOneAlarm=(url="/api/alarmhandle/get_handle",data={})=>{
+      post({url:url,data:data},(res)=>{
           if(res.success){
               this.setState({
               		nextPageBtn:false,
@@ -39,7 +41,8 @@ class Workbench extends Component {
                   companycode:res.data.companycode,
                   eid:res.data.eid,
                   name:res.data.name,
-                  memo:res.alarmhandle.memo,
+                  memo:res.alarmhandle.memo?res.alarmhandle.memo:'备注信息',
+                  memochange:res.alarmhandle.memo?res.alarmhandle.memo:'备注信息',
                   videopath:res.data.videopath,
                   picpath:res.data.picpath,
                   atime:res.data.atime,
@@ -48,10 +51,9 @@ class Workbench extends Component {
                   picWidth:res.data.pic_width,
                   picHeight:res.data.pic_height,
                   videoFalse:false,
-                  falseAlarmBtn:false,//虚警按钮
-                  pushBtn:false,//推送按钮
-                  falsePositivesBtn:false,//误报按钮
-                  mountBtn:false,//挂载按钮图标,
+                  // returnmemo:res.alarmhandle.returnmemo //回访记录
+                  returnmemo:[{time:'2017012',memo:'说点什么吧'}]//回访记录
+
               },()=>{
                   this.paintingBoundary();//围界
               });
@@ -106,35 +108,23 @@ class Workbench extends Component {
     };
     //挂在列表显示
     pendingList=()=>{
-        if(this.state.ifPedding){
-            post({url:"/api/alarmhandle/getlist",data:{htype:"hangup",pageindex:this.state.page,pagesize:10}},(res)=>{
-                if(res.success){
-                    if(res.data.length>0){
-                        if(this.state.page===1){
-                            this.setState({
-                                pending:res.data,
-                                pendingCount:res.totalcount,
-                            })
-                        }else{
-                            const listPending=this.state.pending;
-                            const pending =listPending.concat(res.data);
-                            this.setState({
-                                pending,
-                                pendingCount:res.totalcount,
-                            });
-                        }
+        post({url:"/api/alarmhandle/getlist",data:{htype:"hangup",pageindex:this.state.page,pagesize:10}},(res)=>{
+            if(res.success){
+                if(res.data.length>0){
+                	var pending=res.data;
+                	if(this.state.page>1){
+                		const listPending=this.state.pending;
+                		pending=listPending.concat(res.data);
+                	}
+                	this.setState({
+                      pending:pending,
+                      pendingCount:res.totalcount,
+                  })
 
-                    }else{
-                        message.info("没有更多了");
-                        this.setState({
-                            ifPedding:false
-                        })
-                    }
-                }else{
-                    message.warning(res.errorinfo);
-                }
-            })
-        }
+                }else message.info("没有更多了");
+            }else message.warning(res.errorinfo);
+        })
+
     };
     padingLoad=()=>{
         let page=1;
@@ -161,69 +151,32 @@ class Workbench extends Component {
         if(this.state.code){
             post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:this.state.type}},(res)=>{
                 if(res.success){
-                	var currentPage= this.state.page;
-                	if(currentPage>1){
-                    	currentPage=1;
-                    }
-                    var alarmold=this.state.oldHstatus;
-                    alarmold=this.state.type;
-                    this.setState({
-                    		nextPageBtn:true,
-                        visibleTips:false,
-                        alarmold,
-                        page:currentPage
-                    },()=>this.pendingList());
+                	message.success("修改成功");
+                  this.setState({
+                  		nextPageBtn:true,
+                      visibleTips:false,
+                      oldHstatus:this.state.type,
+                      page:this.state.page>1?1:this.state.page
+                  },()=>this.pendingList());
                     
-
-                    if(this.state.type===4){
-                        this.setState({
-                            falseAlarmBtn:true,
-                            falsePositivesBtn:true,
-                            pushBtn:true,
-                            oldHstatus:4,
-                            mountBtn:true,
-                        })
-                    }else if(this.state.type===5){
-                        this.setState({
-                            falseAlarmBtn:true,
-                            falsePositivesBtn:true,
-                            pushBtn:true,
-                            oldHstatus:5,
-                            mountBtn:true,
-                        })
-                    }else if(this.state.type===1){
-                        this.setState({
-                            falseAlarmBtn:true,
-                            falsePositivesBtn:true,
-                            pushBtn:true,
-                            oldHstatus:1,
-                            mountBtn:true,
-                        })
-                    }else if(this.state.type===2){
+										if(this.state.type===2){ //警情需要查看用户信息
                         post({url:"/api/company/getinfo_maintain",data:{code:this.state.companycode}},(res)=>{
                             if(res.success){
                                 this.setState({
                                     userName:res.data.adminname,
                                     userPhone:res.data.adminaccount,
-                                    falseAlarmBtn:true,
-                                    falsePositivesBtn:true,
-                                    pushBtn:true,
-                                    mountBtn:true,
-                                    oldHstatus:2,
+                                    visibleUser:true
                                 })
                             }
                         });
-                        this.setState({
-                            visibleUser:true
-                        })
                     }
-                    message.success("修改成功");
+                    
                 }else{
                     message.warning(res.errorinfo);
                 }
             });
         }else{
-            message.warning("报警code不存在");
+            message.warning("当前报警不存在");
             this.setState({
                 visibleTips:false,
             })
@@ -231,61 +184,30 @@ class Workbench extends Component {
     };
     //下一页
     nextPage=()=>{
-    	console.log('this.state.nextPageBtn',this.state.nextPageBtn)
         if(this.state.nextPageBtn){
             this.getOneAlarm();
         }else message.info("请先处理当前报警！");
     };
-    remarks=()=>{
-        var remarks=document.getElementById("remarks").value;
-        if(this.state.memo!==remarks){
+    memochange=(e)=>{ //备注信息改变
+    	const memochange=e.target.value;
+    	if(memochange != this.state.memo) this.setState({memochange})
+    }
+    remarks=()=>{ //提价备注信息
+        if(this.state.memo!==this.state.memochange){
             if(this.state.code){
-                post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,memo:remarks}},(res)=>{
+                post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,memo:this.state.memochange}},(res)=>{
                     if(res.success){
-                        var memo=this.state.memo;
-                        memo=remarks;
-                        this.setState({memo});
-                        message.success("备注信息添加成功!");
-                    }else{
-                        message.error("备注信息添加失败!");
-                    }
+                    		message.success("备注信息添加成功!");
+                        this.setState({memo:this.state.memochange});
+                    }else message.error("备注信息添加失败!");
                 })
-            }else{
-                message.warning("报警code不存在");
-            }
+            }else message.warning("当前报警不存在");
         }
     };
     //挂载还原
     mountRestore=(code)=>{
         if(code && this.state.nextPageBtn){
-            post({url:"/api/alarmhandle/get_hangup",data:{code:code}},(res)=>{
-                if(res.success){
-                    this.setState({
-                    		nextPageBtn:false,
-                        oldHstatus:res.alarmhandle.hstatus,
-                        code:res.data.code,
-                        companycode:res.data.companycode,
-                        eid:res.data.eid,
-                        name:res.data.name,
-                        memo:res.alarmhandle.memo,
-                        videopath:res.data.videopath,
-                        picpath:res.data.picpath,
-                        atime:res.data.atime,
-                        fieldInfor:res.data.field,
-                        finalresult:res.data.finalresult1,
-                        picWidth:res.data.pic_width,
-                        picHeight:res.data.pic_height,
-                        videoFalse:false,
-                        falseAlarmBtn:false,//虚警按钮
-                        pushBtn:false,//推送按钮
-                        falsePositivesBtn:false,//误报按钮
-                        mountBtn:false,//挂载按钮图标,
-                    },()=>{
-                        document.getElementById("remarks").value=this.state.memo;
-                        this.paintingBoundary();//围界
-                    });
-                }
-            })
+        	this.getOneAlarm("/api/alarmhandle/get_hangup",{code:code})
         }else{
             message.warning("请先处理当前报警！");
         }
@@ -341,6 +263,29 @@ class Workbench extends Component {
             this.paintingBoundary();
         });
     }
+    lookretrun=(val,opt=true)=>{ //查看回访
+    	this.setState({[val]: opt})
+    }
+    newreturnCancel=()=>{ //取消新增回访记录
+    	this.setState({returnChange: '',newreturnSwitch:false})
+    }
+    newreturnOk=()=>{
+    	const _this=this;
+    	post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,returnmemo:this.state.returnChange}},(res)=>{
+          if(res.success){
+          		message.success("修改成功");
+          		var returnmemo=this.state.returnmemo;
+          		returnmemo.push({time:moment(),memo:this.state.returnChange})
+    					this.setState({returnmemo:returnmemo})
+              _this.newreturnCancel()
+
+          }
+      });
+
+    }
+    returnChange=(e)=>{ //回访内容
+    	this.setState({returnChange: e.target.value})
+    }
     render() {
         return (
             <div className="workBench workToP">
@@ -361,12 +306,20 @@ class Workbench extends Component {
                             </div>
                         </div>
                         <div className="processingAlarm-right">
-                            <div className="mount" style={{visibility:this.state.mountBtn?"hidden":"visible"}}><Icon className="IconMount" type="tag"  size="large" theme="filled" title="挂起"  onClick={()=>this.typeAlarm(1,"挂起")} /></div>
-                            <div className="alarm-btn xuJing" style={{marginTop:"15px"}}><Button type="primary" onClick={()=>this.typeAlarm(4,"虚警")} disabled={this.state.falseAlarmBtn}>虚警</Button></div>
-                            <div className="alarm-btn wuBao"><Button type="primary" onClick={()=>this.typeAlarm(5,"误报")} disabled={this.state.falsePositivesBtn}>误报</Button></div>
-                            <div className="alarm-btn pushAlarm"><Button type="primary" onClick={()=>this.typeAlarm(2,"报警")} disabled={this.state.pushBtn}>警情推送</Button></div>
+                        {this.state.oldHstatus !=2
+                        		?<div>
+	                        			<div className="mount" style={{visibility:this.state.nextPageBtn?"hidden":"visible"}}><Icon className="IconMount" type="tag"  size="large" theme="filled" title="挂起"  onClick={()=>this.typeAlarm(1,"挂起")} /></div>
+	                            	<div className="alarm-btn xuJing" style={{marginTop:"15px"}}><Button type="primary" onClick={()=>this.typeAlarm(4,"虚警")} disabled={this.state.nextPageBtn}>虚警</Button></div>
+	                            	<div className="alarm-btn wuBao"><Button type="primary" onClick={()=>this.typeAlarm(5,"误报")} disabled={this.state.nextPageBtn}>误报</Button></div>
+	                            	<div className="alarm-btn pushAlarm"><Button type="primary" onClick={()=>this.typeAlarm(2,"报警")} disabled={this.state.nextPageBtn}>警情推送</Button></div>
+                        		</div>
+                        		:<div>
+                        				<div className="alarm-btn" style={{marginTop:"15px"}}><Button type="primary"  style={{color:"#f00"}} onClick={()=>this.lookretrun('lookretrunSwitch')}>查看回访</Button></div>
+	                            	<div className="alarm-btn"><Button type="primary" style={{color:"red"}} this onClick={()=>this.typeAlarm(3,"结束")} disabled={this.state.nextPageBtn}>结束</Button></div>
+                        		</div>
+                        } 
                             <div className="noteTriangle" />
-                            <textarea className="remarks" id="remarks" placeholder="备注信息" onBlur={()=>this.remarks()} />
+                            <textarea className="remarks" id="remarks" value={this.state.memochange} onChange={this.memochange} onBlur={()=>this.remarks()} />
                             <div className="nextPage">
                                 <Button type="primary" shape="circle" icon="right-circle" theme="filled" title="下一页" size="large" onClick={()=>this.nextPage()} />
                             </div>
@@ -417,7 +370,38 @@ class Workbench extends Component {
                     okText="确认"
                     cancelText="取消"
                 >
-                    <p><span>确定为</span><sapn>{this.state.name?this.state.name:""}</sapn>吗?</p>
+                    <p><span>确定为</span><span>{this.state.name?this.state.name:""}</span>吗?</p>
+                </Modal>
+                <Modal
+                    title="回访记录"
+                    visible={this.state.lookretrunSwitch}
+                    onCancel={()=>this.lookretrun('lookretrunSwitch',false)} 
+                    width={600}
+                    footer={null}
+                >
+                	{this.state.returnmemo.map((el,i)=>(
+	                		<Comment
+								        author={el.time}
+								        avatar={(
+								          <Icon type="message" theme="filled" style={{color:'#6BAC20',fontSize:'1.5em'}} />
+								        )}
+								        content={(
+								          <p>{el.memo}</p>
+								        )}
+								      />
+	                ))}
+	                <p>共<span>{this.state.returnmemo.length}</span>条记录 <span onClick={()=>this.lookretrun('newreturnSwitch')}><Icon type="plus-circle" theme="twoTone" />新增一条</span></p>
+                </Modal>
+                <Modal
+                    title="新增回访记录"
+                    visible={this.state.newreturnSwitch}
+                    width={400}
+                    okText="确认"
+                    cancelText="取消"
+                    onOk={this.newreturnOk}
+                    onCancel={this.newreturnCancel}   
+                >
+                	<TextArea rows={4}  value={this.state.returnChange} onChange={this.returnChange} />
                 </Modal>
             </div>
         )
