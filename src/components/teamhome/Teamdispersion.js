@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import echarts from 'echarts';
-require('echarts/map/js/china.js');
+require('../../style/ztt/map/shanxi1');
 
 class Teamdispersion extends Component {
     render() {
         const option={
+            backgroundColor: "#BFDDF6",
             background:"#404a59",
             geo: {
-                map: 'china',
+                map: 'shanxi1',
                 roam: true,
                 areaStyle: {
                     normal: {
@@ -69,7 +70,7 @@ class Teamdispersion extends Component {
         return (
             <ReactEcharts
                 option={option}
-                style={{height: '397px', width: '100%'}}
+                style={{height: '397px', width: '100%',padding:"10px 0"}}
                 className={'react_for_echarts'}
             />
         )
