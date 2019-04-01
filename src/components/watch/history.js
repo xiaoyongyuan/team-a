@@ -165,6 +165,10 @@ class history extends React.Component {
             return("triangle-topright-green triangleblue");
         }else if(status === 3){
             return("triangle-topright-green trianglered");
+        }else if(status === 4){
+            return("triangle-topright-green trianglered");
+        }else if(status === 5){
+            return("triangle-topright-green triangleOrange");
         }else if(status === -1){
             return("triangle-topright-green trianglec");
         }else if(status === -2){
@@ -187,7 +191,7 @@ class history extends React.Component {
               case 4:
                   return "虚警";
               case 5:
-                  return "挂起";
+                  return "误报";
               case -1:
                   return "待处理";
               case -3:
@@ -256,12 +260,13 @@ class history extends React.Component {
                                         <Select style={{ width: 120 }}>
                                             <Option value="" >所有</Option>
                                             <Option value="0" >未处理</Option>
-                                            <Option value="1" >虚警</Option>
-                                            <Option value="2" >误报</Option>
-                                            <Option value="3" >警报</Option>
-                                            <Option value="-1" >已获取未处理</Option>
-                                            <Option value="-2" >挂起</Option>
-                                            <Option value="-3" >已过期</Option>
+                                            <Option value="1" >挂起</Option>
+                                            <Option value="2" >报警未结束</Option>
+                                            <Option value="3" >报警已结束</Option>
+                                            <Option value="4" >虚警</Option>
+                                            <Option value="5" >误报</Option>
+                                            <Option value="-1" >待处理</Option>
+                                            <Option value="-3" >过期</Option>
                                         </Select>
                                     )}
                                 </Form.Item>
