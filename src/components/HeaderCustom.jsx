@@ -31,6 +31,7 @@ class HeaderCustom extends Component {
             });
         }
         this.unAlarmNumber();
+        setInterval(()=> this.unAlarmNumber(),2000);
        // const aa= post('login',);
     
     };
@@ -66,16 +67,17 @@ class HeaderCustom extends Component {
     render() {
         const { responsive, path } = this.props;
         let unAlarm={
-            width:"255px",
-            height:"40px",
+            width:"210px",
+            height:"45px",
             display:"inline-block",
             borderRadius:"25px",
-            lineHeight:"40px",
+            lineHeight:"45px",
             border:"2px solid #3F51B5",
+            marginRight:"50px"
         };
         let unAlarmFont={
             background:"#0C1050",
-            width:"50%",
+            width:"60%",
             height:"100%",
             display:"inline-block",
             color:"#fff",
@@ -88,11 +90,12 @@ class HeaderCustom extends Component {
             borderBottomRightRadius:"25px",
             background:"#313653",
             color:"#F40000",
-            width:"50%",
+            width:"40%",
             height:"100%",
             display:"inline-block",
             textAlign:"center",
-            fontWeight:"bolder"
+            fontWeight:"bolder",
+            fontSize:"18px"
         };
         return (
             <Header className="custom-theme header" >
