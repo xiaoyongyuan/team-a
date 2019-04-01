@@ -30,9 +30,19 @@ class HeaderCustom extends Component {
                 user: _user
             });
         }
+        this.unAlarmNumber();
        // const aa= post('login',);
     
     };
+    unAlarmNumber=()=>{
+        post({url:"/api/alarmhandle/get_unhandle"},(res)=>{
+            if(res.success){
+                this.setState({
+                    unAlarm:res.data
+                });
+            }
+        })
+    }
     screenFull = () => { //全屏
         screenfull.toggle();
         this.props.toggle();
@@ -55,6 +65,35 @@ class HeaderCustom extends Component {
     };
     render() {
         const { responsive, path } = this.props;
+        let unAlarm={
+            width:"255px",
+            height:"40px",
+            display:"inline-block",
+            borderRadius:"25px",
+            lineHeight:"40px",
+            border:"2px solid #3F51B5",
+        };
+        let unAlarmFont={
+            background:"#0C1050",
+            width:"50%",
+            height:"100%",
+            display:"inline-block",
+            color:"#fff",
+            textAlign:"center",
+            borderTopLeftRadius:"25px",
+            borderBottomLeftRadius:"25px",
+        };
+        let unAlarmNumber={
+            borderTopRightRadius:"25px",
+            borderBottomRightRadius:"25px",
+            background:"#313653",
+            color:"#F40000",
+            width:"50%",
+            height:"100%",
+            display:"inline-block",
+            textAlign:"center",
+            fontWeight:"bolder"
+        };
         return (
             <Header className="custom-theme header" >
                 {
@@ -75,6 +114,7 @@ class HeaderCustom extends Component {
                     style={{ lineHeight: '64px', float: 'right' }}
                     onClick={this.menuClick}
                 >
+                    <span style={unAlarm}><span style={unAlarmFont}>未处理报警数</span><span style={unAlarmNumber}>{this.state.unAlarm}</span></span>
                     <Menu.Item key="full" onClick={this.screenFull} >
                         <Icon type="arrows-alt" onClick={this.screenFull} />
                     </Menu.Item>
