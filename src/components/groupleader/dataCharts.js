@@ -154,7 +154,7 @@ class dataCharts extends Component {
                             color:'#6475F9',
                             label: {
                                 show: true, //开启显示
-                                position: 'top', //在上方显示
+                                position: 'insideTop', //在上方显示
                                 formatter: function(p) {
                                     return p.value > 0 ? (p.value) : '';
                                  },
@@ -177,7 +177,7 @@ class dataCharts extends Component {
                             color:'#FA8068',
                             label: {
                                 show: true, //开启显示
-                                position: 'top', //在上方显示
+                                position: 'insideTop', //在上方显示
                                 formatter: function(p) {
                                     return p.value > 0 ? (p.value) : '';
                                  },
