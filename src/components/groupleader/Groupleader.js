@@ -4,6 +4,7 @@ import WorkStatistics from "./WorkStatistics";
 import AlarmAnalysis from "./AlarmAnalysis";
 import "../../style/ztt/css/groupLeader.css";
 import {post} from "../../axios/tools";
+import "../../style/ztt/icon/iconfont.css";
 import nodatapic from "../../style/imgs/nopic320180.png";
 class Groupleader extends Component {
     constructor(props) {
@@ -31,7 +32,8 @@ class Groupleader extends Component {
                 this.setState({
                     realname:res.data.realname,
                     lastlogin:res.data.lastlogin,
-                    usergender:res.data.usergender
+                    usergender:res.data.usergender,
+                    account:res.data.account
                 })
             }
         })
@@ -62,7 +64,7 @@ class Groupleader extends Component {
         post({url:"/api/alarmhandle/getinfo"},(res)=>{
             if(res.success){
                 this.setState({
-                    unhandle:res.unhandle,//未处理报警数
+                    unhandle:res.unhandle,//未处理报警数,
                     falsealarm:res.statsstics.falsealarm,//误报
                     emptyalarm:res.statsstics.emptyalarm,//虚警
                     hangup:res.statsstics.hangup,//挂起
@@ -71,6 +73,7 @@ class Groupleader extends Component {
                     smpqy:res.data.smpqy,//企业用户
                     userCount:res.data.smpgr+res.data.smpqy,//用户总数
                     alarmhandle:res.alarmhandle.slice(0.6),//今日处理详情
+                    alarmCount:res.statsstics.alarm+res.statsstics.alarmun
                 })
             }
         })
@@ -87,8 +90,8 @@ class Groupleader extends Component {
                         </div>
                         <div className="groupLeader-img group-information">
                             <div>
-                                <p className="nickname">{this.state.usergender===0?"女":"男"}</p>
-                                <p style={{display:this.state.lastlogin?"block":"none"}} >{this.state.lastlogin}</p>
+                                <p><span>{this.state.account}</span><span className={"nickname iconfont"+(this.state.usergender===0?" icon-male":" icon-female")} /></p>
+                                <p style={{display:this.state.lastlogin?"block":"none"}} >上次登录时间：{this.state.lastlogin}</p>
                             </div>
                         </div>
                     </div>
@@ -101,14 +104,16 @@ class Groupleader extends Component {
                         <p className="alarm-number">{this.state.todaysCount}</p>
                         <div className="misreporting">
                             <Row>
-                                <Col span={8}>误报</Col>
-                                <Col span={8}>虚警</Col>
-                                <Col span={8}>挂起</Col>
+                                <Col span={6}>误报</Col>
+                                <Col span={6}>虚警</Col>
+                                <Col span={6}>挂起</Col>
+                                <Col span={6}>警报</Col>
                             </Row>
                             <Row>
-                                <Col span={8}>{this.state.falsealarm}</Col>
-                                <Col span={8}>{this.state.emptyalarm}</Col>
-                                <Col span={8}>{this.state.hangup}</Col>
+                                <Col span={6}>{this.state.falsealarm}</Col>
+                                <Col span={6}>{this.state.emptyalarm}</Col>
+                                <Col span={6}>{this.state.hangup}</Col>
+                                <Col span={6}>{this.state.alarmCount}</Col>
                             </Row>
                         </div>
                     </div>
@@ -149,7 +154,7 @@ class Groupleader extends Component {
                                             this.state.userList.map((v,i)=>(
                                                 <Row ke={i}>
                                                     <Col span={8} className="record-body">{v.cname?v.cname:"无"}</Col>
-                                                    <Col span={8} className="record-body">{v.atime?v.atime:"无"}</Col>
+                                                    <Col span={8} className="record-body overflow" title={v.atime?v.atime:"无"}>{v.atime?v.atime:"无"}</Col>
                                                     <Col span={8} className="record-body">{v.realname}</Col>
                                                 </Row>
                                             ))

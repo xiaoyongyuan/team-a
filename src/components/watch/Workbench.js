@@ -153,13 +153,12 @@ class Workbench extends Component {
                 if(res.success){
                 	message.success("修改成功");
                   this.setState({
-                  		nextPageBtn:true,
+                  	  nextPageBtn:true,
                       visibleTips:false,
                       oldHstatus:this.state.type,
                       page:this.state.page>1?1:this.state.page
                   },()=>this.pendingList());
-                    
-										if(this.state.type===2){ //警情需要查看用户信息
+				if(this.state.type===2){ //警情需要查看用户信息
                         post({url:"/api/company/getinfo_maintain",data:{code:this.state.companycode}},(res)=>{
                             if(res.success){
                                 this.setState({
@@ -192,7 +191,7 @@ class Workbench extends Component {
     	const memochange=e.target.value;
     	if(memochange != this.state.memo) this.setState({memochange})
     }
-    remarks=()=>{ //提价备注信息
+    remarks=()=>{ //提交备注信息
         if(this.state.memo!==this.state.memochange){
             if(this.state.code){
                 post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,memo:this.state.memochange}},(res)=>{

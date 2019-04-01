@@ -15,7 +15,7 @@ class AlarmAnalysis extends Component {
                 {
                     name: '访问来源',
                     type: 'pie',
-                    radius : '55%',
+                    radius: ['40%', '60%'],
                     center: ['50%', '60%'],
                     data:[
                         {value:this.props.unhandle, name:'未处理报警数'},
@@ -35,7 +35,7 @@ class AlarmAnalysis extends Component {
         return(
             <ReactEcharts
                 option={option}
-                style={{width:"100%"}}
+                style={{width:"100%",marginTop:"-30px"}}
             />
         )
     }
