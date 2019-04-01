@@ -67,17 +67,23 @@ class HeaderCustom extends Component {
     render() {
         const { responsive, path } = this.props;
         let unAlarm={
-            width:"210px",
-            height:"45px",
+            position: "relative",
+            top:"13px",
+            float:"right",
+            width:"237px",
+            height:"40px",
             display:"inline-block",
             borderRadius:"25px",
-            lineHeight:"45px",
+            lineHeight:"40px",
             border:"2px solid #3F51B5",
             marginRight:"50px"
         };
         let unAlarmFont={
+            position: "absolute",
+            top:"0",
+            left:"0",
             background:"#0C1050",
-            width:"60%",
+            width:"50%",
             height:"100%",
             display:"inline-block",
             color:"#fff",
@@ -86,11 +92,14 @@ class HeaderCustom extends Component {
             borderBottomLeftRadius:"25px",
         };
         let unAlarmNumber={
+            position: "absolute",
+            right:"0",
+            top:"0",
             borderTopRightRadius:"25px",
             borderBottomRightRadius:"25px",
             background:"#313653",
             color:"#F40000",
-            width:"40%",
+            width:"50%",
             height:"100%",
             display:"inline-block",
             textAlign:"center",
@@ -117,7 +126,6 @@ class HeaderCustom extends Component {
                     style={{ lineHeight: '64px', float: 'right' }}
                     onClick={this.menuClick}
                 >
-                    <span style={unAlarm}><span style={unAlarmFont}>未处理报警数</span><span style={unAlarmNumber}>{this.state.unAlarm}</span></span>
                     <Menu.Item key="full" onClick={this.screenFull} >
                         <Icon type="arrows-alt" onClick={this.screenFull} />
                     </Menu.Item>
@@ -138,6 +146,7 @@ class HeaderCustom extends Component {
                         </MenuItemGroup>*/}
                     </SubMenu>
                 </Menu>
+                <div style={unAlarm}><span style={unAlarmFont}>未处理报警数</span><span style={unAlarmNumber}>{this.state.unAlarm}</span></div>
             </Header>
         )
     }
