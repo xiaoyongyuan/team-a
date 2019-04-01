@@ -36,12 +36,12 @@ class Workbench extends Component {
       post({url:url,data:data},(res)=>{
           if(res.success){
               this.setState({
-              		nextPageBtn:false,
+              	 nextPageBtn:false,
                   oldHstatus:res.alarmhandle.hstatus,
                   code:res.data.code,
                   companycode:res.data.companycode,
                   eid:res.data.eid,
-                  name:res.data.name,
+                  alarmname:res.data.name,
                   memo:res.alarmhandle.memo?res.alarmhandle.memo:'备注信息',
                   memochange:res.alarmhandle.memo?res.alarmhandle.memo:'备注信息',
                   videopath:res.data.videopath,
@@ -153,24 +153,28 @@ class Workbench extends Component {
     * 如果为报警并获取用户的信息
     * */
     handleOkTips=()=>{
+    	const _this=this;
+    	const oldHstatus=this.state.type;
+
         if(this.state.code){
-            post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:this.state.type}},(res)=>{
+            post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:oldHstatus}},(res)=>{
                 if(res.success){
                 	message.success("修改成功");
-                  this.setState({
+                  _this.setState({
                   		nextPageBtn:true,
                       visibleTips:false,
-                      oldHstatus:this.state.type,
+                      oldHstatus:oldHstatus,
                       page:1
                   },()=>{
+                  	return;
                   	hangup=true;
-                  	this.pendingList() 
+                  	_this.pendingList() 
                   });
-                    
+                    return;
 										if(this.state.type===2){ //警情需要查看用户信息
                         post({url:"/api/company/getinfo_maintain",data:{code:this.state.companycode}},(res)=>{
                             if(res.success){
-                                this.setState({
+                                _this.setState({
                                     userName:res.data.adminname,
                                     userPhone:res.data.adminaccount,
                                     visibleUser:true
@@ -298,8 +302,8 @@ class Workbench extends Component {
                 <div className="processingAlarm workbenchBorder">
                     <div className="processing-title">
                         <div className="processingAlarm-left">
-                            <p style={{display:this.state.name?"block":"none"}}><span className="nameWeight">名称：</span><span className="colorAlarmFont">{this.state.name}</span><span className="switchInfor"><span className="atype">状态：</span><span style={{color:"red"}}>{this.alarmType(this.state.oldHstatus)}</span></span></p>
-                            <p style={{display:this.state.oldHstatus?"block":"none"}}><span className="colorAlarmFont">{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span><span className="switchInfor"><span className="information">围界信息：<Switch size="small" checked={this.state.field} onChange={(checked)=>this.onChange(checked,'field')} /></span><span>报警信息：<Switch size="small" checked={this.state.obj} onChange={(checked)=>this.onChange(checked,'obj')} /></span></span></p>
+                            <p><span className="nameWeight">名称：</span><span className="colorAlarmFont">{this.state.alarmname}</span><span className="switchInfor"><span className="atype">状态：</span><span style={{color:"red"}}>{this.alarmType(this.state.oldHstatus)}</span></span></p>
+                            <p><span className="colorAlarmFont">{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span><span className="switchInfor"><span className="information">围界信息：<Switch size="small" checked={this.state.field} onChange={(checked)=>this.onChange(checked,'field')} /></span><span>报警信息：<Switch size="small" checked={this.state.obj} onChange={(checked)=>this.onChange(checked,'obj')} /></span></span></p>
                             <div className="alarmImg">
                                 <canvas id="myCanvas" width="704px" height="576px" style={{backgroundImage:'url('+this.state.picpath+')',backgroundSize:"100% 100%",display:this.state.videoFalse?"none":"block"}} />
                                 <video id="videopath" src={this.state.videopath} controls="controls" autoPlay="autoplay" loop="loop" style={{display:this.state.videoFalse?"block":"none"}} />
@@ -321,8 +325,8 @@ class Workbench extends Component {
                         		</Fragment>
                         		:<Fragment>
                         				<div className="mount" style={{visibility:"hidden"}}><Icon className="IconMount" type="tag"  size="large" theme="filled" title="挂起" /></div>
-                        				<div className="alarm-btn" style={{marginTop:"15px"}}><Button type="primary"  style={{color:"#f00"}} onClick={()=>this.lookretrun('lookretrunSwitch')}>查看回访</Button></div>
-	                            	<div className="alarm-btn" style={{marginBottom:"95px"}}><Button type="primary" style={{color:"red"}} this onClick={()=>this.typeAlarm(3,"结束")}>结束</Button></div>
+                        				<div className="alarm-btn" style={{marginTop:"15px"}}><Button type="primary"  style={{background:"#86B94A",borderColor:"#86B94A"}} onClick={()=>this.lookretrun('lookretrunSwitch')}>查看回访</Button></div>
+	                            	<div className="alarm-btn" style={{marginBottom:"95px"}}><Button type="primary" style={{background:"red",borderColor:"red"}} this onClick={()=>this.typeAlarm(3,"结束")}>结束</Button></div>
                         		</Fragment>
                         } 
                             <div className="noteTriangle" />
