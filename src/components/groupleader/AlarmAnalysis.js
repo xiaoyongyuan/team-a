@@ -13,7 +13,7 @@ class AlarmAnalysis extends Component {
             color:["#5570FB","#FE6661","#43B4F8"],
             series : [
                 {
-                    name: '访问来源',
+                    name: '',
                     type: 'pie',
                     radius: ['40%', '60%'],
                     center: ['50%', '60%'],
