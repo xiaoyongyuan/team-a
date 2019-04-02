@@ -128,7 +128,7 @@ class Teammange extends Component {
     selectopt = (e) => { //检索search
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            if(values.clouddata==undefined && values.name==undefined){
+            if(values.clouddata===undefined && values.name===undefined){
                 this.requestdata();
                 this.setState({
                     deleteshow: true,
@@ -208,10 +208,9 @@ searchCancel = () =>{//删除取消
                 dataIndex: 'ctype',
                 key: 'ctype',
                 render: (text, record) => {
-                 if(text==4){
+                 if(text===4){
                     return ('树莓派企业用户');
-
-                 }if (text==5) {
+                 }if (text===5) {
                     return ('局域网企业用户');
                  } else {
                     return ('树莓派个人用户');
@@ -243,7 +242,6 @@ searchCancel = () =>{//删除取消
                         >编辑
                         </Button>
                         {/* <Button onClick={()=>_this.showModaldelete(text,index)}>删除</Button> */}
-
                     </span>
                 ),
             }];
@@ -283,7 +281,7 @@ searchCancel = () =>{//删除取消
                     </Col>
                 </Row>
 
-                <Table columns={columns} dataSource={this.state.list} />
+                <Table columns={columns} dataSource={this.state.list} rowKey={record => record.code} />
 
                 <Modal visible={this.state.visible}
                        onOk={this.handleCreate}

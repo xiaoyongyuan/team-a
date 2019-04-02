@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
 class AlarmAnalysis extends Component {
-    constructor(props){
-        super(props);
-    }
     render() {
         let option={
             tooltip : {

@@ -48,7 +48,7 @@ class Groupleader extends Component {
                 })
             }
         })
-    }
+    };
     //近七日工作统计
     sevenDays=()=>{
         post({url:"/api/alarmhandlehistory/get_analysis_comid"},(res)=>{
@@ -100,7 +100,7 @@ class Groupleader extends Component {
                 <Row className="group-flex">
                     <div className="group-height name groupLeader-border">
                         <div className="groupLeader-img">
-                             <div className="groupIcon"><img src="http://ftp01.aokecloud.cn/alarm/1000021/photocatch/20190312/1000021_20190312163101.jpg" alt=""/></div>
+                             <div className="groupIcon"><img src="http://ftp01.aokecloud.cn/alarm/1000021/photocatch/20190312/1000021_20190312163101.jpg" alt="" /></div>
                              <p className="groupLeaderName">{this.state.realname}</p>
                         </div>
                         <div className="groupLeader-img group-information">

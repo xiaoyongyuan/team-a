@@ -65,13 +65,15 @@ class WatchIndex extends Component {
                 return "待处理";
             case -3:
                 return "过期";
+            default:
+                return "";
         }
     };
     alarmTypeColor=(colorType)=>{
         if(colorType===1){
-            return "handupColor";
+            return "textCenter handupColor";
         }else if(colorType===2){
-            return "alarmUntreated";
+            return "textCenter alarmUntreated";
         }
     };
     render() {
@@ -142,14 +144,14 @@ class WatchIndex extends Component {
                                   <Row className="alarmList" key={i}>
                                       <div className="alarmListBorder">
                                           <Col span={6} className="listImg textCenter">
-                                              <div className="handleUpImg"><img src={v.pic_min?v.pic_min:nodata} alt=""/></div>
+                                              <div className="handleUpImg"><img src={v.pic_min?v.pic_min:nodata} alt="" /></div>
                                           </Col>
                                           <Col span={6} className="textCenter">
                                               <Row className="Camera" style={{display:v.name?"block":"none"}}><span className="nameWeight">名称：</span>{v.name}</Row>
                                               <Row className="Camera" title={v.gettime}>{v.gettime}</Row>
                                               <Row className="Camera" title={v.memo?v.memo:"无"}><span className="nameWeight">备注信息：</span>{v.memo?v.memo:"无"}</Row>
                                           </Col>
-                                          <Col span={4} className="textCenter" className={this.alarmTypeColor(v.hstatus)}>{this.peddingType(v.hstatus)?this.peddingType(v.hstatus):"未知类型"}</Col>
+                                          <Col span={4} className={this.alarmTypeColor(v.hstatus)}>{this.peddingType(v.hstatus)?this.peddingType(v.hstatus):"未知类型"}</Col>
                                           <Col span={5} className="textCenter">{v.atime?v.atime:"无"}</Col>
                                       </div>
                                   </Row>

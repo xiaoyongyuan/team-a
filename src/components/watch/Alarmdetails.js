@@ -181,7 +181,7 @@ class Alarmdetails extends React.Component{
     area.rect(parseInt(el.x*x),parseInt(el.y*y),parseInt(el.w*x),parseInt(el.h*y));
     area.stroke();
     area.closePath();
-  }
+  };
       //报警状态
       atypetext =(code) =>{
         if(code === 0){
@@ -201,7 +201,7 @@ class Alarmdetails extends React.Component{
         }else if(code === -3){
               return "过期";
           }
-      }
+      };
       //报警状态颜色
       sanjiaose = (status)=>{
         if(status === 0){
@@ -219,7 +219,7 @@ class Alarmdetails extends React.Component{
         }else if(status === -3){
             return(" triangleaa");
         }
-    }
+    };
     render(){      
         return(
             <div className="AlarmDetail">
@@ -227,7 +227,7 @@ class Alarmdetails extends React.Component{
             		<div className="flexleft" id="flexleft">
                   <canvas id="canvasobj" width="604px" height="476px" style={{backgroundImage:'url('+this.state.data.src+')',backgroundSize:"100% 100%",display:this.state.videoopen?'none':'block'}} />
                 	<div style={{display:this.state.videoopen?'block':'none',width:'604px',height:'513px'}}>
-                      <video src={this.state.data.videopath} autoPlay="autoplay" controls="controls" width="600px"></video>
+                      <video src={this.state.data.videopath} autoPlay="autoplay" controls="controls" width="600px" />
                     </div>
                   <div style={{textAlign:'center',marginTop:'10px'}}>
             				<ButtonGroup>

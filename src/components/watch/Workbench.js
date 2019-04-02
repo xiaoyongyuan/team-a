@@ -1,5 +1,5 @@
 import React, { Component,Fragment } from 'react';
-import {Button,Collapse,Row,Col, Modal,message,Icon,Switch,Avatar,Comment,Input} from "antd";
+import {Button,Collapse,Row,Col, Modal,message,Icon,Switch,Comment,Input} from "antd";
 import "../../style/ztt/css/workbench.css";
 import nodata from "../../style/imgs/nopic.png";
 import {post} from "../../axios/tools";
@@ -138,7 +138,7 @@ class Workbench extends Component {
             var bottom=pending-clice;
             var foot=bottom-scroll;//滚动条距离底部的高度
             console.log(pending,scroll,clice)
-            if(foot==0){
+            if(foot===0){
             	let page=this.state.page;
                 page++;
                 this.setState({page},()=>{
@@ -171,7 +171,7 @@ class Workbench extends Component {
                   	_this.pendingList() 
                   });
                     return;
-										if(this.state.type===2){ //警情需要查看用户信息
+					if(this.state.type===2){ //警情需要查看用户信息
                         post({url:"/api/company/getinfo_maintain",data:{code:this.state.companycode}},(res)=>{
                             if(res.success){
                                 _this.setState({
@@ -196,13 +196,13 @@ class Workbench extends Component {
     };
     //下一页
     nextPage=()=>{
-        if(this.state.nextPageBtn || this.state.oldHstatus==2){
+        if(this.state.nextPageBtn || this.state.oldHstatus===2){
             this.getOneAlarm();
         }else message.info("请先处理当前报警！");
     };
     memochange=(e)=>{ //备注信息改变
     	const memochange=e.target.value;
-    	if(memochange != this.state.memo) this.setState({memochange})
+    	if(memochange !== this.state.memo) this.setState({memochange})
     }
     remarks=()=>{ //提价备注信息
         if(this.state.memo!==this.state.memochange){
@@ -218,7 +218,7 @@ class Workbench extends Component {
     };
     //挂载还原
     mountRestore=(code)=>{
-        if((code && this.state.nextPageBtn) || this.state.oldHstatus==2){
+        if((code && this.state.nextPageBtn) || this.state.oldHstatus===2){
         	this.getOneAlarm("/api/alarmhandle/get_hangup",{code:code})
         }else{
             message.warning("请先处理当前报警！");
@@ -244,6 +244,8 @@ class Workbench extends Component {
                 return "待处理";
             case -3:
                 return "过期";
+            default:
+                return "";
         }
     };
     alarmTypeColor=(colorType)=>{
@@ -274,13 +276,13 @@ class Workbench extends Component {
         },()=>{
             this.paintingBoundary();
         });
-    }
+    };
     lookretrun=(val,opt=true)=>{ //查看回访
     	this.setState({[val]: opt})
-    }
+    };
     newreturnCancel=()=>{ //取消新增回访记录
     	this.setState({returnChange: '',newreturnSwitch:false})
-    }
+    };
     newreturnOk=()=>{ //新增回访
     	const _this=this;
     	post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,returnmemo:this.state.returnChange}},(res)=>{
@@ -316,16 +318,16 @@ class Workbench extends Component {
                             </div>
                         </div>
                         <div className="processingAlarm-right">
-                        {this.state.oldHstatus !=2 && this.state.oldHstatus !=3
+                        {this.state.oldHstatus!==2 && this.state.oldHstatus!==3
                         		?<Fragment>
-	                        			<div className="mount" style={{visibility:this.state.nextPageBtn?"hidden":"visible"}}><Icon className="IconMount" type="tag"  size="large" theme="filled" title="挂起"  onClick={()=>this.typeAlarm(1,"挂起")} /></div>
+	                        			<div className="mount" style={{visibility:this.state.nextPageBtn?"hidden":"visible"}}><Icon className="IconMount" type="tag" size="large" theme="filled" title="挂起" onClick={()=>this.typeAlarm(1,"挂起")} /></div>
 	                            	<div className="alarm-btn xuJing" style={{marginTop:"15px"}}><Button type="primary" onClick={()=>this.typeAlarm(4,"虚警")} disabled={this.state.nextPageBtn}>虚警</Button></div>
 	                            	<div className="alarm-btn wuBao"><Button type="primary" onClick={()=>this.typeAlarm(5,"误报")} disabled={this.state.nextPageBtn}>误报</Button></div>
 	                            	<div className="alarm-btn pushAlarm"><Button type="primary" onClick={()=>this.typeAlarm(2,"报警")} disabled={this.state.nextPageBtn}>警情推送</Button></div>
                         		</Fragment>
                         		:<Fragment>
-                        				<div className="mount" style={{visibility:"hidden"}}><Icon className="IconMount" type="tag"  size="large" theme="filled" title="挂起" /></div>
-                        				<div className="alarm-btn" style={{marginTop:"15px"}}><Button type="primary"  style={{background:"#86B94A",borderColor:"#86B94A"}} onClick={()=>this.lookretrun('lookretrunSwitch')}>查看回访</Button></div>
+                        				<div className="mount" style={{visibility:"hidden"}}><Icon className="IconMount" type="tag" size="large" theme="filled" title="挂起" /></div>
+                        				<div className="alarm-btn" style={{marginTop:"15px"}}><Button type="primary" style={{background:"#86B94A",borderColor:"#86B94A"}} onClick={()=>this.lookretrun('lookretrunSwitch')}>查看回访</Button></div>
 	                            	<div className="alarm-btn" style={{marginBottom:"95px"}}><Button type="primary" style={{background:"red",borderColor:"red"}} this onClick={()=>this.typeAlarm(3,"结束")}>结束</Button></div>
                         		</Fragment>
                         } 
@@ -341,7 +343,7 @@ class Workbench extends Component {
                     <div className="garden">{this.state.pendingCount}</div>
                     <div className="mountUp">挂起列表</div>
                     <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"52px"}}>
-                        <Panel  key="1" showArrow={false}>
+                        <Panel key="1" showArrow={false}>
                             <div className="hangUpPanel" id="hangUpPanel">
                                 {
                                     this.state.pending.map((v,i)=>(
@@ -392,14 +394,14 @@ class Workbench extends Component {
                 >
                 	{this.state.returnmemo.map((el,i)=>(
 	                		<Comment
-								        author={el.time}
-								        avatar={(
-								          <Icon type="message" theme="filled" style={{color:'#6BAC20',fontSize:'1.5em'}} />
-								        )}
-								        content={(
-								          <p>{el.info}</p>
-								        )}
-								      />
+                                author={el.time}
+                                avatar={(
+                                  <Icon type="message" theme="filled" style={{color:'#6BAC20',fontSize:'1.5em'}} />
+                                )}
+                                content={(
+                                  <p>{el.info}</p>
+                                )}
+                            />
 	                ))}
 	                <p>共<span>{this.state.returnmemo.length}</span>条记录 <span style={{cursor:'pointer'}} onClick={()=>this.lookretrun('newreturnSwitch')}><Icon type="plus-circle" theme="twoTone" />新增一条</span></p>
                 </Modal>
@@ -412,7 +414,7 @@ class Workbench extends Component {
                     onOk={this.newreturnOk}
                     onCancel={this.newreturnCancel}   
                 >
-                	<TextArea rows={4}  value={this.state.returnChange} onChange={this.returnChange} />
+                	<TextArea rows={4} value={this.state.returnChange} onChange={this.returnChange} />
                 </Modal>
             </div>
         )

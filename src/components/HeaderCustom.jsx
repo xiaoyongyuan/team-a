@@ -2,7 +2,7 @@
  * 头部登录人信息
  */
 import React, { Component } from 'react';
-import { Menu, Icon, Layout, Badge, Popover } from 'antd';
+import { Menu, Icon, Layout,Popover } from 'antd';
 import screenfull from 'screenfull';
 import icon_admin from '../style/imgs/icon_admin.png';
 import icon_user from '../style/imgs/icon_user.png';
@@ -31,10 +31,13 @@ class HeaderCustom extends Component {
             });
         }
         this.unAlarmNumber();
-        setInterval(()=> this.unAlarmNumber(),2000);
+       this.interVla=setInterval(()=> this.unAlarmNumber(),2000);
        // const aa= post('login',);
     
     };
+    componentWillUnmount(){
+        clearInterval(this.interVla);
+    }
     unAlarmNumber=()=>{
         post({url:"/api/alarmhandle/get_unhandle"},(res)=>{
             if(res.success){
@@ -54,7 +57,7 @@ class HeaderCustom extends Component {
     logout = () => { //退出
         localStorage.removeItem('teamuser');
         localStorage.removeItem('teammeun');
-        this.props.history.push('/login')
+        this.props.history.push('/login');
     };
     popoverHide = () => {
         this.setState({
@@ -134,7 +137,7 @@ class HeaderCustom extends Component {
                             <Icon type="notification" />
                         </Badge>
                     </Menu.Item>*/}
-                    <SubMenu title={<span className="avatar"><img src={this.props.user.utype?icon_user:icon_admin}  alt="头像" /><i className="on bottom b-white" /></span>}>
+                    <SubMenu title={<span className="avatar"><img src={this.props.user.utype?icon_user:icon_admin} alt="头像" /><i className="on bottom b-white" /></span>}>
                         <MenuItemGroup title="用户中心">
                             <Menu.Item key="setting:1">你好 - {this.props.user.realname}</Menu.Item>
                             {/*<Menu.Item key="setting:2">个人信息</Menu.Item>*/}

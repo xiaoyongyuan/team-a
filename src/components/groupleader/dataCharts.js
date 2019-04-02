@@ -48,10 +48,10 @@ class dataCharts extends Component {
                     list:res.data,
                 },()=>{
                     this.state.list.map((v,i)=>(
-                        rname.push(v.realname),
+                        [rname.push(v.realname),
                         alarm.push(v.alarm),
                         emptyalarm.push(v.emptyalarm),
-                        falsealarm.push(v.falsealarm)
+                        falsealarm.push(v.falsealarm)]
                     ))
                 })
             }

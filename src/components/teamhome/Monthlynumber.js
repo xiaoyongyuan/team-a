@@ -78,10 +78,10 @@ class Monthlynumber extends React.Component{
         };
         return(
             <ReactEcharts
-            option={option}
-            style={{height: '200px', width: '100%'}}
-            className={'react_for_echarts'}
-        />
+                option={option}
+                style={{height: '200px', width: '100%'}}
+                className={'react_for_echarts'}
+            />
         )
     }
 }

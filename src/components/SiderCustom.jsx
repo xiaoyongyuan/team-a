@@ -4,7 +4,6 @@
 import React, { Component } from 'react';
 import { Layout } from 'antd';
 import { withRouter } from 'react-router-dom';
-import routes from '../routes/config';
 import SiderMenu from './SiderMenu';
 import logoicon from '../style/imgs/logoicon.png';
 import logofont from '../style/imgs/logofont.png';
@@ -48,7 +47,7 @@ class SiderCustom extends Component {
         firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
     };
     componentDidMount() {
-        const state = SiderCustom.setMenuOpen(this.props);
+        /*const state = SiderCustom.setMenuOpen(this.props);*/
     }
     menuClick = e => {
         this.setState({
@@ -74,7 +73,7 @@ class SiderCustom extends Component {
                 style={{ overflowY: 'auto' }}
             >
                 <div>
-                    <img src={this.props.collapsed?logoicon:logofont} />
+                    <img src={this.props.collapsed?logoicon:logofont} alt="nodata" />
                 </div>
                 <SiderMenu
                     identify="admin"

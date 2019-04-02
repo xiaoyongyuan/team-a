@@ -29,8 +29,6 @@ class Teamdeveice extends Component {
     }
     requestdata=(params) => {//取数据
         post({url:'/api/equipment/getlist',data:params},(res)=>{
-            console.log('******************',res.data);
-            
             if(res){
                 this.setState({
                     list:res.data,
@@ -132,11 +130,11 @@ class Teamdeveice extends Component {
                 render: (text, record,index) => {
                     switch(text){
                         case 0:
-                        return `未绑定`;
-                        break;
+                          return "未绑定";
                         case 1:
-                        return `已绑定`;
-                        break;
+                          return "已绑定";
+                        default:
+                            return "";
                     }
                 },
             },{
@@ -215,8 +213,8 @@ class Teamdeveice extends Component {
                             </Form>
                         </Col>
                     </Row>
-                <Table columns={columns} dataSource={this.state.list} bordered={true}/>
-                <Modal title='编辑' visible={this.state.visible} onOk={this.handleCreate}
+                <Table columns={columns} dataSource={this.state.list} bordered rowKey={record => record.code} />
+                <Modal title="编辑" visible={this.state.visible} onOk={this.handleCreate}
                        onCancel={this.handleCancel}
                 >
                     <label>状态 </label>
