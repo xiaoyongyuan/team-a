@@ -18,7 +18,12 @@ class BeCuty extends Component {
         }
         let option={
             legend: {},
-            tooltip: {},
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
             dataset: {
                 dimensions: ['product', '虚警', '警情', '误报'],
                 source:sevenDatay

@@ -116,10 +116,10 @@
 .groupLeader .groupIcon{
     width: 105px;
     height: 105px;
-    margin: 10px auto;
+    margin: 2px auto;
 }
 .groupLeader .groupIcon img{
-    padding: 5px;
+    padding: 3px;
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -128,6 +128,7 @@
     width: 100%;
     display: flex;
     align-items: center;
+    margin-bottom: 45px;
 }
 .groupLeader .nickname{
     font-weight: bolder;
@@ -136,4 +137,13 @@
 }
 .groupLeader .todayDetails{
     width: 100%;
+}
+.genderFemale{
+    color:#FF3093;
+}
+.genderMale{
+  color: #6475F9;
+}
+.endAlarm{
+    color: red;
 }

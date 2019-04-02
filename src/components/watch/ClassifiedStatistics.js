@@ -19,6 +19,7 @@ class ClassifiedStatistics extends Component {
             legend: {
                 data: ['误报', '虚报','警情','查询用户'],
                 orient:"vertical",
+                bottom:"30%",
                 right:"right"
             },
             xAxis:  {

@@ -78,7 +78,22 @@ class Groupleader extends Component {
             }
         })
     };
-
+    Gender=(gen)=>{
+        if(gen){
+            if(gen===0){
+                return "nickname iconfont icon-nanren genderMale";
+            }else{
+                return "nickname iconfont icon-nvren genderFemale";
+            }
+        }
+    };
+    endAlarm=(value)=>{
+        if(value>0){
+            return "details-body endAlarm";
+        }else{
+            return "details-body";
+        }
+    }
     render() {
         return (
             <div className="groupLeader">
@@ -90,7 +105,7 @@ class Groupleader extends Component {
                         </div>
                         <div className="groupLeader-img group-information">
                             <div>
-                                <p><span>{this.state.account}</span><span className={"nickname iconfont"+(this.state.usergender===0?" icon-male":" icon-female")} /></p>
+                                <p><span>{this.state.account}</span><span className={this.Gender(this.state.usergender)} /></p>
                                 <p style={{display:this.state.lastlogin?"block":"none"}} >上次登录时间：{this.state.lastlogin}</p>
                             </div>
                         </div>
@@ -104,16 +119,16 @@ class Groupleader extends Component {
                         <p className="alarm-number">{this.state.todaysCount}</p>
                         <div className="misreporting">
                             <Row>
+                                <Col span={6}>警情</Col>
                                 <Col span={6}>误报</Col>
                                 <Col span={6}>虚警</Col>
                                 <Col span={6}>挂起</Col>
-                                <Col span={6}>警报</Col>
                             </Row>
                             <Row>
+                                <Col span={6}>{this.state.alarmCount}</Col>
                                 <Col span={6}>{this.state.falsealarm}</Col>
                                 <Col span={6}>{this.state.emptyalarm}</Col>
                                 <Col span={6}>{this.state.hangup}</Col>
-                                <Col span={6}>{this.state.alarmCount}</Col>
                             </Row>
                         </div>
                     </div>
@@ -138,7 +153,7 @@ class Groupleader extends Component {
                             <Col span={12}>
                                 <div className="group-alarm groupLeader-border">
                                     <p className="alarm-top">今日报警分析</p>
-                                    <AlarmAnalysis userCount={this.state.userCount} todaysCount={this.state.todaysCount} unhandle={this.state.unhandle} />
+                                    <AlarmAnalysis alarmCount={this.state.alarmCount} falsealarm={this.state.falsealarm} emptyalarm={this.state.emptyalarm} hangup={this.state.hangup} />
                                 </div>
                             </Col>
                             <Col span={12}>
@@ -152,7 +167,7 @@ class Groupleader extends Component {
                                         </Row>
                                         {
                                             this.state.userList.map((v,i)=>(
-                                                <Row ke={i}>
+                                                <Row key={v.code}>
                                                     <Col span={8} className="record-body">{v.cname?v.cname:"无"}</Col>
                                                     <Col span={8} className="record-body overflow" title={v.atime?v.atime:"无"}>{v.atime?v.atime:"无"}</Col>
                                                     <Col span={8} className="record-body">{v.realname}</Col>
@@ -172,35 +187,41 @@ class Groupleader extends Component {
                         <div className="group-img groupLeader-border">
                             {
                                 this.state.userImg.map((v,i)=>(
-                                   <div className="toDaysImg"><img src={v.pic_min?v.pic_min:nodatapic} alt="" /></div>
+                                   <div className="toDaysImg" key={i}><img src={v.pic_min?v.pic_min:nodatapic} alt="" /></div>
                                 ))
                             }
                         </div>
                         <div className="group-details groupLeader-border">
                             <p className="alarm-top">今日详情处理</p>
                             <table className="record todayDetails">
-                                <tr>
-                                    <td className="details-title">姓名</td>
-                                    <td className="details-title">总数</td>
-                                    <td className="details-title">误报</td>
-                                    <td className="details-title">虚报</td>
-                                    <td className="details-title">报警已结束</td>
-                                    <td className="details-title">报警未结束</td>
-                                    <td className="details-title">挂起</td>
-                                </tr>
+                                <thead>
+                                    <tr>
+                                        <th className="details-title">姓名</th>
+                                        <th className="details-title">总数</th>
+                                        <th className="details-title">误报</th>
+                                        <th className="details-title">虚报</th>
+                                        <th className="details-title">报警已结束</th>
+                                        <th className="details-title">报警未结束</th>
+                                        <th className="details-title">挂起</th>
+                                    </tr>
+                                </thead>
+
                                 {
                                     this.state.alarmhandle.map((v,i)=>(
-                                        <tr key={i}>
-                                            <td className="details-body">{v.account}</td>
-                                            <td className="details-body">{v.falsealarm+v.emptyalarm+v.alarm+v.hangup}</td>
-                                            <td className="details-body">{v.falsealarm}</td>
-                                            <td className="details-body">{v.emptyalarm}</td>
-                                            <td className="details-body">{v.alarm}</td>
-                                            <td className="details-body">{v.alarmun}</td>
-                                            <td className="details-body">{v.hangup}</td>
-                                        </tr>
+                                        <tbody key={i}>
+                                            <tr>
+                                                <td className="details-body">{v.account}</td>
+                                                <td className="details-body">{v.falsealarm+v.emptyalarm+v.alarm+v.hangup}</td>
+                                                <td className="details-body">{v.falsealarm}</td>
+                                                <td className="details-body">{v.emptyalarm}</td>
+                                                <td className="details-body">{v.alarm}</td>
+                                                <td className={this.endAlarm(v.alarmun)}>{v.alarmun}</td>
+                                                <td className="details-body">{v.hangup}</td>
+                                            </tr>
+                                        </tbody>
                                     ))
                                 }
+
                             </table>
                         </div>
                     </Col>

@@ -101,7 +101,7 @@ class WatchIndex extends Component {
                                     <p className="watch-alarm">今日报警分析</p>
                                     <p className="watch-number watch-alarm">{this.state.alarmCount?this.state.alarmCount:0}</p>
                                     <Row>
-                                        <Col span={12} className="police-Name"> 警报/条</Col>
+                                        <Col span={12} className="police-Name"> 警情/条</Col>
                                         <Col span={12} className="police-Name">虚警/条</Col>
                                     </Row>
                                     <Row>
@@ -136,7 +136,7 @@ class WatchIndex extends Component {
                     </Col>
                     <Col span={12}>
                       <div className="pending-list watchIndex-border groupLeader-border">
-                          <p className="alarm-top"><span style={{float:"left"}}>挂起列表</span><span style={{float:"right",cursor:"pointer"}}><a href="#/app/watch/workbench">更多</a></span></p>
+                          <p className="alarm-top"><span style={{float:"left"}}>挂起列表</span><span className="more"><a href="#/app/watch/workbench">更多</a></span></p>
                           {
                               this.state.hangUp.map((v,i)=>(
                                   <Row className="alarmList" key={i}>
