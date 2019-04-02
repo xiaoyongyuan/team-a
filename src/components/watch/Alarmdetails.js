@@ -187,18 +187,20 @@ class Alarmdetails extends React.Component{
         if(code === 0){
             return "未处理";
         }else if(code === 1){
-            return "虚警";
-        }else if(code === 2){
-            return "误报";
-        }else if(code === 3){
-            return "警报";
-        }else if(code === -1){
-            return "已获取未处理";
-        }else if(code === -2){
             return "挂起";
+        }else if(code === 2){
+            return "报警未结束";
+        }else if(code === 3){
+            return "报警已结束";
+        }else if(code === 4){
+            return "虚警";
+        }else if(code === 5){
+            return "误报";
+        }else if(code === -1){
+            return "待处理";
         }else if(code === -3){
-            return "已过期";
-        }
+              return "过期";
+          }
       }
       //报警状态颜色
       sanjiaose = (status)=>{

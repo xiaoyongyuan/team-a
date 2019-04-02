@@ -9,6 +9,7 @@ import AlarmDetail from "./Alarmdetails";
 import nodata from "../../style/imgs/nopic320180.png";
 import banditpic from "../../style/imgs/banditpic.png";
 import firepic from "../../style/imgs/firepic.png";
+import noImg from "../../style/imgs/nodata.png";
 const { RangePicker } = DatePicker ;
 const Option = Select.Option;
 class history extends React.Component {
@@ -148,14 +149,6 @@ class history extends React.Component {
         })
         
     };
-    handleStartOpenChange = (open) => {
-        if (!open) {
-            this.setState({ endOpen: true });
-        }
-    };
-    handleEndOpenChange = (open) => {
-        this.setState({ endOpen: open });
-    };
     sanjiaose = (status)=>{
         if(status === 0){
             return("triangle-topright-green triangleOrange");
@@ -277,7 +270,7 @@ class history extends React.Component {
                 <Spin size="large" spinning={this.state.loadding} tip="加载中..." className="loadding" />
                 {this.state.nodatapic?"":
                 <Row style={{marginTop:"70px",}}>
-                     <Col style={{width:"100%",textAlign:"center"}}><div className="backImg"><img src={nodata} alt="" /></div></Col>
+                     <Col style={{width:"100%",textAlign:"center"}}><div className="backImg"><img src={noImg} alt="" /></div></Col>
                 </Row>}
                
                 <Row style={{marginLeft:"10px",marginTop:"20px"}}>
@@ -307,7 +300,7 @@ class history extends React.Component {
                                                             <p className="fontstyle right_linr1">{v.atime}</p>
                                                         </div>
                                                         <div className="remark">
-                                                        {v.memo?v.memo:'暂无备注'}
+                                                        <span>{v.memo?v.memo:'暂无备注'}</span>
                                                         </div>
                                                 </div>
                                             </Col>
