@@ -2,6 +2,8 @@ import React, { Component,Fragment } from 'react';
 import {Button,Collapse,Row,Col, Modal,message,Icon,Switch,Comment,Input} from "antd";
 import "../../style/ztt/css/workbench.css";
 import nodata from "../../style/imgs/nopic.png";
+import nodataleft from "../../style/imgs/nodata.png";
+
 import {post} from "../../axios/tools";
 import moment from "moment";
 
@@ -57,8 +59,6 @@ class Workbench extends Component {
               },()=>{
                   this.paintingBoundary();//围界
               });
-          }else{
-              this.getOneAlarm();
           }
       })
     };
@@ -155,8 +155,12 @@ class Workbench extends Component {
     handleOkTips=()=>{
     	const _this=this;
     	const oldHstatus=this.state.type;
-
         if(this.state.code){
+        	if(oldHstatus==3 && !this.state.returnmemo.length){
+        		message.warning('请至少添加一条回访记录!');
+        		_this.setState({visibleTips:false})
+        		return;
+        	} 
             post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:oldHstatus}},(res)=>{
                 if(res.success){
                 	message.success("修改成功");
@@ -166,11 +170,9 @@ class Workbench extends Component {
                       oldHstatus:oldHstatus,
                       page:1
                   },()=>{
-                  	return;
                   	hangup=true;
                   	_this.pendingList() 
                   });
-                    return;
 					if(this.state.type===2){ //警情需要查看用户信息
                         post({url:"/api/company/getinfo_maintain",data:{code:this.state.companycode}},(res)=>{
                             if(res.success){
@@ -302,7 +304,9 @@ class Workbench extends Component {
         return (
             <div className="workBench workToP">
                 <div className="processingAlarm workbenchBorder">
-                    <div className="processing-title">
+                {
+                	this.state.code
+                	?<div className="processing-title">
                         <div className="processingAlarm-left">
                             <p><span className="nameWeight">名称：</span><span className="colorAlarmFont">{this.state.alarmname}</span><span className="switchInfor"><span className="atype">状态：</span><span style={{color:"red"}}>{this.alarmType(this.state.oldHstatus)}</span></span></p>
                             <p><span className="colorAlarmFont">{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span><span className="switchInfor"><span className="information">围界信息：<Switch size="small" checked={this.state.field} onChange={(checked)=>this.onChange(checked,'field')} /></span><span>报警信息：<Switch size="small" checked={this.state.obj} onChange={(checked)=>this.onChange(checked,'obj')} /></span></span></p>
@@ -338,6 +342,12 @@ class Workbench extends Component {
                             </div>
                         </div>
                     </div>
+                	:<div className="nodatastatus">
+                		<img src={nodataleft}  />
+                		<p>暂无数据</p>
+                	</div>
+                }
+                    
                 </div>
                 <div className="hangUp">
                     <div className="garden">{this.state.pendingCount}</div>

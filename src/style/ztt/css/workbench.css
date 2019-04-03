@@ -273,3 +273,11 @@
     color: #FF1533;
     font-weight: bolder;
 }
+.workbenchBorder .nodatastatus{
+    height: calc(100vh);
+    padding-top: 100px;
+    line-height: 3em;
+    text-align: center;
+    font-size: 1.3em;
+    color: #333;
+}
