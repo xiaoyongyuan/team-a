@@ -6,6 +6,8 @@ import "../../style/ztt/css/groupLeader.css";
 import {post} from "../../axios/tools";
 import "../../style/ztt/icon/iconfont.css";
 import nodatapic from "../../style/imgs/nopic320180.png";
+import leaderpng from "../../style/imgs/icon_user.png";
+
 class Groupleader extends Component {
     constructor(props) {
         super(props);
@@ -100,7 +102,7 @@ class Groupleader extends Component {
                 <Row className="group-flex">
                     <div className="group-height name groupLeader-border">
                         <div className="groupLeader-img">
-                             <div className="groupIcon"><img src="http://ftp01.aokecloud.cn/alarm/1000021/photocatch/20190312/1000021_20190312163101.jpg" alt="" /></div>
+                             <div className="groupIcon"style={{marginTop: '15px',borderRadius: '50%',background:'#cacaca'}}><img src={leaderpng} /></div>
                              <p className="groupLeaderName">{this.state.realname}</p>
                         </div>
                         <div className="groupLeader-img group-information">

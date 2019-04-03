@@ -31,7 +31,7 @@ class HeaderCustom extends Component {
             });
         }
         this.unAlarmNumber();
-       this.interVla=setInterval(()=> this.unAlarmNumber(),2000);
+       this.interVla=setInterval(()=> this.unAlarmNumber(),5000);
        // const aa= post('login',);
     
     };
