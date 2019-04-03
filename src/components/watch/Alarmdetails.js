@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Switch, Icon } from 'antd';
+import {Button, Switch, Icon,Comment, Modal } from 'antd';
 import {post} from "../../axios/tools";
 import "../../style/ztt/css/police.css";
 const ButtonGroup = Button.Group;
@@ -14,17 +14,18 @@ class Alarmdetails extends React.Component{
       		name:'',
       		tags:'',
       		type:'1',
-            atime:'',
+          atime:'',
       		field:[],
           finalresult:[],
-      
       	},
       	field:true, //是否显示围界信息
       	obj:true, //是否显示报警对象
       	prev:'', //上一条数据code
       	next:'', //下一条数据code
         code:'', //当前数据的code
-        videoopen:false //视频开关
+        videoopen:false, //视频开关
+        returnmemo:[], //回访记录
+        lookretrunSwitch:false, //回访弹层开关
       };
   }
   componentWillMount() {
@@ -46,30 +47,31 @@ class Alarmdetails extends React.Component{
                   code:nextProps.toson.code,
                   faths:nextProps.toson
               }, () => {
-                  this.componentDidMount()});
+                  this.request()});
           }
       }        
   }
   request=()=>{
     post({url:"/api/alarmhandle/getOne",data:this.state.faths},(res)=>{   
 
-      let data={
-          cid:res.data.cid,
-          src:res.data.picpath,
-          field:res.data.field,
-          name:res.data.name,
-          alarmtype:res.data.alarmtype,
-          finalresult:res.data.finalresult1,
-          atime:res.data.atime,
-          type:res.data.status,   
-          tags:res.data.tags, 
-          pic_width:res.data.pic_width, //报警宽
-          pic_height:res.data.pic_height, //报警高  
-          videopath:res.data.videopath, //视频地址 
+      // let data={
+      //     cid:res.data.cid,
+      //     src:res.data.picpath,
+      //     field:res.data.field,
+      //     name:res.data.name,
+      //     alarmtype:res.data.alarmtype,
+      //     finalresult:res.data.finalresult1,
+      //     atime:res.data.atime,
+      //     type:res.data.status,   
+      //     tags:res.data.tags, 
+      //     pic_width:res.data.pic_width, //报警宽
+      //     pic_height:res.data.pic_height, //报警高  
+      //     videopath:res.data.videopath, //视频地址 
        
-        }
+      //   }
         this.setState({
-          data:data,
+          returnmemo:res.alarmhandle.returnmemo,
+          data:res.data,
           prev:res.data.last,
           next:res.data.next, 
           videoopen:false,
@@ -120,7 +122,6 @@ class Alarmdetails extends React.Component{
     }); 
   }
   looknew=(text)=>{ //查看上下一条
-
     let faths=this.state.faths;
     faths.code=this.state[text];
   	this.setState({
@@ -155,7 +156,7 @@ class Alarmdetails extends React.Component{
         return '';
       })
   	}
-    const objs=this.state.data.finalresult;
+    const objs=this.state.data.finalresult1;
   	if(this.state.obj && objs.length){
       //计算缩放比例
       const x=604/this.state.data.pic_width, y=476/this.state.data.pic_height;
@@ -220,12 +221,15 @@ class Alarmdetails extends React.Component{
             return(" triangleaa");
         }
     };
+    lookretrun=(val,opt=true)=>{ //查看回访
+      this.setState({[val]: opt})
+    };
     render(){      
         return(
             <div className="AlarmDetail">
             	<div className="alarmflex">
             		<div className="flexleft" id="flexleft">
-                  <canvas id="canvasobj" width="604px" height="476px" style={{backgroundImage:'url('+this.state.data.src+')',backgroundSize:"100% 100%",display:this.state.videoopen?'none':'block'}} />
+                  <canvas id="canvasobj" width="604px" height="476px" style={{backgroundImage:'url('+this.state.data.picpath+')',backgroundSize:"100% 100%",display:this.state.videoopen?'none':'block'}} />
                 	<div style={{display:this.state.videoopen?'block':'none',width:'604px',height:'513px'}}>
                       <video src={this.state.data.videopath} autoPlay="autoplay" controls="controls" width="600px" />
                     </div>
@@ -255,13 +259,37 @@ class Alarmdetails extends React.Component{
                     <p><label>报警处理：</label><span className={this.sanjiaose(this.state.atype)}>
                         {this.atypetext(this.state.atype)}
                     </span></p>
+                    {this.state.returnmemo.length
+                      ?<p><label>回访记录：</label><span style={{cursor:'pointer'}} onClick={()=>this.lookretrun('lookretrunSwitch')} >{this.state.returnmemo.length} 条</span></p>
+                      :null}
                     <div><label style={{float:'left',color:'#444'}}>备注：</label>
                         <div className="memo">
                         {this.state.memo?this.state.memo:'暂无备注'}
                         </div> 
-                      </div>
+                    </div>
+                    
             		</div>
             	</div>
+              <Modal
+                    title="回访记录"
+                    visible={this.state.lookretrunSwitch}
+                    onCancel={()=>this.lookretrun('lookretrunSwitch',false)} 
+                    width={600}
+                    footer={null}
+                >
+                  {this.state.returnmemo.map((el,i)=>(
+                      <Comment key={'Comment'+i}
+                                author={el.time}
+                                avatar={(
+                                  <Icon type="message" theme="filled" style={{color:'#6BAC20',fontSize:'1.5em'}} />
+                                )}
+                                content={(
+                                  <p>{el.info}</p>
+                                )}
+                            />
+                  ))}
+                  <p>共<span>{this.state.returnmemo.length}</span>条记录</p>
+                </Modal>
             </div>
         )
     }
