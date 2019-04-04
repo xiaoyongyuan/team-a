@@ -25,7 +25,8 @@ class Workbench extends Component {
             newreturnSwitch:false,
             lookretrunSwitch:false, //回访开关
             returnmemo:[], //回访记录
-            returnChange:'' //新增回访记录
+            returnChange:'', //新增回访记录
+            finishSwitch:false, //结束报警开关
         };
     }
     componentDidMount() {
@@ -54,8 +55,8 @@ class Workbench extends Component {
                   picWidth:res.data.pic_width,
                   picHeight:res.data.pic_height,
                   videoFalse:false,
-                  returnmemo:res.alarmhandle.returnmemo //回访记录
-
+                  returnmemo:res.alarmhandle.returnmemo, //回访记录
+                  finishSwitch:false,
               },()=>{
                   this.paintingBoundary();//围界
               });
@@ -69,6 +70,21 @@ class Workbench extends Component {
             type,
         });
     };
+    pushinfo=()=>{ //推送给app，获取用户信息
+    const _this=this;        
+        post({url:"/api/company/getinfo_maintain",data:{code:this.state.companycode}},(res)=>{
+            if(res.success){
+                _this.setState({
+                    userName:res.data.adminname,
+                    userPhone:res.data.adminaccount,
+                    visibleUser:true,
+                })
+            }
+        });
+    }
+    pushOk=()=>{//确认报警
+        this.setState({type:2},()=>this.handleOkTips());
+    }
     //围界
     paintingBoundary=()=> {
         var c = document.getElementById("myCanvas");
@@ -107,8 +123,9 @@ class Workbench extends Component {
     };
     //挂在列表显示
     pendingList=()=>{
-    	if(hangup){
-        post({url:"/api/alarmhandle/getlist",data:{htype:"hangup",pageindex:this.state.page,pagesize:10}},(res)=>{
+        const loginaccount=localStorage.getItem('loginaccount');
+    	if(hangup && loginaccount){
+        post({url:"/api/alarmhandle/getlist",data:{htype:"hangup",pageindex:this.state.page,pagesize:10,account:loginaccount}},(res)=>{
             if(res.success){
                 if(res.data.length>0){
                 	var pending=res.data;
@@ -128,7 +145,6 @@ class Workbench extends Component {
             }else message.warning(res.errorinfo);
         })
       }
-
     };
     padingLoad=()=>{
         document.getElementById("hangUpPanel").onscroll=()=>{
@@ -168,23 +184,13 @@ class Workbench extends Component {
                   		nextPageBtn:true,
                       visibleTips:false,
                       oldHstatus:oldHstatus,
-                      page:1
+                      page:1,
+                      finishSwitch:oldHstatus==3?true:false,
+                      visibleUser:false
                   },()=>{
                   	hangup=true;
                   	_this.pendingList() 
-                  });
-					if(this.state.type===2){ //警情需要查看用户信息
-                        post({url:"/api/company/getinfo_maintain",data:{code:this.state.companycode}},(res)=>{
-                            if(res.success){
-                                _this.setState({
-                                    userName:res.data.adminname,
-                                    userPhone:res.data.adminaccount,
-                                    visibleUser:true
-                                })
-                            }
-                        });
-                    }
-                    
+                  });                    
                 }else{
                     message.warning(res.errorinfo);
                 }
@@ -286,13 +292,14 @@ class Workbench extends Component {
     	this.setState({returnChange: '',newreturnSwitch:false})
     };
     newreturnOk=()=>{ //新增回访
+        if(!this.state.returnChange) return message.warning("请输入内容！");
     	const _this=this;
     	post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,returnmemo:this.state.returnChange}},(res)=>{
           if(res.success){
           		message.success("修改成功");
           		var returnmemo=this.state.returnmemo;
           		returnmemo.push({time:moment().format('YYYY-MM-DD hh:mm:ss'),info:this.state.returnChange})
-    					this.setState({returnmemo:returnmemo},()=>_this.newreturnCancel())
+    			this.setState({returnmemo:returnmemo},()=>_this.newreturnCancel())
           }
       });
 
@@ -327,12 +334,17 @@ class Workbench extends Component {
 	                        			<div className="mount" style={{visibility:this.state.nextPageBtn?"hidden":"visible"}}><Icon className="IconMount" type="tag" size="large" theme="filled" title="挂起" onClick={()=>this.typeAlarm(1,"挂起")} /></div>
 	                            	<div className="alarm-btn xuJing" style={{marginTop:"15px"}}><Button type="primary" onClick={()=>this.typeAlarm(4,"虚警")} disabled={this.state.nextPageBtn}>虚警</Button></div>
 	                            	<div className="alarm-btn wuBao"><Button type="primary" onClick={()=>this.typeAlarm(5,"误报")} disabled={this.state.nextPageBtn}>误报</Button></div>
-	                            	<div className="alarm-btn pushAlarm"><Button type="primary" onClick={()=>this.typeAlarm(2,"报警")} disabled={this.state.nextPageBtn}>警情推送</Button></div>
+	                            	<div className="alarm-btn pushAlarm"><Button type="primary" onClick={this.pushinfo} disabled={this.state.nextPageBtn}>警情推送</Button></div>
                         		</Fragment>
                         		:<Fragment>
                         				<div className="mount" style={{visibility:"hidden"}}><Icon className="IconMount" type="tag" size="large" theme="filled" title="挂起" /></div>
-                        				<div className="alarm-btn" style={{marginTop:"15px"}}><Button type="primary" style={{background:"#86B94A",borderColor:"#86B94A"}} onClick={()=>this.lookretrun('lookretrunSwitch')}>查看回访</Button></div>
-	                            	<div className="alarm-btn" style={{marginBottom:"95px"}}><Button type="primary" style={{background:"red",borderColor:"red"}} this onClick={()=>this.typeAlarm(3,"结束")}>结束</Button></div>
+                        				<div className="alarm-btn" style={{marginTop:"15px"}}>
+                                        {this.state.returnmemo.length
+                                            ?<Button type="primary" style={{background:"#86B94A",borderColor:"#86B94A"}} onClick={()=>this.lookretrun('lookretrunSwitch')}>查看回访</Button>
+                                            :<Button type="primary" style={{background:"#86B94A",borderColor:"#86B94A"}} onClick={()=>this.lookretrun('newreturnSwitch')}>新增回访</Button>
+                                        }
+                                        </div>
+	                            	<div className="alarm-btn" style={{marginBottom:"95px"}}><Button type="primary" style={{background:"red",borderColor:"red"}} this onClick={()=>this.typeAlarm(3,"结束")} disabled={this.state.finishSwitch}>结束</Button></div>
                         		</Fragment>
                         } 
                             <div className="noteTriangle" />
@@ -375,14 +387,17 @@ class Workbench extends Component {
                 <Modal
                     title="用户详情"
                     visible={this.state.visibleUser}
+                    onOk={this.pushOk}
                     onCancel={this.userHandleCancel}
-                    footer={null}
+                    okText="确认报警"
+                    cancelText="取消"
                 >
                     <div className="userDetails">
                         <p><label>姓名：</label><span>{this.state.userName}</span></p>
                         <p><label>联系电话：</label><span>{this.state.userPhone}</span></p>
                         <p><label>地址：</label><span>''</span></p>
                     </div>
+
                 </Modal>
                 <Modal
                     title="提示信息"
@@ -413,9 +428,10 @@ class Workbench extends Component {
                                 )}
                             />
 	                ))}
-	                <p>共<span>{this.state.returnmemo.length}</span>条记录 <span style={{cursor:'pointer'}} onClick={()=>this.lookretrun('newreturnSwitch')}><Icon type="plus-circle" theme="twoTone" />新增一条</span></p>
+	                <p>共<span>{this.state.returnmemo.length}</span>条记录 <span style={{cursor:'pointer',display:this.state.finishSwitch?'none':'inline-block'}} onClick={()=>this.lookretrun('newreturnSwitch')}><Icon type="plus-circle" theme="twoTone" />新增一条</span></p>
                 </Modal>
                 <Modal
+                    zIndex="2000"
                     title="新增回访记录"
                     visible={this.state.newreturnSwitch}
                     width={400}

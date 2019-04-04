@@ -292,18 +292,18 @@ class history extends React.Component {
                                             </Col>
                                             <Col lg={14} xl={13} className="r_flex">
                                                 <div className="row-alarmlist-detail">
-                                                        <div className="word-row">
-                                                            <p className="fontstyle right_linr">{v.name?v.name:'暂无信息'}</p>
-                                                            <p className="fontstyle right_linr">
-                                                               {this.atypetext(v.atype)}
-                                                            </p>
-                                                        </div>
-                                                        <div style={{float:'left',width:'100%'}}>
-                                                            <p className="fontstyle right_linr1">{v.atime}</p>
-                                                        </div>
-                                                        <div className="remark">
+                                                    <div className="word-row">
+                                                        <p className="fontstyle right_linr">{v.name?v.name:'暂无信息'}</p>
+                                                        <p className="fontstyle right_linr">
+                                                           {this.atypetext(v.atype)}
+                                                        </p>
+                                                    </div>
+                                                    <div style={{float:'left',width:'100%'}}>
+                                                        <p className="fontstyle right_linr1">{v.atime}</p>
+                                                    </div>
+                                                    <div className="remark">
                                                         <span>{v.memo?v.memo:'暂无备注'}</span>
-                                                        </div>
+                                                    </div>
                                                 </div>
                                             </Col>
                                         </Row>

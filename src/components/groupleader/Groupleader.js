@@ -207,7 +207,6 @@ class Groupleader extends Component {
                                         <th className="details-title">挂起</th>
                                     </tr>
                                 </thead>
-
                                 {
                                     this.state.alarmhandle.map((v,i)=>(
                                         <tbody key={i}>

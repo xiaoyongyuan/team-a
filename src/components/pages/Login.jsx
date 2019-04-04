@@ -62,7 +62,7 @@ class Login extends React.Component {
         <div className="topbar">
           <div className="logo">
             <img src={logopic} alt="" />
-            系统
+             服务商平台
           </div>
         </div>
         <div className="login-form">
