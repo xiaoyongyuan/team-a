@@ -323,7 +323,7 @@ class Workbench extends Component {
     };
     lightTime=(value)=>{//选择闪灯时长
         this.setState({
-            defaultVal:value
+            lightValue:value
         });
     };
     render() {
@@ -440,8 +440,8 @@ class Workbench extends Component {
                     cancelText="取消"
                 >
                     <p>请选择闪灯时长</p>
-                    <Select defaultValue={5} style={{ width: 120 }} onChange={this.lightTime} >
-                      <Option value="5">5秒</Option>
+                    <Select defaultValue="5" style={{ width: 120 }} onChange={this.lightTime}>
+                      <Option value="5" >5秒</Option>
                       <Option value="10">10秒</Option>
                       <Option value="15">15秒</Option>
                     </Select>
