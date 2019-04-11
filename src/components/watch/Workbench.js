@@ -288,7 +288,9 @@ class Workbench extends Component {
         });
     };
     lookretrun=(val,opt=true)=>{ //查看回访
-    	this.setState({[val]: opt})
+    	this.setState({
+            [val]: opt,
+    	})
     };
     newreturnCancel=()=>{ //取消新增回访记录
     	this.setState({returnChange: '',newreturnSwitch:false})
@@ -310,18 +312,20 @@ class Workbench extends Component {
     	this.setState({returnChange: e.target.value})
     }
     flashlightOk=()=>{ //设备闪灯
-        this.setState({lightSwitch:false})
+        this.setState({lightSwitch:false});
         if(this.state.eid){
-            post({url:"/api/equipment/FlashLampV1",data:{eid:this.state.eid}},(res)=>{
+            post({url:"/api/equipment/FlashLampV1",data:{eid:this.state.eid,seconds:this.state.lightValue}},(res)=>{
                 if(res){
                   message.success("操作成功");  
                 }
             })
         }
-    }
-    lightTime=()=>{//选择闪灯时长
-
-    }
+    };
+    lightTime=(value)=>{//选择闪灯时长
+        this.setState({
+            defaultVal:value
+        });
+    };
     render() {
         return (
             <div className="workBench workToP">
@@ -436,7 +440,7 @@ class Workbench extends Component {
                     cancelText="取消"
                 >
                     <p>请选择闪灯时长</p>
-                    <Select defaultValue="5" style={{ width: 120 }} onChange={this.lightTime}>
+                    <Select defaultValue={5} style={{ width: 120 }} onChange={this.lightTime} >
                       <Option value="5">5秒</Option>
                       <Option value="10">10秒</Option>
                       <Option value="15">15秒</Option>
