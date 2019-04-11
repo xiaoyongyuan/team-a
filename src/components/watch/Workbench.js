@@ -1,11 +1,12 @@
 import React, { Component,Fragment } from 'react';
-import {Button,Collapse,Row,Col, Modal,message,Icon,Switch,Comment,Input} from "antd";
+import {Button,Collapse,Row,Col, Modal,message,Icon,Switch,Comment,Input, Select} from "antd";
 import "../../style/ztt/css/workbench.css";
 import nodata from "../../style/imgs/nopic.png";
 import nodataleft from "../../style/imgs/nodata.png";
 
 import {post} from "../../axios/tools";
 import moment from "moment";
+const Option = Select.Option;
 
 var hangup=true;
 const { TextArea } = Input;
@@ -27,6 +28,7 @@ class Workbench extends Component {
             returnmemo:[], //回访记录
             returnChange:'', //新增回访记录
             finishSwitch:false, //结束报警开关
+            lightSwitch:false, //设备闪灯开关
         };
     }
     componentDidMount() {
@@ -307,6 +309,19 @@ class Workbench extends Component {
     returnChange=(e)=>{ //回访内容
     	this.setState({returnChange: e.target.value})
     }
+    flashlightOk=()=>{ //设备闪灯
+        this.setState({lightSwitch:false})
+        if(this.state.eid){
+            post({url:"/api/equipment/FlashLampV1",data:{eid:this.state.eid}},(res)=>{
+                if(res){
+                  message.success("操作成功");  
+                }
+            })
+        }
+    }
+    lightTime=()=>{//选择闪灯时长
+
+    }
     render() {
         return (
             <div className="workBench workToP">
@@ -347,6 +362,7 @@ class Workbench extends Component {
 	                            	<div className="alarm-btn" style={{marginBottom:"95px"}}><Button type="primary" style={{background:"red",borderColor:"red"}} this onClick={()=>this.typeAlarm(3,"结束")} disabled={this.state.finishSwitch}>结束</Button></div>
                         		</Fragment>
                         } 
+                            <div className="alarm-btn"><Button icon="alert" type="danger" ghost onClick={()=>this.lookretrun('lightSwitch')}>设备闪灯</Button></div>
                             <div className="noteTriangle" />
                             <textarea className="remarks" id="remarks" value={this.state.memochange} onChange={this.memochange} onBlur={()=>this.remarks()} />
                             <div className="nextPage">
@@ -409,6 +425,22 @@ class Workbench extends Component {
                     cancelText="取消"
                 >
                     <p><span>确定为</span><span>{this.state.name?this.state.name:""}</span>吗?</p>
+                </Modal>
+                <Modal
+                    title="提示信息"
+                    visible={this.state.lightSwitch}
+                    onOk={this.flashlightOk}
+                    onCancel={()=>this.lookretrun('lightSwitch',false)}
+                    width={400}
+                    okText="确认"
+                    cancelText="取消"
+                >
+                    <p>请选择闪灯时长</p>
+                    <Select defaultValue="5" style={{ width: 120 }} onChange={this.lightTime}>
+                      <Option value="5">5秒</Option>
+                      <Option value="10">10秒</Option>
+                      <Option value="15">15秒</Option>
+                    </Select>
                 </Modal>
                 <Modal
                     title="回访记录"
