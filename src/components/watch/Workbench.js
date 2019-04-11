@@ -174,7 +174,7 @@ class Workbench extends Component {
     	const _this=this;
     	const oldHstatus=this.state.type;
         if(this.state.code){
-        	if(oldHstatus==3 && !this.state.returnmemo.length){
+        	if(oldHstatus===3 && !this.state.returnmemo.length){
         		message.warning('请至少添加一条回访记录!');
         		_this.setState({visibleTips:false})
         		return;
@@ -187,7 +187,7 @@ class Workbench extends Component {
                       visibleTips:false,
                       oldHstatus:oldHstatus,
                       page:1,
-                      finishSwitch:oldHstatus==3?true:false,
+                      finishSwitch:oldHstatus===3?true:false,
                       visibleUser:false
                   },()=>{
                   	hangup=true;
@@ -375,7 +375,7 @@ class Workbench extends Component {
                         </div>
                     </div>
                 	:<div className="nodatastatus">
-                		<img src={nodataleft}  />
+                		<img src={nodataleft} />
                 		<p>暂无数据</p>
                 	</div>
                 }

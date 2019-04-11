@@ -47,6 +47,7 @@ class history extends React.Component {
         this.setState({
             alarmImgType:false
         })
+        this.handleAlerm();
     };
       //查看报警详情
       alarmImg =(code)=>{
@@ -313,7 +314,7 @@ class history extends React.Component {
                         ))
                     }
                 </Row>
-                <Pagination defaultCurrent={this.state.page} current={this.state.page} total={this.state.totalcount} pageSize={this.state.pageSize} onChange={this.hanlePageSize} className="pageSize" style={{display:this.state.type===1?"block":"none"}} />
+                <Pagination hideOnSinglePage={true} defaultCurrent={this.state.page} current={this.state.page} total={this.state.totalcount} pageSize={this.state.pageSize} onChange={this.hanlePageSize} className="pageSize" style={{display:this.state.type===1?"block":"none"}} />
                 <div>
                     <Modal
                         width={1200}

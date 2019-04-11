@@ -7,7 +7,7 @@ class BeCuty extends Component {
         var sevenCount=[];
         if(sevenData){
             sevenData.map((v)=>{
-                sevenDatay.push([mometn(v.dayly).format("MM.DD"),v.emptyalarm,v.falsealarm,v.alarm]);
+                return sevenDatay.push([mometn(v.dayly).format("MM.DD"),v.emptyalarm,v.falsealarm,v.alarm]);
             });
             for(var i=0;i<sevenData.length;i++){
                 sevenCount.push(sevenData[i].alarm+sevenData[i].emptyalarm+sevenData[i].falsealarm);

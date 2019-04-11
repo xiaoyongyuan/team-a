@@ -1,10 +1,8 @@
 import React from 'react';
-import {Button, Switch, Icon,Comment, Modal,message,Input } from 'antd';
+import {Button, Switch, Icon,Comment, Modal,message } from 'antd';
 import {post} from "../../axios/tools";
 import "../../style/ztt/css/police.css";
-import moment from "moment";
 const ButtonGroup = Button.Group;
-const { TextArea } = Input;
 let vis=false;
 
 class Alarmdetails extends React.Component{
@@ -36,7 +34,6 @@ class Alarmdetails extends React.Component{
   	//此处拿到父页面参数
     this.setState({
       faths:this.props.toson,
-    //   code:this.props.toson.code,
     });
   }
   componentDidMount() {
@@ -49,7 +46,7 @@ class Alarmdetails extends React.Component{
               vis=nextProps.visible;
               this.setState({
                   code:nextProps.toson.code,
-                  faths:nextProps.toson
+                  faths:nextProps.toson,
               }, () => {
                   this.request()});
           }
@@ -57,8 +54,6 @@ class Alarmdetails extends React.Component{
   }
   request=()=>{
     post({url:"/api/alarmhandlehistory/getone",data:this.state.faths},(res)=>{
-        console.log(res.alarmhandle.hstatus,"hstatus");
-        console.log(res.alarmhandle.returnmemo,"returnmemo");
         this.setState({
           returnmemo:res.alarmhandle.returnmemo,
           data:res.data,
@@ -203,7 +198,7 @@ class Alarmdetails extends React.Component{
             return(" trianglebl");
         }else if(status === 3){
             return(" trianglerr");
-        }else if(status === 3){
+        }else if(status === 4){
             return(" trianglerr");
         }else if(status === 5){
             return(" triangleOr");
@@ -244,7 +239,7 @@ class Alarmdetails extends React.Component{
       const _this=this;
       const atype=this.state.type;
         if(this.state.data.code){
-            post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.data.code,hstatus:atype}},(res)=>{
+            post({url:"/api/alarmhandlehistory/alarmhandle",data:{code:this.state.data.code,hstatus:atype}},(res)=>{
                 if(res.success){
                   message.success("修改成功");
                   _this.setState({
@@ -321,12 +316,12 @@ class Alarmdetails extends React.Component{
                     onCancel={()=>this.lookretrun('visibleUser',false)}
                     okText="确认报警"
                     cancelText="取消"
-                >
-                    <div className="userDetails">
-                        <p><label>姓名：</label><span>{this.state.userName}</span></p>
-                        <p><label>联系电话：</label><span>{this.state.userPhone}</span></p>
-                        <p><label>地址：</label><span>''</span></p>
-                    </div>
+              >
+                <div className="userDetails">
+                    <p><label>姓名：</label><span>{this.state.userName}</span></p>
+                    <p><label>联系电话：</label><span>{this.state.userPhone}</span></p>
+                    <p><label>地址：</label><span>''</span></p>
+                </div>
 
                 </Modal>
               <Modal
@@ -335,7 +330,7 @@ class Alarmdetails extends React.Component{
                     onCancel={()=>this.lookretrun('lookretrunSwitch',false)} 
                     width={600}
                     footer={null}
-                >
+               >
                   {this.state.returnmemo.map((el,i)=>(
                       <Comment key={'Comment'+i}
                                 author={el.time}
@@ -345,7 +340,7 @@ class Alarmdetails extends React.Component{
                                 content={(
                                   <p>{el.info}</p>
                                 )}
-                            />
+                      />
                   ))}
                   <p>共<span>{this.state.returnmemo.length}</span>条记录 </p>
                 </Modal>
