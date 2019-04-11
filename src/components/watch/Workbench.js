@@ -1,12 +1,13 @@
 import React, { Component,Fragment } from 'react';
-import {Button,Collapse,Row,Col, Modal,message,Icon,Switch,Comment,Input, Select} from "antd";
+import {Button,Collapse,Row,Col, Modal,message,Icon,Switch,Comment,Input, Radio} from "antd";
 import "../../style/ztt/css/workbench.css";
 import nodata from "../../style/imgs/nopic.png";
 import nodataleft from "../../style/imgs/nodata.png";
 
 import {post} from "../../axios/tools";
 import moment from "moment";
-const Option = Select.Option;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 var hangup=true;
 const { TextArea } = Input;
@@ -29,6 +30,7 @@ class Workbench extends Component {
             returnChange:'', //新增回访记录
             finishSwitch:false, //结束报警开关
             lightSwitch:false, //设备闪灯开关
+            lightValue:'5', //闪灯默认时长
         };
     }
     componentDidMount() {
@@ -176,7 +178,7 @@ class Workbench extends Component {
         if(this.state.code){
         	if(oldHstatus===3 && !this.state.returnmemo.length){
         		message.warning('请至少添加一条回访记录!');
-        		_this.setState({visibleTips:false})
+        		_this.setState({visibleTips:false,newreturnSwitch:true})
         		return;
         	} 
             post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:oldHstatus}},(res)=>{
@@ -316,14 +318,15 @@ class Workbench extends Component {
         if(this.state.eid){
             post({url:"/api/equipment/FlashLampV1",data:{eid:this.state.eid,seconds:this.state.lightValue}},(res)=>{
                 if(res){
+                  this.setState({lightValue:'5'});
                   message.success("操作成功");  
                 }
             })
         }
     };
-    lightTime=(value)=>{//选择闪灯时长
+    lightTime=(e)=>{//选择闪灯时长
         this.setState({
-            lightValue:value
+            lightValue:e.target.value
         });
     };
     render() {
@@ -434,17 +437,17 @@ class Workbench extends Component {
                     title="提示信息"
                     visible={this.state.lightSwitch}
                     onOk={this.flashlightOk}
-                    onCancel={()=>this.lookretrun('lightSwitch',false)}
+                    onCancel={()=>{this.lookretrun('lightSwitch',false);this.lookretrun('lightValue','5')}}
                     width={400}
                     okText="确认"
                     cancelText="取消"
                 >
                     <p>请选择闪灯时长</p>
-                    <Select defaultValue="5" style={{ width: 120 }} onChange={this.lightTime}>
-                      <Option value="5" >5秒</Option>
-                      <Option value="10">10秒</Option>
-                      <Option value="15">15秒</Option>
-                    </Select>
+                    <RadioGroup onChange={this.lightTime} value={this.state.lightValue} buttonStyle="solid">
+                        <RadioButton value="5">5秒</RadioButton>
+                        <RadioButton value="10">10秒</RadioButton>
+                        <RadioButton value="15">15秒</RadioButton>
+                    </RadioGroup>
                 </Modal>
                 <Modal
                     title="回访记录"
