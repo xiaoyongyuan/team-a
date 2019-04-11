@@ -157,7 +157,6 @@ class Workbench extends Component {
             var clice=document.getElementById("hangUpPanel").clientHeight;//可视的高度
             var bottom=pending-clice;
             var foot=bottom-scroll;//滚动条距离底部的高度
-            console.log(pending,scroll,clice)
             if(foot===0){
             	let page=this.state.page;
                 page++;
