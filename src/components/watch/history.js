@@ -86,7 +86,7 @@ class history extends React.Component {
             pagesize:18,
             pageindex:this.state.page,
         }
-        post({url:'/api/alarmhandle/getlist',data:alarmmdata},(res)=>{
+        post({url:'/api/alarmhandlehistory/getlist',data:alarmmdata},(res)=>{
             if(res.success){
                
                 if(res.data.length===0){
