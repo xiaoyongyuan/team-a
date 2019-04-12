@@ -28,6 +28,7 @@ class Groupleader extends Component {
         this.getOne();
         this.userSelect();
         this.unAlarmNumber();
+        this.handleImgs();
     }
     getOne=()=>{
         post({url:"/api/userworker/getone",data:{account:this.state.loginaccount}},(res)=>{
@@ -51,13 +52,22 @@ class Groupleader extends Component {
             }
         })
     };
+    //图片
+    handleImgs=()=>{
+        post({url:"/api/alarmhandle/get_alarminfo_list"},(res)=>{
+            if(res.success){
+                this.setState({
+                    userImg:res.data.slice(0,4),
+                })
+            }
+        })
+    };
     //用户记录
     userSelect=()=>{
-        post({url:"/api/alarmhandle/getlist_homepage"},(res)=>{
+        post({url:"/api/alarmhandle/get_userinfo_list"},(res)=>{
             if(res.success){
                 this.setState({
                     userList:res.data.slice(0,5),
-                    userImg:res.data.slice(0,4),
                 })
             }
         })
@@ -182,7 +192,7 @@ class Groupleader extends Component {
                                             this.state.userList.map((v,i)=>(
                                                 <Row key={v.code}>
                                                     <Col span={8} className="record-body">{v.cname?v.cname:"无"}</Col>
-                                                    <Col span={8} className="record-body overflow" title={v.atime?v.atime:"无"}>{v.atime?v.atime:"无"}</Col>
+                                                    <Col span={8} className="record-body overflow" title={v.gettime?v.gettime:"无"}>{v.gettime?v.gettime:"无"}</Col>
                                                     <Col span={8} className="record-body">{v.realname}</Col>
                                                 </Row>
                                             ))
