@@ -15,7 +15,7 @@ class AlarmAnalysis extends Component {
                     radius: ['40%', '60%'],
                     center: ['50%', '60%'],
                     data:[
-                        {value:this.props.alarmCount, name:'警情'},
+                        {value:this.props.alarm, name:'警情'},
                         {value:this.props.falsealarm, name:'误报'},
                         {value:this.props.emptyalarm, name:'虚警'},
                         {value:this.props.hangup, name:'挂起'},
