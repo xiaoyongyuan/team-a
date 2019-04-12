@@ -193,7 +193,7 @@ class Groupleader extends Component {
                                                 <Row key={v.code}>
                                                     <Col span={8} className="record-body">{v.cname?v.cname:"无"}</Col>
                                                     <Col span={8} className="record-body overflow" title={v.gettime?v.gettime:"无"}>{v.gettime?v.gettime:"无"}</Col>
-                                                    <Col span={8} className="record-body">{v.realname}</Col>
+                                                    <Col span={8} className="record-body">{v.realname?v.realname:v.account}</Col>
                                                 </Row>
                                             ))
                                         }
