@@ -4,7 +4,8 @@
 .groupLeader-border{
     margin: 10px 10px;
     border-radius: 5px;
-    box-shadow: 0 0 10px #bfbdbd
+    box-shadow: 0 0 10px #bfbdbd;
+    background: #fff;
 }
 .groupLeader .overflow{
     overflow: hidden;

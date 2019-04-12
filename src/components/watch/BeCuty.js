@@ -37,6 +37,7 @@ class BeCuty extends Component {
                 {type: 'bar',color:"#FE6661",barWidth:"15%"},
                 {type: 'bar',color:"#5570FB",barWidth:"15%"},
                 {
+                    name:"总数",
                     type: "line",
                     smooth: true,
                     color:["#FDC228"],
