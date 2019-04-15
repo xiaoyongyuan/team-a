@@ -222,6 +222,7 @@ class Alarmdetails extends React.Component{
                     userPhone:res.data.adminaccount,
                     visibleUser:true,
                 })
+                post({url:"/api/alarmhandlehistory/getuserinfo",data:{code:_this.state.faths.code}},(res)=>{})
             }
         });
     }

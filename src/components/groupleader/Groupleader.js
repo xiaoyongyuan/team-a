@@ -233,7 +233,7 @@ class Groupleader extends Component {
                                         <tbody key={i}>
                                             <tr>
                                                 <td className="details-body">{v.account}</td>
-                                                <td className="details-body">{v.falsealarm+v.emptyalarm+v.alarm+v.hangup}</td>
+                                                <td className="details-body">{v.falsealarm+v.emptyalarm+v.alarmun+v.alarm+v.hangup}</td>
                                                 <td className="details-body">{v.falsealarm}</td>
                                                 <td className="details-body">{v.emptyalarm}</td>
                                                 <td className="details-body">{v.alarm}</td>
