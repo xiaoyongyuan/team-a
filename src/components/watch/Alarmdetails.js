@@ -297,7 +297,7 @@ class Alarmdetails extends React.Component{
                     ?<p><label>回访记录：</label><span style={{cursor:'pointer'}} onClick={()=>this.lookretrun('lookretrunSwitch')} >{this.state.returnmemo.length} 条</span></p>
                     :null}
                     {
-                      this.state.atype
+                      this.state.atype===-3
                       ?<p><label>处理操作：</label><Button type="primary" style={{background:'#279AC6',borderColor:'#279AC6',outline:'none !import'}} onClick={()=>this.typeAlarm(4,"虚警")}>虚警</Button><Button  type="primary" style={{background:'#3F51B5',borderColor:'#3F51B5'}} onClick={()=>this.typeAlarm(5,"误报")}>误报</Button><Button type="primary" style={{background:'#313653',borderColor:'#313653'}} onClick={this.pushinfo}>警情推送</Button></p>
                       :null
                     }
