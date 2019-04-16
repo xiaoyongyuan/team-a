@@ -2,7 +2,7 @@
  * 头部登录人信息
  */
 import React, { Component } from 'react';
-import { Menu, Icon, Layout,Popover } from 'antd';
+import { Menu, Icon, Layout,Popover,Modal } from 'antd';
 import screenfull from 'screenfull';
 import icon_admin from '../style/imgs/icon_admin.png';
 import icon_user from '../style/imgs/icon_user.png';
@@ -23,7 +23,7 @@ class HeaderCustom extends Component {
     };
     componentDidMount() {
         const _user = JSON.parse(localStorage.getItem('teamuser'));
-        if(!_user){
+        if(localStorage.getItem('teamtoken')&&!_user){
             this.props.history.push('/login');
         }else{
             this.setState({
@@ -32,7 +32,6 @@ class HeaderCustom extends Component {
         }
         this.unAlarmNumber();
        this.interVla=setInterval(()=> this.unAlarmNumber(),5000);
-       // const aa= post('login',);
     
     };
     componentWillUnmount(){
@@ -52,11 +51,14 @@ class HeaderCustom extends Component {
         this.props.toggle();
     };
     menuClick = e => {
-        e.key === 'logout' && this.logout();
+        e.key === 'logout' && this.lookretrun('logoutlayer');
     };
     logout = () => { //退出
+        this.setState({ logoutlayer:false });
+        
         localStorage.removeItem('teamuser');
         localStorage.removeItem('teammeun');
+        localStorage.removeItem('teamtoken');
         this.props.history.push('/login');
     };
     popoverHide = () => {
@@ -67,6 +69,9 @@ class HeaderCustom extends Component {
     handleVisibleChange = (visible) => {
         this.setState({ visible });
     };
+    lookretrun=(name,val=true)=>{
+        this.setState({ [name]:val });
+    }
     render() {
         const { responsive, path } = this.props;
         let unAlarm={
@@ -141,7 +146,7 @@ class HeaderCustom extends Component {
                         <MenuItemGroup title="用户中心">
                             <Menu.Item key="setting:1">你好 - {this.props.user.realname}</Menu.Item>
                             {/*<Menu.Item key="setting:2">个人信息</Menu.Item>*/}
-                            <Menu.Item key="logout"><span onClick={this.logout}>退出登录</span></Menu.Item>
+                            <Menu.Item key="logout"><span onClick={()=>this.lookretrun('logoutlayer')}>退出登录</span></Menu.Item>
                         </MenuItemGroup>
                         {/*<MenuItemGroup title="设置中心">
                             <Menu.Item key="setting:3">个人设置</Menu.Item>
@@ -150,6 +155,17 @@ class HeaderCustom extends Component {
                     </SubMenu>
                 </Menu>
                 <div style={unAlarm}><span style={unAlarmFont}>未处理报警数</span><span style={unAlarmNumber}>{this.state.unAlarm}</span></div>
+                <Modal
+                    title="提示信息"
+                    visible={this.state.logoutlayer}
+                    onOk={this.logout}
+                    onCancel={()=>this.lookretrun('logoutlayer',false)}
+                    width={400}
+                    okText="确认"
+                    cancelText="取消"
+                >
+                    <p>请确认您的操作</p>
+                </Modal>
             </Header>
         )
     }

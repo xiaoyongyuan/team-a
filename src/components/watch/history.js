@@ -255,13 +255,9 @@ class history extends React.Component {
                                     } )(
                                         <Select style={{ width: 120 }}>
                                             <Option value="" >所有</Option>
-                                            <Option value="0" >未处理</Option>
-                                            <Option value="1" >挂起</Option>
-                                            <Option value="2" >报警未结束</Option>
                                             <Option value="3" >报警已结束</Option>
                                             <Option value="4" >虚警</Option>
                                             <Option value="5" >误报</Option>
-                                            <Option value="-1" >待处理</Option>
                                             <Option value="-3" >过期</Option>
                                         </Select>
                                     )}

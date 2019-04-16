@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,Fragment } from 'react';
 import {Col, Row} from "antd";
 import BeCuty from "./BeCuty";
 import "../../style/ztt/css/watchIndex.css";
@@ -140,10 +140,12 @@ class WatchIndex extends Component {
                       <div className="pending-list watchIndex-border groupLeader-border">
                           <p className="alarm-top"><span style={{float:"left"}}>挂起列表</span><span className="more"><a href="#/app/watch/workbench">更多</a></span></p>
                           {
-                              this.state.hangUp.map((v,i)=>(
-                                  <div className="alarmList" key={i}>
-                                      <a href={"/#/app/watch/workbench?code="+v.code}>
-                                        <div className="alarmListBorder">
+                            this.state.hangUp.length
+                            ?<Fragment>{
+                                this.state.hangUp.map((v,i)=>(
+                                  <Row className="alarmList" key={i}>
+                                      <a href={"#/app/watch/workbench?code="+v.code}>
+                                       <div className="alarmListBorder">
                                           <Col span={6} className="listImg textCenter">
                                               <div className="handleUpImg"><img src={v.pic_min?v.pic_min:nodata} alt="" /></div>
                                           </Col>
@@ -156,8 +158,13 @@ class WatchIndex extends Component {
                                           <Col span={5} className="textCenter">{v.atime?v.atime:"无"}</Col>
                                       </div>
                                       </a>
-                                  </div>
+                                  </Row>
                               ))
+                            }</Fragment>
+                            :<div style={{margin:'50px auto 0',width:'200px',textAlign:'center'}}>
+                                <img src={nodata} width="100%"/>
+                                <p>暂无数据</p>
+                            </div>
                           }
                       </div>
                     </Col>
