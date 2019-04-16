@@ -36,7 +36,7 @@ class Workbench extends Component {
         if(this.props.query.code){
             this.getOneAlarm("/api/alarmhandle/get_hangup",{code:this.props.query.code});
         }else{
-            this.getOneAlarm();
+            this.getOneAlarm("/api/alarmhandle/get_handle");
         }
         this.pendingList();
         this.padingLoad();
