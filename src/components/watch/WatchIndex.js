@@ -140,7 +140,7 @@ class WatchIndex extends Component {
                       <div className="pending-list watchIndex-border groupLeader-border">
                           <p className="alarm-top"><span style={{float:"left"}}>挂起列表</span><span className="more"><a href="#/app/watch/workbench">更多</a></span></p>
                           {
-                            !this.state.hangUp
+                            this.state.hangUp.length
                             ?<Fragment>{
                                 this.state.hangUp.map((v,i)=>(
                                   <Row className="alarmList" key={i}>
