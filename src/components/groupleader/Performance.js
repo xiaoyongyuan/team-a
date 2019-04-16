@@ -150,7 +150,7 @@ class Performance extends Component {
                 <Row>
                     <Col span={20}>
                         <Table rowKey={record => record.account} columns={columns} dataSource={this.state.list} bordered
-                               pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage}}
+                               pagination={{defaultPageSize:10,current:this.state.page, hideOnSinglePage:true,total:this.state.total,onChange:this.changePage}}
                         />
                     </Col>
                 </Row>

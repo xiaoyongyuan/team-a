@@ -141,8 +141,9 @@ class WatchIndex extends Component {
                           <p className="alarm-top"><span style={{float:"left"}}>挂起列表</span><span className="more"><a href="#/app/watch/workbench">更多</a></span></p>
                           {
                               this.state.hangUp.map((v,i)=>(
-                                  <Row className="alarmList" key={i}>
-                                      <div className="alarmListBorder">
+                                  <div className="alarmList" key={i}>
+                                      <a href={"/#/app/watch/workbench?code="+v.code}>
+                                        <div className="alarmListBorder">
                                           <Col span={6} className="listImg textCenter">
                                               <div className="handleUpImg"><img src={v.pic_min?v.pic_min:nodata} alt="" /></div>
                                           </Col>
@@ -154,7 +155,8 @@ class WatchIndex extends Component {
                                           <Col span={4} className={this.alarmTypeColor(v.hstatus)}>{this.peddingType(v.hstatus)?this.peddingType(v.hstatus):"未知类型"}</Col>
                                           <Col span={5} className="textCenter">{v.atime?v.atime:"无"}</Col>
                                       </div>
-                                  </Row>
+                                      </a>
+                                  </div>
                               ))
                           }
                       </div>

@@ -34,7 +34,7 @@ class Workbench extends Component {
         };
     }
     componentDidMount() {
-        this.getOneAlarm();
+        this.getOneAlarm("/api/alarmhandle/get_hangup",{code:this.props.query.code});
         this.pendingList();
         this.padingLoad();
     }
