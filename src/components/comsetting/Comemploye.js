@@ -168,7 +168,7 @@ class Comemploye extends Component {
                     pagesize:10,
                     pageindex:this.state.page,
                 }
-                post({url:"/api/companyuser/getlist",data:data}, (res)=>{
+                post({url:"/api/userworker/getlist",data:data}, (res)=>{
                     if(res.success){
                         this.setState({
                             list: res.data,
