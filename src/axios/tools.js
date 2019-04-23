@@ -24,7 +24,7 @@ export const post = async({url, msg = '接口异常',data={},type},callback) =>{
   const comid=localStorage.getItem('teamcomid');
   const account=localStorage.getItem('teamaccount');
 
-  if(!account||account=='undefined'||!token||!comid || token=='undefined' || comid=='undefined'){
+  if(!account||account==='undefined'||!token||!comid || token==='undefined' || comid==='undefined'){
     window.location.href="#/login"
     return callback(false);
   }
@@ -35,9 +35,9 @@ export const post = async({url, msg = '接口异常',data={},type},callback) =>{
   }
 
     axios.post(Httpurl+url,Object.assign({comid:comid,user:account},data),head).then(res =>{
-      if(res.data.success==1){
+      if(res.data.success===1){
         return callback(res.data)
-      }else if(res.data.success==2){
+      }else if(res.data.success===2){
         window.location.href="#/login"
         return callback(false)
       }else{

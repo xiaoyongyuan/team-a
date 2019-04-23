@@ -212,7 +212,7 @@ class Department extends Component {
                         </Col>
                     </Row>
                 <Row>
-                    <Table columns={columns} dataSource={this.state.list} bordered={true}/>
+                    <Table columns={columns} dataSource={this.state.list} bordered />
                 </Row>
                 </div>
                        

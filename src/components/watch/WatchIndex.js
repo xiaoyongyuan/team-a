@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,Fragment } from 'react';
 import {Col, Row} from "antd";
 import BeCuty from "./BeCuty";
 import "../../style/ztt/css/watchIndex.css";
@@ -65,13 +65,15 @@ class WatchIndex extends Component {
                 return "待处理";
             case -3:
                 return "过期";
+            default:
+                return "";
         }
     };
     alarmTypeColor=(colorType)=>{
         if(colorType===1){
-            return "handupColor";
+            return "textCenter handupColor";
         }else if(colorType===2){
-            return "alarmUntreated";
+            return "textCenter alarmUntreated";
         }
     };
     render() {
@@ -101,7 +103,7 @@ class WatchIndex extends Component {
                                     <p className="watch-alarm">今日报警分析</p>
                                     <p className="watch-number watch-alarm">{this.state.alarmCount?this.state.alarmCount:0}</p>
                                     <Row>
-                                        <Col span={12} className="police-Name"> 警报/条</Col>
+                                        <Col span={12} className="police-Name"> 警情/条</Col>
                                         <Col span={12} className="police-Name">虚警/条</Col>
                                     </Row>
                                     <Row>
@@ -136,24 +138,33 @@ class WatchIndex extends Component {
                     </Col>
                     <Col span={12}>
                       <div className="pending-list watchIndex-border groupLeader-border">
-                          <p className="alarm-top"><span style={{float:"left"}}>挂起列表</span><span style={{float:"right",cursor:"pointer"}}><a href="#/app/watch/workbench">更多</a></span></p>
+                          <p className="alarm-top"><span style={{float:"left"}}>挂起列表</span><span className="more"><a href="#/app/watch/workbench">更多</a></span></p>
                           {
-                              this.state.hangUp.map((v,i)=>(
+                            this.state.hangUp.length
+                            ?<Fragment>{
+                                this.state.hangUp.map((v,i)=>(
                                   <Row className="alarmList" key={i}>
-                                      <div className="alarmListBorder">
+                                      <a href={"#/app/watch/workbench?code="+v.code}>
+                                       <div className="alarmListBorder">
                                           <Col span={6} className="listImg textCenter">
-                                              <div className="handleUpImg"><img src={v.pic_min?v.pic_min:nodata} alt=""/></div>
+                                              <div className="handleUpImg"><img src={v.pic_min?v.pic_min:nodata} alt="" /></div>
                                           </Col>
                                           <Col span={6} className="textCenter">
                                               <Row className="Camera" style={{display:v.name?"block":"none"}}><span className="nameWeight">名称：</span>{v.name}</Row>
                                               <Row className="Camera" title={v.gettime}>{v.gettime}</Row>
                                               <Row className="Camera" title={v.memo?v.memo:"无"}><span className="nameWeight">备注信息：</span>{v.memo?v.memo:"无"}</Row>
                                           </Col>
-                                          <Col span={4} className="textCenter" className={this.alarmTypeColor(v.hstatus)}>{this.peddingType(v.hstatus)?this.peddingType(v.hstatus):"未知类型"}</Col>
+                                          <Col span={4} className={this.alarmTypeColor(v.hstatus)}>{this.peddingType(v.hstatus)?this.peddingType(v.hstatus):"未知类型"}</Col>
                                           <Col span={5} className="textCenter">{v.atime?v.atime:"无"}</Col>
                                       </div>
+                                      </a>
                                   </Row>
                               ))
+                            }</Fragment>
+                            :<div style={{margin:'50px auto 0',width:'200px',textAlign:'center'}}>
+                                <img src={nodata} width="100%"/>
+                                <p>暂无数据</p>
+                            </div>
                           }
                       </div>
                     </Col>

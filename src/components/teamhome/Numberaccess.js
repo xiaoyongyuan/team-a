@@ -52,10 +52,10 @@ class Numberaccess extends React.Component{
         };
         return(
             <ReactEcharts
-            option={option}
-            style={{height: '100px', width: '100%'}}
-            className={'react_for_echarts'}
-        />
+                option={option}
+                style={{height: '100px', width: '100%'}}
+                className={'react_for_echarts'}
+            />
         )
     }
 }

@@ -277,7 +277,7 @@
     height: 0;
     border-color: transparent white;
     /* border-top-right-radius: 10px; */
-    border-width: 0px 60px 60px 0px;
+    border-width: 0px 70px 70px 0px;
     border-style: solid;
     position: absolute;
     right: 0;
@@ -358,9 +358,9 @@
 .xuanzhuan{
     position: absolute;
     color: #000;
-    right: -60px;
+    right: -70px;
     display: inline-block;
-    top: 10px;
+    top: 15px;
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
     color: white;
@@ -372,6 +372,7 @@
     margin: 25px auto;
 }
 .row-alarmlist-detail{
+    width: 100%;
     color: #333;
 }
 
@@ -408,11 +409,19 @@
     width:90%;
 }
 .remark{
+    width: 100%;
     float:left;
-    width:90%;
     margin-top:2px;
     height: 30px;
     line-height: 30px;
+}
+.remark span{
+    display: inline-block;
+    width: 100%;
+   padding: 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .remark>input{
   border: 0;

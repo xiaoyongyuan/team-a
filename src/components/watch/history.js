@@ -1,5 +1,5 @@
 import React from 'react';
-import { DatePicker, Row, Col, Button, Modal, Pagination, Form,LocaleProvider,Spin, Select,Input,Icon } from "antd";
+import { DatePicker, Row, Col, Button, Modal, Pagination, Form,LocaleProvider,Spin, Select,Input} from "antd";
 import "../../style/ztt/css/police.css";
 import "../../style/publicStyle/publicStyle.css";
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
@@ -9,6 +9,7 @@ import AlarmDetail from "./Alarmdetails";
 import nodata from "../../style/imgs/nopic320180.png";
 import banditpic from "../../style/imgs/banditpic.png";
 import firepic from "../../style/imgs/firepic.png";
+import noImg from "../../style/imgs/nodata.png";
 const { RangePicker } = DatePicker ;
 const Option = Select.Option;
 class history extends React.Component {
@@ -46,6 +47,7 @@ class history extends React.Component {
         this.setState({
             alarmImgType:false
         })
+        this.handleAlerm();
     };
       //查看报警详情
       alarmImg =(code)=>{
@@ -85,7 +87,7 @@ class history extends React.Component {
             pagesize:18,
             pageindex:this.state.page,
         }
-        post({url:'/api/alarmhandle/getlist',data:alarmmdata},(res)=>{
+        post({url:'/api/alarmhandlehistory/getlist',data:alarmmdata},(res)=>{
             if(res.success){
                
                 if(res.data.length===0){
@@ -148,14 +150,6 @@ class history extends React.Component {
         })
         
     };
-    handleStartOpenChange = (open) => {
-        if (!open) {
-            this.setState({ endOpen: true });
-        }
-    };
-    handleEndOpenChange = (open) => {
-        this.setState({ endOpen: open });
-    };
     sanjiaose = (status)=>{
         if(status === 0){
             return("triangle-topright-green triangleOrange");
@@ -196,6 +190,8 @@ class history extends React.Component {
                   return "待处理";
               case -3:
                   return "过期";
+              default:
+                  return "";
           }
     };
      
@@ -259,13 +255,9 @@ class history extends React.Component {
                                     } )(
                                         <Select style={{ width: 120 }}>
                                             <Option value="" >所有</Option>
-                                            <Option value="0" >未处理</Option>
-                                            <Option value="1" >挂起</Option>
-                                            <Option value="2" >报警未结束</Option>
                                             <Option value="3" >报警已结束</Option>
                                             <Option value="4" >虚警</Option>
                                             <Option value="5" >误报</Option>
-                                            <Option value="-1" >待处理</Option>
                                             <Option value="-3" >过期</Option>
                                         </Select>
                                     )}
@@ -277,7 +269,7 @@ class history extends React.Component {
                 <Spin size="large" spinning={this.state.loadding} tip="加载中..." className="loadding" />
                 {this.state.nodatapic?"":
                 <Row style={{marginTop:"70px",}}>
-                     <Col style={{width:"100%",textAlign:"center"}}><div className="backImg"><img src={nodata} alt="" /></div></Col>
+                     <Col style={{width:"100%",textAlign:"center"}}><div className="backImg"><img src={noImg} alt="" /></div></Col>
                 </Row>}
                
                 <Row style={{marginLeft:"10px",marginTop:"20px"}}>
@@ -297,18 +289,18 @@ class history extends React.Component {
                                             </Col>
                                             <Col lg={14} xl={13} className="r_flex">
                                                 <div className="row-alarmlist-detail">
-                                                        <div className="word-row">
-                                                            <p className="fontstyle right_linr">{v.name?v.name:'暂无信息'}</p>
-                                                            <p className="fontstyle right_linr">
-                                                               {this.atypetext(v.atype)}
-                                                            </p>
-                                                        </div>
-                                                        <div style={{float:'left',width:'100%'}}>
-                                                            <p className="fontstyle right_linr1">{v.atime}</p>
-                                                        </div>
-                                                        <div className="remark">
-                                                        {v.memo?v.memo:'暂无备注'}
-                                                        </div>
+                                                    <div className="word-row">
+                                                        <p className="fontstyle right_linr">{v.name?v.name:'暂无信息'}</p>
+                                                        <p className="fontstyle right_linr">
+                                                           {this.atypetext(v.atype)}
+                                                        </p>
+                                                    </div>
+                                                    <div style={{float:'left',width:'100%'}}>
+                                                        <p className="fontstyle right_linr1">{v.atime}</p>
+                                                    </div>
+                                                    <div className="remark">
+                                                        <span>{v.memo?v.memo:'暂无备注'}</span>
+                                                    </div>
                                                 </div>
                                             </Col>
                                         </Row>
@@ -318,7 +310,7 @@ class history extends React.Component {
                         ))
                     }
                 </Row>
-                <Pagination defaultCurrent={this.state.page} current={this.state.page} total={this.state.totalcount} pageSize={this.state.pageSize} onChange={this.hanlePageSize} className="pageSize" style={{display:this.state.type===1?"block":"none"}} />
+                <Pagination hideOnSinglePage={true} defaultCurrent={this.state.page} current={this.state.page} total={this.state.totalcount} pageSize={this.state.pageSize} onChange={this.hanlePageSize} className="pageSize" style={{display:this.state.type===1?"block":"none"}} />
                 <div>
                     <Modal
                         width={1200}

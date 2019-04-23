@@ -1,13 +1,13 @@
 
 import React, { Component } from 'react';
 import '../../style/sjg/home.css';
-import { Card, Form, Input, Row, Col, Button,Upload, message, Icon, } from 'antd';
+import { Card, Form, Input, Row, Col, Button,message} from 'antd';
 import BreadcrumbCustom from '../BreadcrumbCustom';
 import {post} from "../../axios/tools";
 import nopic from "../../style/imgs/nopic.png";
 const FormItem = Form.Item;
-const props = {
-    accept:'image/*',
+/*const props = {
+    accept:'image/!*',
     name: 'lffupload.png',
     action: 'http://api.aokecloud.cn//upload/temp',
     // action: '/src/style/imgs/',
@@ -24,7 +24,7 @@ const props = {
             message.error(`file upload failed.`);
         }
     },
-};
+};*/
 
 class Adopt extends Component {
     constructor(props) {
@@ -49,7 +49,7 @@ class Adopt extends Component {
                     rname: res.data.rname, //对象名
                     applydate: res.data.applydate, 
                     cameraname: res.data.cameraname, 
-                    rhandle: res.data.rhandle,   //处理结果                           
+                    rhandle: res.data.rhandle,//处理结果
                 });
                 _this.setState({
                     imgsrc: res.data.basepic, //图片
@@ -79,6 +79,7 @@ class Adopt extends Component {
                    } 
                    area.stroke();
                 }
+                return "";
             }) 
         }
         

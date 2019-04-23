@@ -2,7 +2,7 @@
  * 头部登录人信息
  */
 import React, { Component } from 'react';
-import { Menu, Icon, Layout, Badge, Popover } from 'antd';
+import { Menu, Icon, Layout,Popover,Modal } from 'antd';
 import screenfull from 'screenfull';
 import icon_admin from '../style/imgs/icon_admin.png';
 import icon_user from '../style/imgs/icon_user.png';
@@ -23,7 +23,7 @@ class HeaderCustom extends Component {
     };
     componentDidMount() {
         const _user = JSON.parse(localStorage.getItem('teamuser'));
-        if(!_user){
+        if(localStorage.getItem('teamtoken')&&!_user){
             this.props.history.push('/login');
         }else{
             this.setState({
@@ -31,9 +31,12 @@ class HeaderCustom extends Component {
             });
         }
         this.unAlarmNumber();
-       // const aa= post('login',);
+       this.interVla=setInterval(()=> this.unAlarmNumber(),5000);
     
     };
+    componentWillUnmount(){
+        clearInterval(this.interVla);
+    }
     unAlarmNumber=()=>{
         post({url:"/api/alarmhandle/get_unhandle"},(res)=>{
             if(res.success){
@@ -48,12 +51,15 @@ class HeaderCustom extends Component {
         this.props.toggle();
     };
     menuClick = e => {
-        e.key === 'logout' && this.logout();
+        e.key === 'logout' && this.lookretrun('logoutlayer');
     };
     logout = () => { //退出
+        this.setState({ logoutlayer:false });
+        
         localStorage.removeItem('teamuser');
         localStorage.removeItem('teammeun');
-        this.props.history.push('/login')
+        localStorage.removeItem('teamtoken');
+        this.props.history.push('/login');
     };
     popoverHide = () => {
         this.setState({
@@ -63,17 +69,27 @@ class HeaderCustom extends Component {
     handleVisibleChange = (visible) => {
         this.setState({ visible });
     };
+    lookretrun=(name,val=true)=>{
+        this.setState({ [name]:val });
+    }
     render() {
         const { responsive, path } = this.props;
         let unAlarm={
-            width:"255px",
+            position: "relative",
+            top:"13px",
+            float:"right",
+            width:"237px",
             height:"40px",
             display:"inline-block",
             borderRadius:"25px",
             lineHeight:"40px",
             border:"2px solid #3F51B5",
+            marginRight:"50px"
         };
         let unAlarmFont={
+            position: "absolute",
+            top:"0",
+            left:"0",
             background:"#0C1050",
             width:"50%",
             height:"100%",
@@ -84,6 +100,9 @@ class HeaderCustom extends Component {
             borderBottomLeftRadius:"25px",
         };
         let unAlarmNumber={
+            position: "absolute",
+            right:"0",
+            top:"0",
             borderTopRightRadius:"25px",
             borderBottomRightRadius:"25px",
             background:"#313653",
@@ -92,7 +111,8 @@ class HeaderCustom extends Component {
             height:"100%",
             display:"inline-block",
             textAlign:"center",
-            fontWeight:"bolder"
+            fontWeight:"bolder",
+            fontSize:"18px"
         };
         return (
             <Header className="custom-theme header" >
@@ -114,7 +134,6 @@ class HeaderCustom extends Component {
                     style={{ lineHeight: '64px', float: 'right' }}
                     onClick={this.menuClick}
                 >
-                    <span style={unAlarm}><span style={unAlarmFont}>未处理报警数</span><span style={unAlarmNumber}>{this.state.unAlarm}</span></span>
                     <Menu.Item key="full" onClick={this.screenFull} >
                         <Icon type="arrows-alt" onClick={this.screenFull} />
                     </Menu.Item>
@@ -123,11 +142,11 @@ class HeaderCustom extends Component {
                             <Icon type="notification" />
                         </Badge>
                     </Menu.Item>*/}
-                    <SubMenu title={<span className="avatar"><img src={this.props.user.utype?icon_user:icon_admin}  alt="头像" /><i className="on bottom b-white" /></span>}>
+                    <SubMenu title={<span className="avatar"><img src={this.props.user.utype?icon_user:icon_admin} alt="头像" /><i className="on bottom b-white" /></span>}>
                         <MenuItemGroup title="用户中心">
                             <Menu.Item key="setting:1">你好 - {this.props.user.realname}</Menu.Item>
                             {/*<Menu.Item key="setting:2">个人信息</Menu.Item>*/}
-                            <Menu.Item key="logout"><span onClick={this.logout}>退出登录</span></Menu.Item>
+                            <Menu.Item key="logout"><span onClick={()=>this.lookretrun('logoutlayer')}>退出登录</span></Menu.Item>
                         </MenuItemGroup>
                         {/*<MenuItemGroup title="设置中心">
                             <Menu.Item key="setting:3">个人设置</Menu.Item>
@@ -135,6 +154,18 @@ class HeaderCustom extends Component {
                         </MenuItemGroup>*/}
                     </SubMenu>
                 </Menu>
+                <div style={unAlarm}><span style={unAlarmFont}>未处理报警数</span><span style={unAlarmNumber}>{this.state.unAlarm}</span></div>
+                <Modal
+                    title="提示信息"
+                    visible={this.state.logoutlayer}
+                    onOk={this.logout}
+                    onCancel={()=>this.lookretrun('logoutlayer',false)}
+                    width={400}
+                    okText="确认"
+                    cancelText="取消"
+                >
+                    <p>请确认您的操作</p>
+                </Modal>
             </Header>
         )
     }

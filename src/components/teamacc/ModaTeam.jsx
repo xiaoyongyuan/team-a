@@ -21,13 +21,14 @@ class ModaBianhao extends Component {
         post({url:"/api//servicetype/getsinfo"}, (res)=>{
             if(res.success){
                 if(res.data.length){
-                    res.data.map((el,i)=>{
+                    res.data.map((el)=>{
                         let objs={
                            label: el.name,
                            value: el.name,
                         };
-                        plainOptions.push(objs)  
-                    })
+                        plainOptions.push(objs);
+                        return "";
+                    });
                     this.setState({
                         plainOptions
                     })
@@ -46,11 +47,11 @@ class ModaBianhao extends Component {
     requestdata=(params) => {//取数据
         this.props.form.setFieldsValue({
             opening:['围界入侵']
-        })
+        });
         if(this.state.code){
             post({url:"/api/company/getone",data:{comid:this.state.code} }, (res)=>{
                 let istrue=true;
-                res.data.ctype == 4? istrue=true:istrue=false
+                res.data.ctype === 4? istrue=true:istrue=false
                 this.setState({
                     istrue:istrue
                 });
@@ -74,7 +75,7 @@ class ModaBianhao extends Component {
     };
 
     componentWillReceiveProps(nextProps){
-        if( nextProps.visible != vis){
+        if( nextProps.visible !== vis){
             vis=nextProps.visible;
             if(nextProps.visible){
                 vis=nextProps.visible;
@@ -159,7 +160,7 @@ class ModaBianhao extends Component {
                             initialValue: "4",
                             rules: [{ required: true, message: '请输入用户类型!' }],
                         })(
-                            <RadioGroup disabled  onChange={this.onChange_radio}>
+                            <RadioGroup disabled onChange={this.onChange_radio}>
                                 <Radio value="5">局域网企业用户</Radio>
                                 <Radio value="4">树莓派企业用户</Radio>
                                 <Radio value="3">树莓派个人用户</Radio>
@@ -170,7 +171,7 @@ class ModaBianhao extends Component {
                         {getFieldDecorator('opening', {
                             rules: [{ required: true}],
                         })(
-                            <CheckboxGroup disabled={!this.state.istrue}  options={_this.state.plainOptions}  onChange={onChangecheck} />
+                            <CheckboxGroup disabled={!this.state.istrue} options={_this.state.plainOptions} onChange={onChangecheck} />
                         )}
                     </FormItem>
                     <div style={{display:this.state.istrue?"block":"none"}}>

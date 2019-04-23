@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Switch, Icon } from 'antd';
+import {Button, Switch, Icon,Comment, Modal,message } from 'antd';
 import {post} from "../../axios/tools";
 import "../../style/ztt/css/police.css";
 const ButtonGroup = Button.Group;
@@ -14,24 +14,26 @@ class Alarmdetails extends React.Component{
       		name:'',
       		tags:'',
       		type:'1',
-            atime:'',
+          atime:'',
       		field:[],
           finalresult:[],
-      
       	},
       	field:true, //是否显示围界信息
       	obj:true, //是否显示报警对象
       	prev:'', //上一条数据code
       	next:'', //下一条数据code
         code:'', //当前数据的code
-        videoopen:false //视频开关
+        videoopen:false, //视频开关
+        returnmemo:[], //回访记录
+        lookretrunSwitch:false, //回访弹层开关
+        newreturnSwitch:false, //新增回访弹层开关
+        visibleUser:false, //用户详情弹层
       };
   }
   componentWillMount() {
   	//此处拿到父页面参数
     this.setState({
       faths:this.props.toson,
-    //   code:this.props.toson.code,
     });
   }
   componentDidMount() {
@@ -44,32 +46,17 @@ class Alarmdetails extends React.Component{
               vis=nextProps.visible;
               this.setState({
                   code:nextProps.toson.code,
-                  faths:nextProps.toson
+                  faths:nextProps.toson,
               }, () => {
-                  this.componentDidMount()});
+                  this.request()});
           }
       }        
   }
   request=()=>{
-    post({url:"/api/alarmhandle/getOne",data:this.state.faths},(res)=>{   
-
-      let data={
-          cid:res.data.cid,
-          src:res.data.picpath,
-          field:res.data.field,
-          name:res.data.name,
-          alarmtype:res.data.alarmtype,
-          finalresult:res.data.finalresult1,
-          atime:res.data.atime,
-          type:res.data.status,   
-          tags:res.data.tags, 
-          pic_width:res.data.pic_width, //报警宽
-          pic_height:res.data.pic_height, //报警高  
-          videopath:res.data.videopath, //视频地址 
-       
-        }
+    post({url:"/api/alarmhandlehistory/getone",data:this.state.faths},(res)=>{
         this.setState({
-          data:data,
+          returnmemo:res.alarmhandle.returnmemo,
+          data:res.data,
           prev:res.data.last,
           next:res.data.next, 
           videoopen:false,
@@ -120,7 +107,6 @@ class Alarmdetails extends React.Component{
     }); 
   }
   looknew=(text)=>{ //查看上下一条
-
     let faths=this.state.faths;
     faths.code=this.state[text];
   	this.setState({
@@ -155,7 +141,7 @@ class Alarmdetails extends React.Component{
         return '';
       })
   	}
-    const objs=this.state.data.finalresult;
+    const objs=this.state.data.finalresult1;
   	if(this.state.obj && objs.length){
       //计算缩放比例
       const x=604/this.state.data.pic_width, y=476/this.state.data.pic_height;
@@ -181,25 +167,27 @@ class Alarmdetails extends React.Component{
     area.rect(parseInt(el.x*x),parseInt(el.y*y),parseInt(el.w*x),parseInt(el.h*y));
     area.stroke();
     area.closePath();
-  }
+  };
       //报警状态
       atypetext =(code) =>{
         if(code === 0){
             return "未处理";
         }else if(code === 1){
-            return "虚警";
-        }else if(code === 2){
-            return "误报";
-        }else if(code === 3){
-            return "警报";
-        }else if(code === -1){
-            return "已获取未处理";
-        }else if(code === -2){
             return "挂起";
+        }else if(code === 2){
+            return "报警未结束";
+        }else if(code === 3){
+            return "报警已结束";
+        }else if(code === 4){
+            return "虚警";
+        }else if(code === 5){
+            return "误报";
+        }else if(code === -1){
+            return "待处理";
         }else if(code === -3){
-            return "已过期";
-        }
-      }
+              return "过期";
+          }
+      };
       //报警状态颜色
       sanjiaose = (status)=>{
         if(status === 0){
@@ -210,6 +198,10 @@ class Alarmdetails extends React.Component{
             return(" trianglebl");
         }else if(status === 3){
             return(" trianglerr");
+        }else if(status === 4){
+            return(" trianglerr");
+        }else if(status === 5){
+            return(" triangleOr");
         }else if(status === -1){
             return(" trianglecc");
         }else if(status === -2){
@@ -217,15 +209,64 @@ class Alarmdetails extends React.Component{
         }else if(status === -3){
             return(" triangleaa");
         }
+    };
+    lookretrun=(val,opt=true)=>{ //将val置为opt
+      this.setState({[val]: opt})
+    };
+    pushinfo=()=>{ //推送给app，获取用户信息
+    const _this=this;        
+        post({url:"/api/company/getinfo_maintain",data:{code:this.state.data.companycode}},(res)=>{
+            if(res.success){
+                _this.setState({
+                    userName:res.data.adminname,
+                    userPhone:res.data.adminaccount,
+                    visibleUser:true,
+                })
+                post({url:"/api/alarmhandlehistory/getuserinfo",data:{code:_this.state.faths.code}},(res)=>{})
+            }
+        });
     }
+    typeAlarm=(type,name)=>{
+        this.setState({
+            name,
+            visibleTips:true,
+            type,
+        });
+    };
+    pushOk=()=>{//确认报警
+        this.setState({type:2},()=>this.handleOkTips());
+    }
+    handleOkTips=()=>{ //处理：2报警未结束  4虚警   5误报
+      const _this=this;
+      const atype=this.state.type;
+        if(this.state.data.code){
+            post({url:"/api/alarmhandlehistory/alarmhandle",data:{code:this.state.data.code,hstatus:atype}},(res)=>{
+                if(res.success){
+                  message.success("修改成功");
+                  _this.setState({
+                      visibleTips:false,
+                      visibleUser:false,
+                      atype
+                  }); 
+                }else{
+                    message.warning(res.errorinfo);
+                }
+            });
+        }else{
+            message.warning("当前报警不存在");
+            this.setState({
+                visibleTips:false,
+            })
+        }
+    };
     render(){      
         return(
             <div className="AlarmDetail">
             	<div className="alarmflex">
             		<div className="flexleft" id="flexleft">
-                  <canvas id="canvasobj" width="604px" height="476px" style={{backgroundImage:'url('+this.state.data.src+')',backgroundSize:"100% 100%",display:this.state.videoopen?'none':'block'}} />
+                  <canvas id="canvasobj" width="604px" height="476px" style={{backgroundImage:'url('+this.state.data.picpath+')',backgroundSize:"100% 100%",display:this.state.videoopen?'none':'block'}} />
                 	<div style={{display:this.state.videoopen?'block':'none',width:'604px',height:'513px'}}>
-                      <video src={this.state.data.videopath} autoPlay="autoplay" controls="controls" width="600px"></video>
+                      <video src={this.state.data.videopath} autoPlay="autoplay" controls="controls" width="600px" />
                     </div>
                   <div style={{textAlign:'center',marginTop:'10px'}}>
             				<ButtonGroup>
@@ -250,16 +291,71 @@ class Alarmdetails extends React.Component{
             				<p><label>围界信息: <Switch size="small" checked={this.state.field} onChange={(checked)=>this.onChange(checked,'field')} /></label></p>
             				<p><label>报警信息: <Switch size="small" checked={this.state.obj} onChange={(checked)=>this.onChange(checked,'obj')} /></label></p>
             				<p><label>报警时间：<span>{this.state.data.atime}</span></label></p>
-                    <p><label>报警处理：</label><span className={this.sanjiaose(this.state.atype)}>
+                    <p><label>处理类型：</label><span className={this.sanjiaose(this.state.atype)}>
                         {this.atypetext(this.state.atype)}
                     </span></p>
+                    {this.state.returnmemo.length
+                    ?<p><label>回访记录：</label><span style={{cursor:'pointer'}} onClick={()=>this.lookretrun('lookretrunSwitch')} >{this.state.returnmemo.length} 条</span></p>
+                    :null}
+                    {
+                      this.state.atype===-3
+                      ?<p><label>处理操作：</label><Button type="primary" style={{background:'#279AC6',borderColor:'#279AC6',outline:'none !import'}} onClick={()=>this.typeAlarm(4,"虚警")}>虚警</Button><Button  type="primary" style={{background:'#3F51B5',borderColor:'#3F51B5'}} onClick={()=>this.typeAlarm(5,"误报")}>误报</Button><Button type="primary" style={{background:'#313653',borderColor:'#313653'}} onClick={this.pushinfo}>警情推送</Button></p>
+                      :null
+                    }
                     <div><label style={{float:'left',color:'#444'}}>备注：</label>
                         <div className="memo">
                         {this.state.memo?this.state.memo:'暂无备注'}
                         </div> 
-                      </div>
+                    </div>
+                    
             		</div>
             	</div>
+              <Modal
+                    title="用户详情"
+                    visible={this.state.visibleUser}
+                    onOk={this.pushOk}
+                    onCancel={()=>this.lookretrun('visibleUser',false)}
+                    okText="确认报警"
+                    cancelText="取消"
+              >
+                <div className="userDetails">
+                    <p><label>姓名：</label><span>{this.state.userName}</span></p>
+                    <p><label>联系电话：</label><span>{this.state.userPhone}</span></p>
+                    <p><label>地址：</label><span>''</span></p>
+                </div>
+
+                </Modal>
+              <Modal
+                    title="回访记录"
+                    visible={this.state.lookretrunSwitch}
+                    onCancel={()=>this.lookretrun('lookretrunSwitch',false)} 
+                    width={600}
+                    footer={null}
+               >
+                  {this.state.returnmemo.map((el,i)=>(
+                      <Comment key={'Comment'+i}
+                                author={el.time}
+                                avatar={(
+                                  <Icon type="message" theme="filled" style={{color:'#6BAC20',fontSize:'1.5em'}} />
+                                )}
+                                content={(
+                                  <p>{el.info}</p>
+                                )}
+                      />
+                  ))}
+                  <p>共<span>{this.state.returnmemo.length}</span>条记录 </p>
+                </Modal>
+                <Modal
+                    title="提示信息"
+                    visible={this.state.visibleTips}
+                    onOk={this.handleOkTips}
+                    onCancel={()=>this.lookretrun('visibleTips',false)}
+                    width={400}
+                    okText="确认"
+                    cancelText="取消"
+                >
+                    <p><span>确定为</span><span>{this.state.name?this.state.name:""}</span>吗?</p>
+                </Modal>
             </div>
         )
     }

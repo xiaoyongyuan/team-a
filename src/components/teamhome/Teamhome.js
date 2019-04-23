@@ -153,7 +153,7 @@ class Teamhome extends React.Component {
                                     <Col xl={2} xxl={1}><div className="sandian"><img src={sandiantu} alt="" /></div></Col>
                                     <Col xl={10} xxl={12}><span className="titleFont">用户散点图</span></Col>
                                 </Row>
-                                <Teamdispersion datasMap={this.state.mapJson}/>
+                                <Teamdispersion datasMap={this.state.mapJson} />
                             </Card>
                         </div>
                     </Col>
@@ -166,7 +166,7 @@ class Teamhome extends React.Component {
                                             <Col xl={3} xxl={3}><div className="sandian"><img src={fwnleiruwang} alt="" /></div></Col>
                                             <Col xl={12} xxl={12}><span className="titleFont">分类入网数</span></Col>
                                         </Row>
-                                        <Numberaccess raspberry={this.state.raspberry} LANequipment={this.state.LANequipment}/>
+                                        <Numberaccess raspberry={this.state.raspberry} LANequipment={this.state.LANequipment} />
                                     </Card>
                                 </div>
                             </Col>
@@ -202,7 +202,7 @@ class Teamhome extends React.Component {
                                             <Col xl={2} xxl={1}><div className="sandian"><img src={yueruwangshu} alt="" /></div></Col>
                                             <Col xl={10} xxl={12}><span className="titleFont">月入网数</span></Col>
                                         </Row>
-                                        <Monthlynumber monthlyX={this.state.monthlyNumber} monthlyY={this.state.monthlyNumberY}/>
+                                        <Monthlynumber monthlyX={this.state.monthlyNumber} monthlyY={this.state.monthlyNumberY} />
                                     </Card>
                                 </div>
                             </Col>

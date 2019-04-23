@@ -106,8 +106,7 @@
     white-space: nowrap;
 }
 .watchIndex .statisticsNumber{
-    text-align: center;
-    margin-left: -35%;
+    margin-left: 23%;
 }
 .watchIndex .yesterdayData{
     margin-left: -20%;
@@ -139,4 +138,12 @@
     color: #FF1533;
     font-weight: bolder;
 }
-
+.watchIndex .more a{
+    float:right;
+    cursor:pointer;
+    color: #096DD9;
+    text-decoration:underline;
+}
+.watchIndex .more a:hover{
+    color: #096DD9;
+}

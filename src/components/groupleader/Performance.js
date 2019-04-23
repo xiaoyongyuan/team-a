@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Table,DatePicker, Row,Button, Form,LocaleProvider,Input,Pagination} from "antd";
+import { Table,DatePicker, Row,Button, Form,LocaleProvider,Input,Col} from "antd";
 import "../../style/ztt/css/police.css";
 import "../../style/publicStyle/publicStyle.css";
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
@@ -105,16 +105,14 @@ class Performance extends Component {
                 title: '虚报',
                 dataIndex: 'emptyalarm',
                 key: 'emptyalarm',
-            }
-            ,{
+            },{
                 title: '警报',
                 dataIndex: 'alarm',
                 key: 'alarm',
-            }
-            ,{
+            },{
                 title: '查询用户详情次数',
                 dataIndex: 'alarm',
-                key: 'datai',
+                key: 'userCount',
             }
         ];
         return (
@@ -149,9 +147,14 @@ class Performance extends Component {
                         </Form>
                     </Row>
                 </LocaleProvider>
-                 <Table rowKey={record => record.code} columns={columns} dataSource={this.state.list} bordered={true}
-                  pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage}}
-                 /> 
+                <Row>
+                    <Col span={20}>
+                        <Table rowKey={record => record.account} columns={columns} dataSource={this.state.list} bordered
+                               pagination={{defaultPageSize:10,current:this.state.page, hideOnSinglePage:true,total:this.state.total,onChange:this.changePage}}
+                        />
+                    </Col>
+                </Row>
+
             </div>
         )
     }

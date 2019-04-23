@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
 class AlarmAnalysis extends Component {
-    constructor(props){
-        super(props);
-    }
     render() {
         let option={
             tooltip : {
                 trigger: 'item',
                 formatter: "{a} <br/>{b} : {c} ({d}%)"
             },
-            color:["#5570FB","#FE6661","#43B4F8"],
+            color:["#FE6661","#5570FB","#43B4F8","#9D73F2"],
             series : [
                 {
                     name: '',
@@ -18,9 +15,10 @@ class AlarmAnalysis extends Component {
                     radius: ['40%', '60%'],
                     center: ['50%', '60%'],
                     data:[
-                        {value:this.props.unhandle, name:'未处理报警数'},
-                        {value:this.props.todaysCount, name:'今日处理报警数'},
-                        {value:this.props.userCount, name:'用户总数'},
+                        {value:this.props.alarm, name:'警情'},
+                        {value:this.props.falsealarm, name:'误报'},
+                        {value:this.props.emptyalarm, name:'虚警'},
+                        {value:this.props.hangup, name:'挂起'},
                     ],
                     itemStyle: {
                         emphasis: {

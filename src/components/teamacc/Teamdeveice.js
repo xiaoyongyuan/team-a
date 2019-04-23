@@ -160,11 +160,11 @@ console.log('*values',values);
                 render: (text, record,index) => {
                     switch(text){
                         case 0:
-                        return `未绑定`;
-                        break;
+                          return "未绑定";
                         case 1:
-                        return `已绑定`;
-                        break;
+                          return "已绑定";
+                        default:
+                            return "";
                     }
                 },
             },{
@@ -243,11 +243,16 @@ console.log('*values',values);
                             </Form>
                         </Col>
                     </Row>
+<<<<<<< HEAD
                 <Table columns={columns} dataSource={this.state.list} bordered={true}
                  pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage ,hideOnSinglePage:true}}
                  rowKey={record => record.code}
                 />
                 <Modal title='编辑' visible={this.state.visible} onOk={this.handleCreate}
+=======
+                <Table columns={columns} dataSource={this.state.list} bordered rowKey={record => record.code} />
+                <Modal title="编辑" visible={this.state.visible} onOk={this.handleCreate}
+>>>>>>> 92279a9caef3099c999568c715707e014296b982
                        onCancel={this.handleCancel}
                 >
                     <label>状态 </label>

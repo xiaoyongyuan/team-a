@@ -22,3 +22,11 @@ img {
   max-width: 100%;
   vertical-align: bottom;
 }
+
+.copyright {
+  position: absolute;
+  left: 47%;
+  bottom: 10px;
+  font-size: 12px;
+  color: #fff;
+}

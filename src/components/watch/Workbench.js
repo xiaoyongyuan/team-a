@@ -1,9 +1,13 @@
 import React, { Component,Fragment } from 'react';
-import {Button,Collapse,Row,Col, Modal,message,Icon,Switch,Avatar,Comment,Input} from "antd";
+import {Button,Collapse,Row,Col, Modal,message,Icon,Switch,Comment,Input, Radio} from "antd";
 import "../../style/ztt/css/workbench.css";
 import nodata from "../../style/imgs/nopic.png";
+import nodataleft from "../../style/imgs/nodata.png";
+
 import {post} from "../../axios/tools";
 import moment from "moment";
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 var hangup=true;
 const { TextArea } = Input;
@@ -20,14 +24,20 @@ class Workbench extends Component {
             page:1,
             field:true, //是否显示围界信息
             obj:true,
-            newreturnSwitch:false,
-            lookretrunSwitch:false, //回访开关
+            newreturnSwitch:false, //处理警情弹层
             returnmemo:[], //回访记录
-            returnChange:'' //新增回访记录
+            returnChange:'', //新增回访记录
+            finishSwitch:false, //结束报警开关
+            lightSwitch:false, //设备闪灯开关
+            lightValue:'5', //闪灯默认时长
         };
     }
     componentDidMount() {
-        this.getOneAlarm();
+        if(this.props.query.code){
+            this.getOneAlarm("/api/alarmhandle/get_hangup",{code:this.props.query.code});
+        }else{
+            this.getOneAlarm();
+        }
         this.pendingList();
         this.padingLoad();
     }
@@ -36,12 +46,12 @@ class Workbench extends Component {
       post({url:url,data:data},(res)=>{
           if(res.success){
               this.setState({
-              		nextPageBtn:false,
+              	  nextPageBtn:false,
                   oldHstatus:res.alarmhandle.hstatus,
                   code:res.data.code,
                   companycode:res.data.companycode,
                   eid:res.data.eid,
-                  name:res.data.name,
+                  alarmname:res.data.name,
                   memo:res.alarmhandle.memo?res.alarmhandle.memo:'备注信息',
                   memochange:res.alarmhandle.memo?res.alarmhandle.memo:'备注信息',
                   videopath:res.data.videopath,
@@ -52,13 +62,11 @@ class Workbench extends Component {
                   picWidth:res.data.pic_width,
                   picHeight:res.data.pic_height,
                   videoFalse:false,
-                  returnmemo:res.alarmhandle.returnmemo //回访记录
-
+                  returnmemo:res.alarmhandle.returnmemo?res.alarmhandle.returnmemo:[], //回访记录
+                  finishSwitch:false,
               },()=>{
                   this.paintingBoundary();//围界
               });
-          }else{
-              this.getOneAlarm();
           }
       })
     };
@@ -69,6 +77,22 @@ class Workbench extends Component {
             type,
         });
     };
+    pushinfo=()=>{ //推送给app，获取用户信息
+    const _this=this;        
+        post({url:"/api/company/getinfo_maintain",data:{code:this.state.companycode}},(res)=>{
+            if(res.success){
+                _this.setState({
+                    userName:res.data.adminname,
+                    userPhone:res.data.adminaccount,
+                    visibleUser:true,
+                })
+                post({url:"/api/alarmhandle/getuserinfo",data:{code:this.state.code}},(res)=>{})
+            }
+        });
+    }
+    pushOk=()=>{//确认报警
+        this.setState({type:2},()=>this.handleOkTips());
+    }
     //围界
     paintingBoundary=()=> {
         var c = document.getElementById("myCanvas");
@@ -105,10 +129,11 @@ class Workbench extends Component {
             })
         }
     };
-    //挂在列表显示
+    //挂载列表显示
     pendingList=()=>{
-    	if(hangup){
-        post({url:"/api/alarmhandle/getlist",data:{htype:"hangup",pageindex:this.state.page,pagesize:10}},(res)=>{
+        const loginaccount=localStorage.getItem('loginaccount');
+    	if(hangup && loginaccount){
+        post({url:"/api/alarmhandle/getlist",data:{htype:"hangup",pageindex:this.state.page,pagesize:10,account:loginaccount}},(res)=>{
             if(res.success){
                 if(res.data.length>0){
                 	var pending=res.data;
@@ -128,7 +153,6 @@ class Workbench extends Component {
             }else message.warning(res.errorinfo);
         })
       }
-
     };
     padingLoad=()=>{
         document.getElementById("hangUpPanel").onscroll=()=>{
@@ -137,8 +161,7 @@ class Workbench extends Component {
             var clice=document.getElementById("hangUpPanel").clientHeight;//可视的高度
             var bottom=pending-clice;
             var foot=bottom-scroll;//滚动条距离底部的高度
-            console.log(pending,scroll,clice)
-            if(foot==0){
+            if(foot===0){
             	let page=this.state.page;
                 page++;
                 this.setState({page},()=>{
@@ -153,32 +176,25 @@ class Workbench extends Component {
     * 如果为报警并获取用户的信息
     * */
     handleOkTips=()=>{
+    	const _this=this;
+    	const oldHstatus=this.state.type;
         if(this.state.code){
-            post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:this.state.type}},(res)=>{
+            post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,hstatus:oldHstatus}},(res)=>{
                 if(res.success){
                 	message.success("修改成功");
-                  this.setState({
+                  _this.setState({
                   		nextPageBtn:true,
                       visibleTips:false,
-                      oldHstatus:this.state.type,
-                      page:1
+                      oldHstatus:oldHstatus,
+                      page:1,
+                      finishSwitch:oldHstatus===3?true:false,
+                      visibleUser:false,
+                      newreturnSwitch:false,
+                      returnChange:''
                   },()=>{
                   	hangup=true;
-                  	this.pendingList() 
-                  });
-                    
-										if(this.state.type===2){ //警情需要查看用户信息
-                        post({url:"/api/company/getinfo_maintain",data:{code:this.state.companycode}},(res)=>{
-                            if(res.success){
-                                this.setState({
-                                    userName:res.data.adminname,
-                                    userPhone:res.data.adminaccount,
-                                    visibleUser:true
-                                })
-                            }
-                        });
-                    }
-                    
+                  	_this.pendingList() 
+                  });                    
                 }else{
                     message.warning(res.errorinfo);
                 }
@@ -192,15 +208,15 @@ class Workbench extends Component {
     };
     //下一页
     nextPage=()=>{
-        if(this.state.nextPageBtn || this.state.oldHstatus==2){
+        if(this.state.nextPageBtn || this.state.oldHstatus===2){
             this.getOneAlarm();
         }else message.info("请先处理当前报警！");
     };
     memochange=(e)=>{ //备注信息改变
     	const memochange=e.target.value;
-    	if(memochange != this.state.memo) this.setState({memochange})
+    	if(memochange !== this.state.memo) this.setState({memochange})
     }
-    remarks=()=>{ //提价备注信息
+    remarks=()=>{ //提交备注信息
         if(this.state.memo!==this.state.memochange){
             if(this.state.code){
                 post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,memo:this.state.memochange}},(res)=>{
@@ -214,7 +230,7 @@ class Workbench extends Component {
     };
     //挂载还原
     mountRestore=(code)=>{
-        if((code && this.state.nextPageBtn) || this.state.oldHstatus==2){
+        if((code && this.state.nextPageBtn) || this.state.oldHstatus===2){
         	this.getOneAlarm("/api/alarmhandle/get_hangup",{code:code})
         }else{
             message.warning("请先处理当前报警！");
@@ -240,6 +256,8 @@ class Workbench extends Component {
                 return "待处理";
             case -3:
                 return "过期";
+            default:
+                return "";
         }
     };
     alarmTypeColor=(colorType)=>{
@@ -270,36 +288,61 @@ class Workbench extends Component {
         },()=>{
             this.paintingBoundary();
         });
-    }
+    };
     lookretrun=(val,opt=true)=>{ //查看回访
-    	this.setState({[val]: opt})
-    }
-    newreturnCancel=()=>{ //取消新增回访记录
+    	this.setState({
+            [val]: opt,
+    	})
+    };
+    newreturnCancel=()=>{ //取消警情处理弹窗
     	this.setState({returnChange: '',newreturnSwitch:false})
-    }
+    };
     newreturnOk=()=>{ //新增回访
+        if(!this.state.returnChange) return message.warning("请输入内容！");
     	const _this=this;
     	post({url:"/api/alarmhandle/alarmhandle",data:{code:this.state.code,returnmemo:this.state.returnChange}},(res)=>{
           if(res.success){
           		message.success("修改成功");
-          		var returnmemo=this.state.returnmemo;
+          		var returnmemo=_this.state.returnmemo;
           		returnmemo.push({time:moment().format('YYYY-MM-DD hh:mm:ss'),info:this.state.returnChange})
-    					this.setState({returnmemo:returnmemo},()=>_this.newreturnCancel())
+    			_this.setState({returnmemo:returnmemo,returnChange:''})
           }
       });
-
     }
     returnChange=(e)=>{ //回访内容
     	this.setState({returnChange: e.target.value})
+    }
+    flashlightOk=()=>{ //设备闪灯
+        this.setState({lightSwitch:false});
+        if(this.state.eid){
+            post({url:"/api/equipment/FlashLampV1",data:{eid:this.state.eid,seconds:this.state.lightValue}},(res)=>{
+                if(res.success){
+                  this.setState({lightValue:'5'});
+                  message.success("操作成功");  
+                }
+            })
+        }
+    };
+    lightTime=(e)=>{//选择闪灯时长
+        this.setState({
+            lightValue:e.target.value
+        });
+    };
+    finishAffirm=()=>{
+        if(!this.state.returnmemo.length){
+            message.warning('请至少添加一条回访记录!'); 
+        }else{this.typeAlarm(3,"结束")}
     }
     render() {
         return (
             <div className="workBench workToP">
                 <div className="processingAlarm workbenchBorder">
-                    <div className="processing-title">
+                {
+                	this.state.code
+                	?<div className="processing-title">
                         <div className="processingAlarm-left">
-                            <p style={{display:this.state.name?"block":"none"}}><span className="nameWeight">名称：</span><span className="colorAlarmFont">{this.state.name}</span><span className="switchInfor"><span className="atype">状态：</span><span style={{color:"red"}}>{this.alarmType(this.state.oldHstatus)}</span></span></p>
-                            <p style={{display:this.state.oldHstatus?"block":"none"}}><span className="colorAlarmFont">{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span><span className="switchInfor"><span className="information">围界信息：<Switch size="small" checked={this.state.field} onChange={(checked)=>this.onChange(checked,'field')} /></span><span>报警信息：<Switch size="small" checked={this.state.obj} onChange={(checked)=>this.onChange(checked,'obj')} /></span></span></p>
+                            <p><span className="nameWeight">名称：</span><span className="colorAlarmFont">{this.state.alarmname}</span><span className="switchInfor"><span className="atype">状态：</span><span style={{color:"red"}}>{this.alarmType(this.state.oldHstatus)}</span></span></p>
+                            <p><span className="colorAlarmFont">{this.state.eid}</span><span className="atimeLeft">{this.state.atime}</span><span className="switchInfor"><span className="information">围界信息：<Switch size="small" checked={this.state.field} onChange={(checked)=>this.onChange(checked,'field')} /></span><span>报警信息：<Switch size="small" checked={this.state.obj} onChange={(checked)=>this.onChange(checked,'obj')} /></span></span></p>
                             <div className="alarmImg">
                                 <canvas id="myCanvas" width="704px" height="576px" style={{backgroundImage:'url('+this.state.picpath+')',backgroundSize:"100% 100%",display:this.state.videoFalse?"none":"block"}} />
                                 <video id="videopath" src={this.state.videopath} controls="controls" autoPlay="autoplay" loop="loop" style={{display:this.state.videoFalse?"block":"none"}} />
@@ -312,19 +355,19 @@ class Workbench extends Component {
                             </div>
                         </div>
                         <div className="processingAlarm-right">
-                        {this.state.oldHstatus !=2 && this.state.oldHstatus !=3
+                        {this.state.oldHstatus!==2 && this.state.oldHstatus!==3
                         		?<Fragment>
-	                        			<div className="mount" style={{visibility:this.state.nextPageBtn?"hidden":"visible"}}><Icon className="IconMount" type="tag"  size="large" theme="filled" title="挂起"  onClick={()=>this.typeAlarm(1,"挂起")} /></div>
-	                            	<div className="alarm-btn xuJing" style={{marginTop:"15px"}}><Button type="primary" onClick={()=>this.typeAlarm(4,"虚警")} disabled={this.state.nextPageBtn}>虚警</Button></div>
-	                            	<div className="alarm-btn wuBao"><Button type="primary" onClick={()=>this.typeAlarm(5,"误报")} disabled={this.state.nextPageBtn}>误报</Button></div>
-	                            	<div className="alarm-btn pushAlarm"><Button type="primary" onClick={()=>this.typeAlarm(2,"报警")} disabled={this.state.nextPageBtn}>警情推送</Button></div>
+	                        		<div className="mount" style={{visibility:this.state.nextPageBtn?"hidden":"visible"}}><Icon className="IconMount" type="tag" size="large" theme="filled" title="挂起" onClick={()=>this.typeAlarm(1,"挂起")} /></div>
+	                            	<div className="alarm-btn xuJing" style={{marginTop:"15px"}}><Button key="xub" type="primary" onClick={()=>this.typeAlarm(4,"虚警")} disabled={this.state.nextPageBtn}>虚警</Button></div>
+	                            	<div className="alarm-btn wuBao"><Button key="wub" type="primary" onClick={()=>this.typeAlarm(5,"误报")} disabled={this.state.nextPageBtn}>误报</Button></div>
+	                            	<div className="alarm-btn pushAlarm"><Button key="jinb" type="primary" onClick={this.pushinfo} disabled={this.state.nextPageBtn}>警情推送</Button></div>
                         		</Fragment>
                         		:<Fragment>
-                        				<div className="mount" style={{visibility:"hidden"}}><Icon className="IconMount" type="tag"  size="large" theme="filled" title="挂起" /></div>
-                        				<div className="alarm-btn" style={{marginTop:"15px"}}><Button type="primary"  style={{color:"#f00"}} onClick={()=>this.lookretrun('lookretrunSwitch')}>查看回访</Button></div>
-	                            	<div className="alarm-btn" style={{marginBottom:"95px"}}><Button type="primary" style={{color:"red"}} this onClick={()=>this.typeAlarm(3,"结束")}>结束</Button></div>
+                        				<div className="mount" style={{visibility:"hidden"}}><Icon className="IconMount" type="tag" size="large" key="guaq" theme="filled" title="挂起" /></div>
+	                            	<div className="alarm-btn" style={{marginBottom:"191px",marginTop:'15px'}}><Button type="primary" style={{background:"red",borderColor:"red"}} onClick={()=>this.lookretrun('newreturnSwitch')} disabled={this.state.finishSwitch}>处理警情</Button></div>
                         		</Fragment>
                         } 
+                            <div className="alarm-btn"><Button icon="alert" type="danger" key="over" ghost onClick={()=>this.lookretrun('lightSwitch')}>设备闪灯</Button></div>
                             <div className="noteTriangle" />
                             <textarea className="remarks" id="remarks" value={this.state.memochange} onChange={this.memochange} onBlur={()=>this.remarks()} />
                             <div className="nextPage">
@@ -332,15 +375,24 @@ class Workbench extends Component {
                             </div>
                         </div>
                     </div>
+                	:<div className="nodatastatus">
+                		<img src={nodataleft} alt="无数据" />
+                		<p>暂无数据</p>
+                	</div>
+                }
+                    
                 </div>
                 <div className="hangUp">
-                    <div className="garden">{this.state.pendingCount}</div>
+                    <div className="garden">{this.state.pendingCount?this.state.pendingCount:0}</div>
                     <div className="mountUp">挂起列表</div>
                     <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"52px"}}>
-                        <Panel  key="1" showArrow={false}>
+                        <Panel key="1" showArrow={false}>
                             <div className="hangUpPanel" id="hangUpPanel">
+
                                 {
-                                    this.state.pending.map((v,i)=>(
+                                    this.state.pending.length
+                                    ?<Fragment>
+                                    {this.state.pending.map((v,i)=>(
                                         <Row key={i} onClick={()=>this.mountRestore(v.code)} className="mountRestore">
                                             <Col xxl={15} xl={14}>
                                                 <div className="hangUpImg"><img src={v.pic_min?v.pic_min:nodata} alt="" /></div>
@@ -350,7 +402,12 @@ class Workbench extends Component {
                                                 <p className={this.alarmTypeColor(v.hstatus)}>{this.alarmType(v.hstatus)}</p>
                                             </Col>
                                         </Row>
-                                    ))
+                                    ))}
+                                    </Fragment>
+                                    :<div style={{width:'80%',maxWidth:'200px',margin:'0 auto 10px',textAlign:'center'}}>
+                                    <img src={nodata} width="100%" />
+                                    <p>暂无数据</p>
+                                    </div>
                                 }
                             </div>
                         </Panel>
@@ -359,16 +416,20 @@ class Workbench extends Component {
                 <Modal
                     title="用户详情"
                     visible={this.state.visibleUser}
+                    onOk={this.pushOk}
                     onCancel={this.userHandleCancel}
-                    footer={null}
+                    okText="确认报警"
+                    cancelText="取消"
                 >
                     <div className="userDetails">
                         <p><label>姓名：</label><span>{this.state.userName}</span></p>
                         <p><label>联系电话：</label><span>{this.state.userPhone}</span></p>
                         <p><label>地址：</label><span>''</span></p>
                     </div>
+
                 </Modal>
                 <Modal
+                    zIndex="2001"
                     title="提示信息"
                     visible={this.state.visibleTips}
                     onOk={this.handleOkTips}
@@ -380,35 +441,51 @@ class Workbench extends Component {
                     <p><span>确定为</span><span>{this.state.name?this.state.name:""}</span>吗?</p>
                 </Modal>
                 <Modal
-                    title="回访记录"
-                    visible={this.state.lookretrunSwitch}
-                    onCancel={()=>this.lookretrun('lookretrunSwitch',false)} 
-                    width={600}
-                    footer={null}
-                >
-                	{this.state.returnmemo.map((el,i)=>(
-	                		<Comment
-								        author={el.time}
-								        avatar={(
-								          <Icon type="message" theme="filled" style={{color:'#6BAC20',fontSize:'1.5em'}} />
-								        )}
-								        content={(
-								          <p>{el.info}</p>
-								        )}
-								      />
-	                ))}
-	                <p>共<span>{this.state.returnmemo.length}</span>条记录 <span style={{cursor:'pointer'}} onClick={()=>this.lookretrun('newreturnSwitch')}><Icon type="plus-circle" theme="twoTone" />新增一条</span></p>
-                </Modal>
-                <Modal
-                    title="新增回访记录"
-                    visible={this.state.newreturnSwitch}
+                    title="提示信息"
+                    visible={this.state.lightSwitch}
+                    onOk={this.flashlightOk}
+                    onCancel={()=>{this.lookretrun('lightSwitch',false);this.lookretrun('lightValue','5')}}
                     width={400}
                     okText="确认"
                     cancelText="取消"
+                >
+                    <p>请选择闪灯时长</p>
+                    <RadioGroup onChange={this.lightTime} value={this.state.lightValue} buttonStyle="solid">
+                        <RadioButton value="5">5秒</RadioButton>
+                        <RadioButton value="10">10秒</RadioButton>
+                        <RadioButton value="15">15秒</RadioButton>
+                    </RadioGroup>
+                </Modal>
+                <Modal
+                    zIndex="2000"
+                    title="处理警情"
+                    visible={this.state.newreturnSwitch}
+                    width={500}
+                    footer={[
+                            <Button key="back" onClick={this.newreturnCancel}>取消</Button>,
+                            <Button key="submit" type="primary" onClick={this.newreturnOk}>新增记录</Button>,
+                            <Button key="overbtn" type="primary" style={{background:'red',borderColor:'red'}} onClick={this.finishAffirm}>结束</Button>
+                    ]}
                     onOk={this.newreturnOk}
                     onCancel={this.newreturnCancel}   
                 >
-                	<TextArea rows={4}  value={this.state.returnChange} onChange={this.returnChange} />
+                    <div style={{maxHeight:'400px',overflowX:'auto',marginBottom:'10px'}}>
+                    {this.state.returnmemo.map((el,i)=>(
+                            <Comment
+                                author={el.time}
+                                avatar={(
+                                  <Icon type="message" theme="filled" style={{color:'#6BAC20',fontSize:'1.5em'}} />
+                                )}
+                                content={(
+                                  <p>{el.info}</p>
+                                )}
+                            />
+                    ))}
+                    
+
+                    </div>
+                    <p>共<span>{this.state.returnmemo.length}</span>条记录</p>
+                	<TextArea rows={4} value={this.state.returnChange} onChange={this.returnChange} />
                 </Modal>
             </div>
         )

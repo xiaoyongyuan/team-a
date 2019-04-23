@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, notification, Icon } from 'antd';
+import { Layout} from 'antd';
 import SiderCustom from './components/SiderCustom';
 import HeaderCustom from './components/HeaderCustom';
 import { receiveData } from './action';
@@ -20,8 +20,8 @@ class App extends Component {
     componentWillMount() {
         const { receiveData } = this.props;
         const user = localStorage.getItem('teamuser');
-        if(user && user != 'undefined'){ //此处判断有没有登录
-            user && receiveData(JSON.parse(user), 'auth');
+        if(user && user !== "undefined"){ //此处判断有没有登录
+            user && receiveData(JSON.parse(user), "auth");
         }else{
             this.props.history.push('/login');
         }

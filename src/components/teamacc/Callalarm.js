@@ -28,7 +28,7 @@ class Callalarm extends Component {
     componentDidMount() {
         this.setState({
             list:data
-        })
+        });
         //取数据
         this.requestdata()
     }
@@ -112,11 +112,13 @@ class Callalarm extends Component {
                 render: text =>{
                     switch(text){
                         case 0:
-                        return('未处理');
+                           return('未处理');
                         case 1:
-                        return('通过');
+                           return('通过');
                         case 2:
-                        return('未通过');
+                           return('未通过');
+                        default:
+                            return "";
                     }
                 },
             },

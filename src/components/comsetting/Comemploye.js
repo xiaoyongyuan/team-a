@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BreadcrumbCustom from '../BreadcrumbCustom';
 import ModalForm from './ModalForm.js';
-import {Form,Input, Row, Col, Button, Modal, Table,Pagination } from 'antd';
+import {Form,Input, Row, Col, Button, Modal, Table} from 'antd';
 // import '../../style/sjg/home.css';
 import {post} from "../../axios/tools";
 const FormItem = Form.Item;
@@ -210,7 +210,7 @@ class Comemploye extends Component {
                 dataIndex: 'usergender',
                 key: 'usergender',
                 render:(text, record,index) => {
-                    if(record.usergender==0){
+                    if(record.usergender===0){
                         return ("女")
                     }else{
                         return ("男")
@@ -222,11 +222,11 @@ class Comemploye extends Component {
                 dataIndex: 'userpower',
                 key: 'userpower',
                 render:(text, record,index) => {
-                    if(record.userpower=='admin_helper'){
+                    if(record.userpower==="admin_helper"){
                         return ("管理员")
-                    }else if(record.userpower=='chargehand_helper'){
+                    }else if(record.userpower==="chargehand_helper"){
                         return ("值班组长")
-                    }else if(record.userpower=='onduty_helper'){
+                    }else if(record.userpower==="onduty_helper"){
                         return ("值守人员")
                     }
                 }
@@ -246,11 +246,11 @@ class Comemploye extends Component {
                 dataIndex: 'code',
                 key: 'operation',
                 render: (text, record,index) => {
-                	if(this.state.utype=='admin_helper'){
+                	if(this.state.utype==="admin_helper"){
                         return (
                             <div>
                                 <Button style={{marginRight:'20px'}} onClick={()=>_this.showModalEdit(text,record,index)}>编辑</Button>
-                                <Button style={record.userpower != 'admin_helper'?{display:"inline-block"}:{display:"none"}} onClick={()=>_this.showModaldelete(text,record,index)}>删除</Button>
+                                <Button style={record.userpower !== "admin_helper"?{display:"inline-block"}:{display:"none"}} onClick={()=>_this.showModaldelete(text,record,index)}>删除</Button>
                             </div>
                         )
                 	}
@@ -293,11 +293,11 @@ class Comemploye extends Component {
                             </Form>
                         </Col>
                         <Col span={2}>
-                            <Button style={this.state.utype=='admin_helper'?{display:"inline-block"}:{display:"none"}} type="primary" onClick={this.showModal}>新增</Button>
+                            <Button style={this.state.utype==="admin_helper"?{display:"inline-block"}:{display:"none"}} type="primary" onClick={this.showModal}>新增</Button>
                         </Col>
                     </Row>
                     <Row>
-                        <Table rowKey={record => record.code} style={{marginTop:'20px'}} columns={columns} dataSource={this.state.list} bordered={true}
+                        <Table rowKey={record => record.code} style={{marginTop:'20px'}} columns={columns} dataSource={this.state.list} bordered
                          pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage}}
                         />
                     </Row>

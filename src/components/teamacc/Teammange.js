@@ -128,7 +128,7 @@ class Teammange extends Component {
     selectopt = (e) => { //检索search
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            if(values.clouddata==undefined && values.name==undefined){
+            if(values.clouddata===undefined && values.name===undefined){
                 this.requestdata();
                 this.setState({
                     deleteshow: true,
@@ -209,10 +209,9 @@ changePage=(page,pageSize)=>{ //分页  页码改变的回调，参数是改变�
                 dataIndex: 'ctype',
                 key: 'ctype',
                 render: (text, record) => {
-                 if(text==4){
+                 if(text===4){
                     return ('树莓派企业用户');
-
-                 }if (text==5) {
+                 }if (text===5) {
                     return ('局域网企业用户');
                  } else {
                     return ('树莓派个人用户');
@@ -244,7 +243,6 @@ changePage=(page,pageSize)=>{ //分页  页码改变的回调，参数是改变�
                         >编辑
                         </Button>
                         {/* <Button onClick={()=>_this.showModaldelete(text,index)}>删除</Button> */}
-
                     </span>
                 ),
             }];

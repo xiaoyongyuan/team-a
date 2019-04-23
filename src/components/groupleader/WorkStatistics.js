@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import mometn from "moment";
 class BeCuty extends Component {
-    constructor(props){
-        super(props);
-    }
     sevenDay(sevenData){
         var sevenDatay=[];
         var sevenCount=[];
@@ -18,7 +15,12 @@ class BeCuty extends Component {
         }
         let option={
             legend: {},
-            tooltip: {},
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : { // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'// 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
             dataset: {
                 dimensions: ['product', '虚警', '警情', '误报'],
                 source:sevenDatay
@@ -35,6 +37,7 @@ class BeCuty extends Component {
                 {type: 'bar',color:"#FE6661",barWidth:"15%"},
                 {type: 'bar',color:"#5570FB",barWidth:"15%"},
                 {
+                    name:"总数",
                     type: "line",
                     smooth: true,
                     color:["#FDC228"],

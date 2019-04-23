@@ -8,8 +8,8 @@ class meunHome extends Component {
     render() {
         const meuns=localStorage.getItem('teammeun')?JSON.parse(localStorage.getItem('teammeun')):[];
         if(meuns[0]){
-           if(meuns[0].menuaddress=='/app/teamhome/index')return (<Teamhome />)
-            else if(meuns[0].menuaddress=='/app/watch/watchIndex')return (<WatchIndex />)
+           if(meuns[0].menuaddress==='/app/teamhome/index')return (<Teamhome />)
+            else if(meuns[0].menuaddress==='/app/watch/watchIndex')return (<WatchIndex />)
             else return (<Groupleader />) 
         }else{
             return (<Login />)  
