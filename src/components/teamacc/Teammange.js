@@ -15,6 +15,7 @@ class Teammange extends Component {
         this.state={
             list:[],
             value: 1,
+            page:1,
         };
     }
     componentDidMount() {
@@ -29,24 +30,23 @@ class Teammange extends Component {
     }
 
     requestdata=() => {//取数据
-        post({url:"/api/company/getlist"}, (res)=>{
+        const params={
+            pagesize:10,
+            bdate:this.state.bdate,
+            edate: this.state.edate,
+            cname: this.state.cname,
+            pageindex:this.state.page,
+
+        }
+        post({url:"/api/company/getlist",data:params}, (res)=>{
             if(res.success){
                 this.setState({
-                    list: res.data
+                    list: res.data,
+                    total:res.totalcount,
                 })
             }
         })
     }
-    // showModsearch = (code,index,record) =>{//删除弹层
-    //     this.setState({
-    //         deleteshow: true,
-    //         type:code,
-    //         index:index
-    //     });
-
-    // }
-
-
     onChange_radio=(e)=>{//单选
         this.setState({
             value: e.target.value,
@@ -137,20 +137,14 @@ class Teammange extends Component {
             }
 
             if(!err){
-                /*if(values.clouddata!==undefined ) {*/
-                    var dataUseres = {
-                        bdate: values.clouddata[0].format('YYYY-MM-DD'),
-                        edate: values.clouddata[1].format('YYYY-MM-DD'),
+                    this.setState({
+                        bdate: values.clouddata&&values.clouddata.length?values.clouddata[0].format('YYYY-MM-DD'):"",
+                        edate: values.clouddata&&values.clouddata.length?values.clouddata[1].format('YYYY-MM-DD'):"",
                         cname: values.name,
-                    }
-                /*}*/
-                post({url:"/api/company/getlist",data:dataUseres}, (res)=>{
-                    if(res.success){
-                        this.setState({
-                            list: res.data
-                        })
-                    }
-                })
+                        page:1
+                    },()=>{
+                        this.requestdata();
+                    });
             }
         })
     }
@@ -165,7 +159,14 @@ searchCancel = () =>{//删除取消
         deleteshow: false,
     });
 };
+changePage=(page,pageSize)=>{ //分页  页码改变的回调，参数是改变后的页码及每页条数
+    this.setState({
+        page: page,
+    },()=>{
+        this.requestdata()
+    })
 
+}
     render() {
         const _this=this;
         const { getFieldDecorator } = this.props.form;
@@ -283,7 +284,10 @@ searchCancel = () =>{//删除取消
                     </Col>
                 </Row>
 
-                <Table columns={columns} dataSource={this.state.list} />
+                <Table columns={columns} dataSource={this.state.list} 
+                 rowKey={record => record.code}
+                 pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage ,hideOnSinglePage:true}}
+                />
 
                 <Modal visible={this.state.visible}
                        onOk={this.handleCreate}

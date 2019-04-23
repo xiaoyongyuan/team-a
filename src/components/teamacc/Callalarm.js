@@ -20,7 +20,8 @@ class Callalarm extends Component {
         super(props);
         this.state = {
             list:[],
-            isDeal: false
+            isDeal: false,
+            page:1,
         };
     }
 
@@ -32,11 +33,20 @@ class Callalarm extends Component {
         this.requestdata()
     }
     requestdata=(params={}) => {//取数据
-        post({url:"/api/rollcall/getlist_maintain",data:params}, (res)=>{
+        this.setState({ loading: true });
+        const bparams={
+            pagesize:10,
+            bdate:this.state.bdate,
+            edate: this.state.edate,
+            cname: this.state.cname,
+            pageindex:this.state.page,
+        }
+        post({url:"/api/rollcall/getlist_maintain",data:bparams}, (res)=>{
             if(res.success){
                 this.setState({
                     list: res.data,
-                    total:res.totalcount
+                    total:res.totalcount,
+                    loading: false 
                 })
             }
         })
@@ -46,8 +56,24 @@ class Callalarm extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if(!err){
-                this.requestdata(values)
+                console.log('******************',values);
+
+                this.setState({
+                    bdate: values.clouddata&&values.clouddata.length?values.clouddata[0].format('YYYY-MM-DD'):"",
+                    edate: values.clouddata&&values.clouddata.length?values.clouddata[1].format('YYYY-MM-DD'):"",
+                    cname: values.name,
+                    page:1
+                },()=>{
+                    this.requestdata();
+                });
             }
+        })
+    }
+    changePage=(page,pageSize)=>{ //分页  页码改变的回调，参数是改变后的页码及每页条数
+        this.setState({
+            page: page,
+        },()=>{
+            this.componentDidMount()
         })
     }
     render() {
@@ -62,8 +88,8 @@ class Callalarm extends Component {
             },
             {
                 title: '用户',
-                dataIndex: 'qpplyname',
-                key: 'qpplyname'
+                dataIndex: 'cname',
+                key: 'cname'
             },{
                 title: '摄像头',
                 dataIndex: 'cameraname',
@@ -150,7 +176,10 @@ class Callalarm extends Component {
                     </Col>
                 </Row>
 
-                <Table columns={columns} dataSource={this.state.list} bordered={true}/>
+                <Table columns={columns} dataSource={this.state.list} bordered={true}
+                 pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage ,hideOnSinglePage:true}}
+                 rowKey={record => record.code}
+                />
 
             </div>
         )

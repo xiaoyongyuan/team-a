@@ -13,6 +13,7 @@ class Teamdeveice extends Component {
             type:"",
             editstate:1,
             userlist:[], //用户列表
+            page:1,
         };
     }
     componentDidMount() {
@@ -28,12 +29,21 @@ class Teamdeveice extends Component {
         this.requestdata()
     }
     requestdata=(params) => {//取数据
-        post({url:'/api/equipment/getlist',data:params},(res)=>{
-            console.log('******************',res.data);
-            
+        this.setState({ loading: true });
+        const quparams={
+            pagesize:10,
+            ecode:this.state.ecode,
+            estatus:this.state.estatus,
+            companycode:this.state.companycode,
+            pageindex:this.state.page,
+
+        }
+        post({url:'/api/equipment/getlist',data:quparams},(res)=>{
             if(res){
                 this.setState({
                     list:res.data,
+                    total:res.totalcount,
+                    loading: false 
                 }); 
             }   
         })
@@ -41,8 +51,19 @@ class Teamdeveice extends Component {
     selectopt = (e) => { //检索
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
+console.log('*values',values);
+
+
             if(!err){
-                this.requestdata(values);
+                this.setState({
+                    ecode:values.ecode,
+                    estatus: values.estatus,
+                    companycode:values.companycode,
+                    page:1
+                },()=>{
+                    this.requestdata();
+                })
+                
 
             }
         })
@@ -100,6 +121,13 @@ class Teamdeveice extends Component {
         this.setState({
             editstate: value
         });
+    }
+    changePage=(page,pageSize)=>{ //分页  页码改变的回调，参数是改变后的页码及每页条数
+        this.setState({
+            page: page,
+        },()=>{
+            this.componentDidMount()
+        })
     }
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -215,7 +243,10 @@ class Teamdeveice extends Component {
                             </Form>
                         </Col>
                     </Row>
-                <Table columns={columns} dataSource={this.state.list} bordered={true}/>
+                <Table columns={columns} dataSource={this.state.list} bordered={true}
+                 pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage ,hideOnSinglePage:true}}
+                 rowKey={record => record.code}
+                />
                 <Modal title='编辑' visible={this.state.visible} onOk={this.handleCreate}
                        onCancel={this.handleCancel}
                 >
