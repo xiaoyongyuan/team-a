@@ -298,7 +298,7 @@ class Comemploye extends Component {
                     </Row>
                     <Row>
                         <Table rowKey={record => record.code} style={{marginTop:'20px'}} columns={columns} dataSource={this.state.list} bordered
-                         pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage}}
+                         pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage,hideOnSinglePage:true}}
                         />
                     </Row>
                 </div>
