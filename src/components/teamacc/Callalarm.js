@@ -149,13 +149,13 @@ class Callalarm extends Component {
         }
         return (
             <div>
-                <BreadcrumbCustom first="账号管理" second="维护团队管理" />
+                <BreadcrumbCustom first="账号管理" second="点名区域审核" />
                 <Row className="margin_top20 margin_bottom20">
                     <Col span={18}>
                         <Form layout="inline"onSubmit={this.selectopt}>
-                            <FormItem label="名称">
+                            <FormItem label="查询用户">
                                 {getFieldDecorator('name', {
-                                    rules: [{ required: false, message: '请输入名称!' }],
+                                    rules: [{ required: false, message: '请输入用户名称!' }],
                                 })(
                                     <Input />
                                 )}
