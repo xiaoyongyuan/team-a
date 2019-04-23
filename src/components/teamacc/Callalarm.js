@@ -178,7 +178,7 @@ class Callalarm extends Component {
                     </Col>
                 </Row>
 
-                <Table columns={columns} dataSource={this.state.list} bordered={true}
+                <Table columns={columns} dataSource={this.state.list} bordered={true?true:false}
                  pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage ,hideOnSinglePage:true}}
                  rowKey={record => record.code}
                 />
