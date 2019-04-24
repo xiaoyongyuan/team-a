@@ -3,7 +3,6 @@
  */
 import axios from "axios";
 import { message } from "antd";
-import axiosPro from "axios-jsonp-pro";
 
 /**
  * 公用get请求
@@ -67,20 +66,6 @@ export const post = async (
     })
     .catch(err => {
       console.log("err", err);
-      message.warn(msg);
-    });
-};
-export const crossjsonP = async (
-  { url, msg = "jsonp接口异常", data = {} },
-  callback
-) => {
-  axiosPro
-    .jsonp(url)
-    .then(function(res) {
-      return callback(res.features);
-    })
-    .catch(function(error) {
-      // console.log(error);
       message.warn(msg);
     });
 };
