@@ -126,13 +126,14 @@ console.log('*values',values);
         this.setState({
             page: page,
         },()=>{
-            this.componentDidMount()
+            this.requestdata()
         })
     }
     render() {
         const { getFieldDecorator } = this.props.form;
         const columns = [
             {
+                width:100,
                 title: '序号',
                 dataIndex: 'index',
                 key: 'index',

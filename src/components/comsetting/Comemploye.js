@@ -190,7 +190,8 @@ class Comemploye extends Component {
         const _this=this;
         const { getFieldDecorator } = this.props.form;
         const columns = [
-            {
+            {  
+                width:100,
                 title: '序号',
                 dataIndex: 'index',
                 key: 'index',
@@ -260,7 +261,7 @@ class Comemploye extends Component {
         ];
         return (
             <div>
-                <BreadcrumbCustom first="系统管理" second="人员管理" />
+                <BreadcrumbCustom first="系统管理" second="用户管理" />
                 <div className="shange">
                     <Row>
                         <Col span={22}>
