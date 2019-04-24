@@ -80,7 +80,8 @@ class Callalarm extends Component {
         const { getFieldDecorator } = this.props.form;
         const dateFormat = 'YYYY/MM/DD';
         const columns = [
-            {
+            {   
+                width:100,
                 title: '序号',
                 dataIndex: 'index',
                 key: 'index',

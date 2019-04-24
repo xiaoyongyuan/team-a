@@ -179,6 +179,7 @@ changePage=(page,pageSize)=>{ //分页  页码改变的回调，参数是改变�
         const dateFormat = 'YYYY/MM/DD';
         const columns = [
             {
+                width:100,
                 title: '序号',
                 dataIndex: 'index',
                 key: 'index',
@@ -282,7 +283,7 @@ changePage=(page,pageSize)=>{ //分页  页码改变的回调，参数是改变�
                     </Col>
                 </Row>
 
-                <Table columns={columns} dataSource={this.state.list} 
+                <Table columns={columns} dataSource={this.state.list} bordered
                  rowKey={record => record.code}
                  pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage ,hideOnSinglePage:true}}
                 />
