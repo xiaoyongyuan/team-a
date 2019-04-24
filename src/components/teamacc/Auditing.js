@@ -2,9 +2,6 @@
  * Created by hao.cheng on 2017/4/13.
  */
 import React, { Component } from "react";
-import { crossjsonP } from "../../axios/tools";
-import reqwest from "reqwest";
-import "whatwg-fetch";
 import "../../style/sjg/home.css";
 import {
   Card,
