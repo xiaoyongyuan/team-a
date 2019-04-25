@@ -210,23 +210,6 @@ class Adopt extends Component {
                       rules: [{ required: false }]
                     })(<Input disabled />)}
                   </FormItem>
-                  {/* <Row>
-                    <Col span={8} offset={16}>
-                      <Button
-                        type="primary"
-                        htmlType="submit"
-                        className="login-form-button"
-                      >
-                        上传对象图
-                      </Button>
-                      <Button
-                        style={{ display: "inline-block" }}
-                        onClick={this.cancelhandle}
-                      >
-                        不通过
-                      </Button>
-                    </Col>
-                  </Row> */}
                 </Form>
               </Card>
             </div>

@@ -2,9 +2,9 @@
  * Created by hao.cheng on 2017/4/13.
  */
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import "../../style/sjg/home.css";
+import nopic from "../../style/imgs/nopic.png";
 import {
   Card,
   Form,
@@ -27,7 +27,7 @@ function getBase64(img, callback) {
 }
 
 function beforeUpload(file) {
-  const isJPG = file.type === "image/jpeg" || "image/png";
+  const isJPG = file.type === "image/jpeg" || file.type === "image/png";
   if (!isJPG) {
     message.error("You can only upload JPG file!");
   }
@@ -43,14 +43,14 @@ class Auditing extends Component {
     super(props);
     this.state = {
       confirmDirty: false,
-      loading: false
+      loading: false,
+      imgsrc: nopic,
+      present: [],
+      notpic: false
     };
     this.jumpPage = this.jumpPage.bind(this);
   }
 
-  static contextTypes = {
-    router: PropTypes.object.isRequired
-  };
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -71,7 +71,7 @@ class Auditing extends Component {
         );
       }
     });
-    this.context.router.history.push("/app/teamacc/callalram");
+    window.location.href = "#/app/teamacc/callalram";
   };
   componentWillMount() {
     this.setState({
@@ -90,15 +90,44 @@ class Auditing extends Component {
           const furl = res.data.basepic;
           const regs = furl.substring(furl.indexOf("?"));
           const downpic = furl.replace(regs, "");
-          this.setState({
-            areapic: res.data.basepic,
-            downpic
-          });
+          this.setState(
+            {
+              // areapic: res.data.basepic,
+              imgsrc: res.data.basepic, //图片
+              present: JSON.parse(res.data.rzone), //区域
+
+              downpic
+            },
+            () => {
+              this.draw();
+            }
+          );
         }
       }
     );
   }
-
+  draw = () => {
+    //绘制区域
+    let item = this.state.present;
+    if (item.length) {
+      let ele = document.getElementById("time_graph_canvas");
+      let area = ele.getContext("2d");
+      area.strokeStyle = "#ff0";
+      area.lineWidth = 3;
+      area.beginPath();
+      area.moveTo(item[0][0], item[0][1]);
+      item.map((elx, i) => {
+        if (i > 0) {
+          area.lineTo(item[i][0], item[i][1]);
+          if (i === 3) {
+            area.lineTo(item[0][0], item[0][1]);
+          }
+          area.stroke();
+        }
+        return "";
+      });
+    }
+  };
   componentDidUpdate() {}
   handleChange = info => {
     if (info.file.status === "uploading") {
@@ -114,9 +143,24 @@ class Auditing extends Component {
         })
       );
     }
+    if (info.file.type !== "image/jpeg" || info.file.type !== "image/png") {
+      this.setState({
+        notpic: true
+      });
+    }
   };
   jumpPage = () => {
-    this.context.router.history.push("/app/teamacc/callalram");
+    window.location.href = "#/app/teamacc/callalram";
+    post(
+      {
+        url: "/api/rollcall/handle",
+        data: {
+          code: this.state.code,
+          rhandle: 0
+        }
+      },
+      res => {}
+    );
   };
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -144,7 +188,11 @@ class Auditing extends Component {
     };
     const uploadButton = (
       <div>
-        <Icon type={this.state.loading ? "loading" : "plus"} />
+        {this.state.notpic ? (
+          <Icon type="exclamation-circle" />
+        ) : (
+          <Icon type={this.state.loading ? "loading" : "plus"} />
+        )}
         <div className="ant-upload-text">上传</div>
       </div>
     );
@@ -184,30 +232,15 @@ class Auditing extends Component {
                     })(<Input disabled />)}
                   </FormItem>
                   <FormItem {...formItemLayout} label="区域">
-                    <div
-                      className="area"
+                    <canvas
+                      id="time_graph_canvas"
+                      width="704px"
+                      height="576px"
                       style={{
-                        width: "300px",
-                        background: `url(${
-                          this.state.areapic
-                        }) no-repeat center/cover `,
-                        position: "relative"
+                        backgroundImage: "url(" + this.state.imgsrc + ")",
+                        backgroundSize: "100% 100%"
                       }}
-                    >
-                      <Button
-                        type="primary"
-                        size="large"
-                        href={this.state.downpic}
-                        download
-                        style={{
-                          position: "absolute",
-                          right: "-30%",
-                          top: "40%"
-                        }}
-                      >
-                        下载
-                      </Button>
-                    </div>
+                    />
                   </FormItem>
                   <FormItem {...formItemLayout} label="上传图片">
                     <div className="upload">
@@ -218,12 +251,11 @@ class Auditing extends Component {
                         multiple={false}
                         action="/api/rollcall/handle"
                         data={updata}
-                        // customRequest={this.handleUpload}
                         onChange={this.handleChange}
                         beforeUpload={beforeUpload}
                       >
                         {imageUrl ? (
-                          <img src={imageUrl} alt="avatar" />
+                          <img src={imageUrl} alt="" />
                         ) : (
                           uploadButton
                         )}
