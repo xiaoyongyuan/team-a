@@ -68,7 +68,7 @@ class Auditing extends Component {
           },
           res => {
             if (res.success === 1) {
-              message.success("审核通过，1秒后跳转至点名区域审核页面");
+              message.success("审核通过");
               setTimeout(() => {
                 window.location.href = "#/app/teamacc/callalram";
               }, 1000);
@@ -165,7 +165,7 @@ class Auditing extends Component {
       },
       res => {
         if (res.success === 1) {
-          message.error("审核不通过，1秒后跳转至点名区域审核页面");
+          message.error("审核不通过");
           setTimeout(() => {
             window.location.href = "#/app/teamacc/callalram";
           }, 1000);
@@ -249,17 +249,27 @@ class Auditing extends Component {
                       height="576px"
                       style={{
                         backgroundImage: "url(" + this.state.imgsrc + ")",
-                        backgroundSize: "100% 100%"
+                        backgroundSize: "100% 100%",
+                        position: "relative"
                       }}
                     />
+                    <Button
+                      type="primary"
+                      href={this.state.imgsrc}
+                      target="_blank"
+                      download
+                    >
+                      查看原图
+                    </Button>
                   </FormItem>
                   <FormItem {...formItemLayout} label="上传图片">
                     <div
                       className="upload"
                       style={{
-                        maxWidth: "300px",
-                        maxHeight: "260px",
-                        overflow: "auto"
+                        width: "200px",
+                        height: "200px"
+                        // maxHeight: "260px"
+                        // overflow: "hidden"
                       }}
                     >
                       <Upload
@@ -273,7 +283,15 @@ class Auditing extends Component {
                         beforeUpload={beforeUpload}
                       >
                         {imageUrl ? (
-                          <img src={imageUrl} alt="" />
+                          <img
+                            src={imageUrl}
+                            alt=""
+                            style={{
+                              width: "100%",
+                              height: "auto",
+                              display: "inline-block"
+                            }}
+                          />
                         ) : (
                           uploadButton
                         )}
