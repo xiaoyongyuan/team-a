@@ -155,17 +155,21 @@ console.log('*values',values);
                 key: 'pname',
                 render: text => <span>{text}</span>,
             },{
-                title: '綁定状态',
+                title: '设备状态',
                 dataIndex: 'estatus',
-                key: 'estatus',
+                key: 'estatus1',
                 render: (text, record,index) => {
                     switch(text){
                         case 0:
-                          return "未绑定";
+                            return `未使用`;
                         case 1:
-                          return "已绑定";
+                            return `使用中`;
+                        case 2:
+                            return `报修中`;
+                        case 9001:
+                            return `服务已过期`;
                         default:
-                            return "";
+                            return"";
                     }
                 },
             },{
