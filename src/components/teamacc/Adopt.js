@@ -51,7 +51,7 @@ class Adopt extends Component {
             rname: res.data.rname, //对象名
             applydate: res.data.applydate,
             cameraname: res.data.cameraname,
-            rhandle: res.data.rhandle //处理结果
+            rhandle: res.data.rhandle === 1 ? "通过" : "不通过" //处理结果
           });
           _this.setState(
             {

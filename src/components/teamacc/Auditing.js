@@ -2,7 +2,6 @@
  * Created by hao.cheng on 2017/4/13.
  */
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import "../../style/sjg/home.css";
 import nopic from "../../style/imgs/nopic.png";
 import {
@@ -67,11 +66,17 @@ class Auditing extends Component {
               picurl: this.state.imageUrl
             }
           },
-          res => {}
+          res => {
+            if (res.success === 1) {
+              message.success("审核通过，1秒后跳转至点名区域审核页面");
+              setTimeout(() => {
+                window.location.href = "#/app/teamacc/callalram";
+              }, 1000);
+            }
+          }
         );
       }
     });
-    window.location.href = "#/app/teamacc/callalram";
   };
   componentWillMount() {
     this.setState({
@@ -150,16 +155,22 @@ class Auditing extends Component {
     }
   };
   jumpPage = () => {
-    window.location.href = "#/app/teamacc/callalram";
     post(
       {
         url: "/api/rollcall/handle",
         data: {
           code: this.state.code,
-          rhandle: 0
+          rhandle: 2
         }
       },
-      res => {}
+      res => {
+        if (res.success === 1) {
+          message.error("审核不通过，1秒后跳转至点名区域审核页面");
+          setTimeout(() => {
+            window.location.href = "#/app/teamacc/callalram";
+          }, 1000);
+        }
+      }
     );
   };
   render() {
@@ -243,7 +254,14 @@ class Auditing extends Component {
                     />
                   </FormItem>
                   <FormItem {...formItemLayout} label="上传图片">
-                    <div className="upload">
+                    <div
+                      className="upload"
+                      style={{
+                        maxWidth: "300px",
+                        maxHeight: "260px",
+                        overflow: "auto"
+                      }}
+                    >
                       <Upload
                         listType="picture-card"
                         className="avatar-uploader"
