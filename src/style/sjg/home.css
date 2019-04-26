@@ -235,3 +235,16 @@ margin: 20px 0;
 .modaTeam .scene label{
     margin-left: 40%;
 }
+.zttLatitude{
+    display: flex;
+    flex-direction: row;
+    justify-content:center;
+}
+.zttLatitude .ant-input{
+    width: 70%;
+    margin: 10px 0;
+}
+.zttLatitude label{
+    margin: 15px 0px;
+    padding-right: 15px;
+}

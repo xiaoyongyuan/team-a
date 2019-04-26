@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../../style/sjg/home.css';
-import {Table, Form, Input, Row, Col, Button,Select,Modal} from 'antd';
+import {Table, Form, Input, Row, Col, Button,Select,Modal,message} from 'antd';
 import BreadcrumbCustom from "../BreadcrumbCustom";
 import {post} from "../../axios/tools";
 const FormItem = Form.Item;
@@ -14,6 +14,7 @@ class Teamdeveice extends Component {
             editstate:1,
             userlist:[], //用户列表
             page:1,
+            longitude:false
         };
     }
     componentDidMount() {
@@ -21,10 +22,10 @@ class Teamdeveice extends Component {
             if(res){
                 this.setState({
                     userlist:res.data,
-                }); 
-            }   
-        })
-        
+                });
+            }
+        });
+
         //取数据
         this.requestdata()
     }
@@ -51,9 +52,6 @@ class Teamdeveice extends Component {
     selectopt = (e) => { //检索
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-console.log('*values',values);
-
-
             if(!err){
                 this.setState({
                     ecode:values.ecode,
@@ -82,7 +80,7 @@ console.log('*values',values);
         post({url:'/api/equipment/del',data:{code:this.state.type}},(res)=>{
             if(res){
                 const list=this.state.list;
-                list.splice(this.state.index,1)
+                list.splice(this.state.index,1);
                 this.setState({
                     list:list,
                     deleteshow: false,
@@ -128,7 +126,54 @@ console.log('*values',values);
         },()=>{
             this.requestdata()
         })
-    }
+    };
+    //经纬度model
+    upLatitude=(redcord,index)=>{
+        this.setState({
+            longitude:true,
+            changelng:redcord.lng,
+            changelat:redcord.lat,
+            cid:redcord.cid,
+            LatitudeIndex:index
+        })
+    };
+    longitudeCancel=()=>{
+        document.getElementById("changelat").value="";
+        this.setState({
+            longitude:false,
+        })
+        console.log(document.getElementById("changelat").value,"aaaa")
+    };
+    HanleChangelng=(Changelng,e)=>{
+        console.log(e.target.value,Changelng);
+        this.setState({
+            [Changelng]:e.target.value
+        })
+    };
+    longitudeOk=()=>{
+        if(this.state.cid){
+            const reg =/^\d+(\.\d+)?$/;
+            if(this.state.changelng || this.state.changelat){
+                if(reg.test(this.state.changelat)&&reg.test(this.state.changelng)){
+                    post({url:"/api/camera/update",data:{code:this.state.cid,lat:this.state.changelat,lng:this.state.changelng}},(res)=>{
+                        if(res.success){
+                            let list=this.state.list;
+                            list[this.state.LatitudeIndex].lat=this.state.changelat;
+                            list[this.state.LatitudeIndex].lng=this.state.changelng;
+                            this.setState({
+                                longitude:false,
+                                list
+                            },()=>{
+                                message.success('修改成功！');
+                            })
+                        }
+                    })
+                }else{
+                    message.error('只能输入整数或者小数');
+                }
+            }
+        }
+    };
     render() {
         const { getFieldDecorator } = this.props.form;
         const columns = [
@@ -173,6 +218,15 @@ console.log('*values',values);
                     }
                 },
             },{
+                title: '经纬度',
+                dataIndex: 'lng',
+                key: 'lng',
+                render: (text, record,index) => {
+                    return(
+                        <p><span>{record.lng}</span><span style={{display:text?"inline-block":"none"}}>,</span><span>{record.lat}</span></p>
+                    )
+                }
+            },{
                 title: '绑定日期',
                 dataIndex: 'createon',
                 key: 'manage'
@@ -186,6 +240,7 @@ console.log('*values',values);
                             <span>
                                 {/*<Button onClick={() => {this.showModalEdit(record.code,index)}}>编辑</Button>*/}
                                 <Button onClick={()=>this.showModaldelete(record.code,index)}>删除</Button>
+                                <Button onClick={()=>this.upLatitude(record,index)}>修改经纬度</Button>
                             </span>
                         )
                     }else{
@@ -269,7 +324,15 @@ console.log('*values',values);
                 >
                     <p>确认删除吗？</p>
                 </Modal>
-
+                <Modal title="修改经纬度" visible={this.state.longitude} onOk={this.longitudeOk}
+                       onCancel={this.longitudeCancel}
+                       width={450}
+                       okText="确认"
+                       cancelText="取消"
+                >
+                    <div className="zttLatitude"><label>经度：</label><Input placeholder="请输入经度" id="changelat" defaultValue={this.state.changelng} onChange={(e)=>this.HanleChangelng("changelng",e)} /></div>
+                    <div className="zttLatitude"> <label>纬度：</label><Input placeholder="请输入纬度" defaultValue={this.state.changelat} onChange={(e)=>this.HanleChangelng("changelat",e)} /></div>
+                </Modal>
             </div>
         )
     }
