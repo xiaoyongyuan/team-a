@@ -138,14 +138,11 @@ class Teamdeveice extends Component {
         })
     };
     longitudeCancel=()=>{
-        document.getElementById("changelat").value="";
         this.setState({
             longitude:false,
-        })
-        console.log(document.getElementById("changelat").value,"aaaa")
+        });
     };
     HanleChangelng=(Changelng,e)=>{
-        console.log(e.target.value,Changelng);
         this.setState({
             [Changelng]:e.target.value
         })
@@ -153,7 +150,7 @@ class Teamdeveice extends Component {
     longitudeOk=()=>{
         if(this.state.cid){
             const reg =/^\d+(\.\d+)?$/;
-            if(this.state.changelng || this.state.changelat){
+            if(this.state.changelng && this.state.changelat){
                 if(reg.test(this.state.changelat)&&reg.test(this.state.changelng)){
                     post({url:"/api/camera/update",data:{code:this.state.cid,lat:this.state.changelat,lng:this.state.changelng}},(res)=>{
                         if(res.success){
@@ -171,6 +168,8 @@ class Teamdeveice extends Component {
                 }else{
                     message.error('只能输入整数或者小数');
                 }
+            }else {
+                message.warning('请输入经度和纬度！');
             }
         }
     };
@@ -330,8 +329,8 @@ class Teamdeveice extends Component {
                        okText="确认"
                        cancelText="取消"
                 >
-                    <div className="zttLatitude"><label>经度：</label><Input placeholder="请输入经度" id="changelat" defaultValue={this.state.changelng} onChange={(e)=>this.HanleChangelng("changelng",e)} /></div>
-                    <div className="zttLatitude"> <label>纬度：</label><Input placeholder="请输入纬度" defaultValue={this.state.changelat} onChange={(e)=>this.HanleChangelng("changelat",e)} /></div>
+                    <div className="zttLatitude"><label>经度：</label><Input placeholder="请输入经度" value={this.state.changelng} onChange={(e)=>this.HanleChangelng("changelng",e)} /></div>
+                    <div className="zttLatitude"> <label>纬度：</label><Input placeholder="请输入纬度" value={this.state.changelat} onChange={(e)=>this.HanleChangelng("changelat",e)} /></div>
                 </Modal>
             </div>
         )
