@@ -196,9 +196,24 @@ class Adopt extends Component {
                       对象图：
                     </Col>
                     <Col span={10}>
-                      <div className="area">
+                      <div
+                        className="area"
+                        style={{
+                          width: "300px",
+                          height: "200px",
+                          lineHeight: "200px"
+                        }}
+                      >
                         {this.state.rpic ? (
-                          <img alt="" src={this.state.rpic} />
+                          <img
+                            alt=""
+                            src={this.state.rpic}
+                            style={{
+                              width: "100%",
+                              height: "auto",
+                              display: "inline-block"
+                            }}
+                          />
                         ) : (
                           <img alt="暂无图片" />
                         )}

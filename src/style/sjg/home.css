@@ -1,238 +1,275 @@
-.home_top{
+.home_top {
     margin-bottom: 30px;
 }
-.shange{
-    width:99%;
+
+.shange {
+    width: 99%;
     height: auto;
     margin: 0 auto;
     padding: 1%;
 }
-.search input{
+
+.search input {
     width: 60%;
 }
-.download_btn{
+
+.download_btn {
     margin-left: 3%;
 }
-.margin_top20{
+
+.margin_top20 {
     margin-top: 20px;
 }
-.margin_top80{
+
+.margin_top80 {
     margin-top: 80px;
 }
-.margin_bottom80{
+
+.margin_bottom80 {
     margin-bottom: 80px;
 }
-.margin_bottom40{
+
+.margin_bottom40 {
     margin-bottom: 40px;
 }
-.margin_bottom20{
+
+.margin_bottom20 {
     margin-bottom: 20px;
 }
-.margin80 button{
-   width: 100%;
+
+.margin80 button {
+    width: 100%;
 }
-.white{
+
+.white {
     background: #fff;
 }
-.area{
+
+.area {
     width: 100%;
     height: 200px;
     background: #ccc;
     margin-bottom: 20px;
     margin-right: 40px;
 }
-.area_row{
+
+.area_row {
     position: relative;
 }
-.area_col{
+
+.area_col {
     position: absolute;
-    bottom:26px;
+    bottom: 26px;
     left: 80%;
 }
-.area_text{
+
+.area_text {
     text-align: right;
 }
-.team_item{
+
+.team_item {
     width: 100%;
     height: auto;
     border: 1px solid #313653;
     border-radius: 6px;
 }
-.item_f{
+
+.item_f {
     width: 100%;
     height: 80px;
-    line-height:2.2;
+    line-height: 2.2;
     border-bottom: 1px #eee solid;
     padding: 6px 20px;
 }
-.item_s{
+
+.item_s {
     width: 100%;
     height: 80px;
-    line-height:2.2;
+    line-height: 2.2;
     padding: 6px 20px;
 }
-.tit{
-    padding:0 20px;
+
+.tit {
+    padding: 0 20px;
     color: #fff;
     height: 45px;
     line-height: 45px;
 }
-.tit button{
+
+.tit button {
     float: right;
     color: #fff;
     border: 0;
     height: 30px;
-    line-height:30px ;
+    line-height: 30px;
 }
-.tit span{
+
+.tit span {
     width: 40%;
     height: 30px;
-    line-height:30px ;
+    line-height: 30px;
 }
-.t_t{
+
+.t_t {
     margin-top: 20px;
     margin-right: 30px;
 }
-.del_con{
+
+.del_con {
     margin-top: 15px;
-   float: right;
+    float: right;
 }
-.line_h{
-margin: 20px 0;
+
+.line_h {
+    margin: 20px 0;
 }
-.ant-modal-footer{
+
+.ant-modal-footer {
     border-top: 0 !important;
 }
 
 /*//摄像头扫描部分*/
-.wap{
+.wap {
     width: 100%;
     margin: 0 auto;
     background: #eee;
     border: 3px solid #07FEFE;
     border-radius: 10px;
 }
-.max{
+
+.max {
     position: relative;
     margin-top: 10px;
-    width:90%;
+    width: 90%;
     margin-left: 5%;
 }
 
-.saomiao{
-    width:100%;
-    height:30px;
+.saomiao {
+    width: 100%;
+    height: 30px;
     /*margin-left:6% ;*/
     /*display:none;*/
     position: absolute;
     top: 0px;
-    z-index:2;
+    z-index: 2;
 }
-.flip{
+
+.flip {
     position: relative;
     margin-top: 30px;
     bottom: 0px;
     left: 0;
     width: 100%;
     height: 40px;
-    line-height:40px;
+    line-height: 40px;
     display: flex;
-    flex-direction :row;
-    flex-wrap :nowrap;
-    justify-content:space-around;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
     padding: 0 5%;
 }
-.grid_img{
-    width:100%;
-    height:80px;
+
+.grid_img {
+    width: 100%;
+    height: 80px;
     position: absolute;
     bottom: 0;
     left: 0;
 
     margin-top: 10px;
 }
-.scanning{
+
+.scanning {
     position: relative;
-    width:100%;
-    border-radius:8px ;
+    width: 100%;
+    border-radius: 8px;
     padding: 6px;
 
 
 }
-.max .scanning>img{
+
+.max .scanning>img {
     position: relative;
     top: 0;
     z-index: 1;
-    width:94%;
+    width: 94%;
     height: auto;
     max-height: 360px;
 }
-.sijiao{
+
+.sijiao {
     width: 100%;
     padding: 10px;
     position: relative;
 
 }
-.jiao1{
+
+.jiao1 {
     position: absolute;
     top: 0;
     left: 0;
 
     width: 50px;
     height: 50px;
-    background-image:url(img/jiao1.png) ;
-    background-size:100% 100% ;
+    background-image: url(img/jiao1.png);
+    background-size: 100% 100%;
     background-repeat: no-repeat;
 }
-.jiao2{
+
+.jiao2 {
     position: absolute;
     top: 0;
     right: 0;
 
     width: 50px;
     height: 50px;
-    background-image:url(img/jiao2.png) ;
-    background-size:100% 100% ;
+    background-image: url(img/jiao2.png);
+    background-size: 100% 100%;
     background-repeat: no-repeat;
 }
-.jiao3{
+
+.jiao3 {
     position: absolute;
     bottom: 0;
     left: 0;
 
     width: 50px;
     height: 50px;
-    background-image:url(img/jiao4.png) ;
-    background-size:100% 100% ;
+    background-image: url(img/jiao4.png);
+    background-size: 100% 100%;
     background-repeat: no-repeat;
 }
-.jiao4{
+
+.jiao4 {
     position: absolute;
     bottom: 0;
     right: 0;
 
     width: 50px;
     height: 50px;
-    background-image:url(img/jiao3.png) ;
-    background-size:100% 100% ;
+    background-image: url(img/jiao3.png);
+    background-size: 100% 100%;
     background-repeat: no-repeat;
 }
 
-#scanning_img{
+#scanning_img {
     color: #000;
 }
 
 /*摄像头管理防区设置*/
-.clearInfo{
-     margin: 50px 0 80px 0;
- }
-.clearInfo row col{
+.clearInfo {
+    margin: 50px 0 80px 0;
+}
+
+.clearInfo row col {
     text-align: center;
 }
-.modaTeam .ant-form-item-required{
+
+.modaTeam .ant-form-item-required {
     margin-left: 30%;
 }
-.modaTeam .scene label{
+
+.modaTeam .scene label {
     margin-left: 40%;
 }
 .zttLatitude{
@@ -247,4 +284,9 @@ margin: 20px 0;
 .zttLatitude label{
     margin: 15px 0px;
     padding-right: 15px;
+}
+
+.upload .ant-upload.ant-upload-select-picture-card {
+    width: 100%;
+    height: 100%;
 }
