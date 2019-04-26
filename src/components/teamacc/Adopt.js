@@ -190,21 +190,20 @@ class Adopt extends Component {
                       />
                     </Col>
                   </Row>
-
-                  <Row className="area_row">
-                    <Col span={4} offset={4} className="area_text">
-                      对象图：
-                    </Col>
-                    <Col span={10}>
-                      <div
-                        className="area"
-                        style={{
-                          width: "300px",
-                          height: "200px",
-                          lineHeight: "200px"
-                        }}
-                      >
-                        {this.state.rpic ? (
+                  {this.state.rpic ? (
+                    <Row className="area_row">
+                      <Col span={4} offset={4} className="area_text">
+                        对象图：
+                      </Col>
+                      <Col span={10}>
+                        <div
+                          className="area"
+                          style={{
+                            width: "300px",
+                            height: "200px",
+                            lineHeight: "200px"
+                          }}
+                        >
                           <img
                             alt=""
                             src={this.state.rpic}
@@ -214,12 +213,10 @@ class Adopt extends Component {
                               display: "inline-block"
                             }}
                           />
-                        ) : (
-                          null
-                        )}
-                      </div>
-                    </Col>
-                  </Row>
+                        </div>
+                      </Col>
+                    </Row>
+                  ) : null}
                   <FormItem {...formItemLayout} label="审核结果">
                     {getFieldDecorator("rhandle", {
                       rules: [{ required: false }]
