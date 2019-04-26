@@ -215,7 +215,7 @@ class Adopt extends Component {
                             }}
                           />
                         ) : (
-                          <img alt="暂无图片" />
+                          null
                         )}
                       </div>
                     </Col>
