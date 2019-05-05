@@ -33,7 +33,8 @@ class ModalForm extends Component {
                     code:nextProps.code,
                     account:nextProps.account,
                 }, () => {
-                    this.requestdata()});
+                    this.requestdata()
+                });
             }
         }
     }
@@ -71,10 +72,6 @@ class ModalForm extends Component {
           value: e.target.value,
         });
       }
-    formquanxian = () => { //将form传给父组件由父组件控制表单提交
-        return this.state.value;
-    };
-
     formref = () => { //将form传给父组件由父组件控制表单提交
         return this.props.form;
     };

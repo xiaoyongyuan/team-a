@@ -39,7 +39,8 @@ export default {
     others: [ 
         { key: '/app/teamacc/adopt', title: '点名处理', component: 'Adopt'},
         { key: '/app/teamacc/auditing', title: '点名查看', component: 'Auditing'},
-        { key: '/app/groupleader/dataCharts', title: '统计图', component: 'dataCharts'},   
+        { key: '/app/groupleader/dataCharts', title: '统计图', component: 'dataCharts'},
+        { key: '/app/teamacc/lookAlarm', title: '查看报警', component: 'LookAlarm'},
         {
             key: '/subs4', title: '页面', icon: 'switcher',
             subs: [

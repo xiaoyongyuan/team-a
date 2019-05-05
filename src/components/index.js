@@ -32,8 +32,7 @@ import groupleader from './groupleader/Groupleader';
 import Performance from './groupleader/Performance';
 import dataCharts from './groupleader/dataCharts';
 
-
-
+import LookAlarm from "./teamacc/LookAlarm";
 const WysiwygBundle = Loadable({ // 按需加载富文本配置
     loader: () => import('./ui/Wysiwyg'),
     loading: Loading,
@@ -45,6 +44,6 @@ export default {
     , Teamhome, Teammange, Teamdeveice, Callalarm, Adopt, Auditing, Department, Comemploye
 
     , WatchIndex, Workbench, history, AlarmDetail
-    , groupleader, Performance, dataCharts
+    , groupleader, Performance, dataCharts,LookAlarm
 
 }

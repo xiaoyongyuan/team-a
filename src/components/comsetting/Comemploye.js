@@ -66,7 +66,7 @@ class Comemploye extends Component {
     	e.preventDefault();
         this.setState({
             value:1    
-        })
+        });
         const forms=this.formRef.formref();
         forms.validateFields((err, values) => {
             if (!err) {
