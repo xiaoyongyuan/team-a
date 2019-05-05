@@ -114,7 +114,7 @@ class TeamdeveiceForm extends Component {
                         </FormItem>
                     </Col>
                     <Col>
-                        <FormItem label="安装人电话"{...formItemLayout}>
+                        <FormItem label="安装人电话" {...formItemLayout}>
                             {getFieldDecorator('iphone', {
                                 rules:[{
                                     required:false,

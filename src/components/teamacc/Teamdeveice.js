@@ -211,8 +211,7 @@ class Teamdeveice extends Component {
                 dataIndex: 'estatus',
                 key: 'estatus1',
                 defaultSortOrder: 'descend',
-                onFilter: (value, record) => record.estatus.indexOf(value) === 0,
-                sorter: (a, b) => a.estatus.length - b.estatus.length,
+                sorter: (a, b) => a.estatus - b.estatus,
                 render: (text) => {
                     switch (text) {
                         case 0:
