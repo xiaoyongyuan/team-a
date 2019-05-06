@@ -106,7 +106,7 @@ class TeamdeveiceForm extends Component {
                     </Col>
                     <Col>
                         <FormItem label="安装人"{...formItemLayout}>
-                            {getFieldDecorator('memo', {
+                            {getFieldDecorator('installmemo', {
                                 rules: [{ required: false, message: '请输入姓名!' }],
                             })(
                                 <Input />
@@ -115,7 +115,7 @@ class TeamdeveiceForm extends Component {
                     </Col>
                     <Col>
                         <FormItem label="安装人电话" {...formItemLayout}>
-                            {getFieldDecorator('iphone', {
+                            {getFieldDecorator('installiphone', {
                                 rules:[{
                                     required:false,
                                     pattern: new RegExp("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$|^0\\d{2,3}-?\\d{7,8}$"),
@@ -128,7 +128,7 @@ class TeamdeveiceForm extends Component {
                     </Col>
                     <Col>
                         <FormItem label="责任销售"{...formItemLayout}>
-                            {getFieldDecorator('iphone', {
+                            {getFieldDecorator('responsibility', {
                                 rules: [{ required: false, message: '请输入姓名!' }],
                             })(
                                 <Input />
@@ -137,7 +137,7 @@ class TeamdeveiceForm extends Component {
                     </Col>
                     <Col>
                         <FormItem label="销售电话"{...formItemLayout}>
-                            {getFieldDecorator('iphone', {
+                            {getFieldDecorator('saleIphone', {
                                 rules:[{
                                     required:false,
                                     pattern: new RegExp("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$|^0\\d{2,3}-?\\d{7,8}$"),

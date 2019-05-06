@@ -123,7 +123,7 @@ class ModalForm extends Component {
                 <Col>
                     <FormItem label="权限"{...formItemLayout}>
                         {getFieldDecorator('userpower', {
-                            initialValue: _this.state.roles[0].rolename,
+                            initialValue:_this.state.roles.length>0?_this.state.roles[0].rolename:"",
                             rules: [{ required: true }],
                         })(
                             <RadioGroup onChange={this.onChangeradio}>
