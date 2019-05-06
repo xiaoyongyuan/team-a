@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
 import {Form,Input,Row,Col } from 'antd';
 import {post} from "../../axios/tools";
+import CascaderModule from '../common/CascaderModule';
 const FormItem = Form.Item;
 let vis=false;
 class TeamdeveiceForm extends Component {
     constructor(props){
         super(props);
         this.state={
-
+            filedInput:true,
+            filed:false
         };
     }
+
     componentDidMount() {
         this.setState({
-            changeCode:this.props.changeCode
+            changeCode:this.props.changeCode,
+            filedInput:this.props.filedInput,
+            filed:this.props.filed,
         },()=>{
             this.getOne();
         })
@@ -23,6 +28,8 @@ class TeamdeveiceForm extends Component {
             if(nextProps.longitude){
                 this.setState({
                     changeCode:nextProps.changeCode,
+                    filedInput:nextProps.filedInput,
+                    filed:nextProps.filed,
                 }, () => {
                     this.getOne()
                 });
@@ -44,7 +51,16 @@ class TeamdeveiceForm extends Component {
                 }
             })
         }
-    }
+    };
+    hanleFiled=()=>{
+      this.setState({
+          filedInput:false,
+          filed:true
+      })
+    };
+    onRef = (ref) => {
+        this.child = ref;
+    };
     formref = () => { //将form传给父组件由父组件控制表单提交
         return this.props.form;
     };
@@ -52,8 +68,8 @@ class TeamdeveiceForm extends Component {
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
             labelCol: {
-                xs: { span: 24 },
-                sm: { span: 5 },
+                xs: { span: 20 },
+                sm: { span: 4 },
             },
             wrapperCol: {
                 xs: { span: 24 },
@@ -91,9 +107,15 @@ class TeamdeveiceForm extends Component {
                         </Form.Item>
                     </Col>
                     <Col>
-                        <FormItem label="所在区域" {...formItemLayout}>
+                        <FormItem label="所在区域" {...formItemLayout} style={{display:this.state.filedInput===false?"none":"block"}}>
                             {getFieldDecorator('filed')(
-                                <Input />
+                                <Input disabled />
+                            )}
+                        </FormItem>
+                        <div onClick={this.hanleFiled} style={{position: "absolute",right: "0%",top: "24%",color:"#0099FF",cursor:"pointer",display:this.state.filedInput===false?"none":"block"}}>修改</div>
+                        <FormItem label="所在区域" {...formItemLayout} style={{display:this.state.filed===true?"block":"none"}}>
+                            {getFieldDecorator('filed')(
+                                <CascaderModule onRef={this.onRef} />
                             )}
                         </FormItem>
                     </Col>
@@ -114,7 +136,7 @@ class TeamdeveiceForm extends Component {
                         </FormItem>
                     </Col>
                     <Col>
-                        <FormItem label="安装人电话" {...formItemLayout}>
+                        <FormItem label="安装电话" {...formItemLayout}>
                             {getFieldDecorator('installiphone', {
                                 rules:[{
                                     required:false,
