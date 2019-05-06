@@ -454,3 +454,57 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
+
+/*LookAlarm.js*/
+.r_flex{
+    flex-direction: column;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    height: 100%;
+    border-left: 0;
+}
+@media screen and (min-width: 1600px) {
+    .pliceImgyal{
+        width: 100%;
+        height: 123px;
+        background: #ffffff;
+        /* box-shadow: 0 0 10px #ffffff;*/
+        cursor: pointer;
+    }
+    .pliceImgyal img{
+        width: 100%;
+        height: 100%;
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+    }
+}
+@media screen and (max-width: 1600px) {
+    .pliceImgyal{
+        width: 100%;
+        height: 123px;
+        background: #ffffff;
+        /* box-shadow: 0 0 10px #ffffff;*/
+        cursor: pointer;
+    }
+    .pliceImgyal img{
+        width: 100%;
+        height: 100%;
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+    }
+}
+.fontstyle{
+    font-size: 13px;
+    height: 61px;
+    line-height: 61px;
+    margin: 0 !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.fontstyletime{
+    font-size: 12px!important;
+}
+.queryBtn{
+    margin-top: 3px;
+}

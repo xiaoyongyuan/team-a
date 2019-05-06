@@ -4,8 +4,7 @@ import {Table, Form, Input, Row, Col, Button, Select, Modal, message} from 'antd
 import BreadcrumbCustom from "../BreadcrumbCustom";
 import TeamdeveiceForm from "./TeamdeveiceForm";
 import {post} from "../../axios/tools";
-import ModalForm from "../comsetting/ModalForm";
-
+import moment from "moment";
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -67,8 +66,6 @@ class Teamdeveice extends Component {
                 }, () => {
                     this.requestdata();
                 })
-
-
             }
         })
     }
@@ -126,11 +123,11 @@ class Teamdeveice extends Component {
             editstate: value
         });
     }
-    changePage = (page, pageSize) => { //分页  页码改变的回调，参数是改变后的页码及每页条数
+    changePage = (page) => { //分页  页码改变的回调，参数是改变后的页码及每页条数
         this.setState({
             page: page,
         }, () => {
-            this.requestdata()
+            this.requestdata();
         })
     };
     //经纬度model
@@ -195,6 +192,7 @@ class Teamdeveice extends Component {
                 defaultSortOrder: 'descend',
                 onFilter: (value, record) => record.ecode.indexOf(value) === 0,
                 sorter: (a, b) => a.ecode.length - b.ecode.length,
+                sortDirections: ['descend', 'ascend'],
                 render: text => <span>{text}</span>,
             }, {
                 title: '设备类型',
@@ -244,11 +242,13 @@ class Teamdeveice extends Component {
                 dataIndex: 'createon',
                 key: 'createon',
                 sorter: (a, b) => Date.parse(a.createon) - Date.parse(b.createon),
+                sortDirections: ['descend', 'ascend'],
             }, {
                 title: '最后一次报警',
                 dataIndex: 'setuptime',
                 key: 'setuptime',
                 sorter: (a, b) => Date.parse(a.setuptime) - Date.parse(b.setuptime),
+                sortDirections: ['descend', 'ascend'],
             }, {
                 title: '安装人员',
                 dataIndex: 'man',
@@ -267,7 +267,7 @@ class Teamdeveice extends Component {
                             <span>
                               {/*  <Button onClick={() => {this.showModalEdit(record.code,index)}}>编辑</Button>*/}
                                 <Button onClick={() => this.upLatitude(record, index)}>编辑</Button>
-                                 <Button><a href={"#/app/teamacc/lookAlarm?code=" + record.code}>查看报警</a></Button>
+                                 <Button><a href={"#/app/teamacc/lookAlarm?cid=" + record.cid}>查看报警</a></Button>
                                 <Button onClick={() => this.showModaldelete(record.code, index)}>删除</Button>
 
                             </span>

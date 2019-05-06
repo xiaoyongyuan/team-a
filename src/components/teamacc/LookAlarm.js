@@ -1,4 +1,3 @@
-/*
 import React from 'react';
 import { DatePicker, Row, Col, Button, Modal, Pagination, Form,LocaleProvider,Spin,notification,message} from "antd";
 import "../../style/ztt/css/police.css";
@@ -45,9 +44,7 @@ class LookAlarm extends React.Component{
     }
     componentWillMount=()=>{
         this.setState({
-            ccodet: this.props.query.ccode,
-            cidt: this.props.query.cid,
-            eidt: this.props.query.eid,
+            cid: this.props.query.cid,
         });
     }
     componentDidMount() {
@@ -93,8 +90,8 @@ class LookAlarm extends React.Component{
             edate:this.state.edate,
             pagesize:18,
             pageindex:this.state.page,
-            cid:this.state.cidt,
-        }
+            cid:this.state.cid,
+        };
         post({url:'/api/alarm/getlist_foradmin',data:alarmmdata},(res)=>{
             if(res.success){
                 this.setState({
@@ -131,10 +128,10 @@ class LookAlarm extends React.Component{
         })
     };
 
-    /!*
+    /*
     * 检索
     * 开始时间、结束时间
-    * *!/
+    * */
     handleSubmit =(e)=>{
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -165,29 +162,6 @@ class LookAlarm extends React.Component{
     handleEndOpenChange = (open) => {
         this.setState({ endOpen: open });
     };
-    misinf=()=>{
-        this.setState({
-            ifall:true,
-            ifkai:true,//误报确认弹框
-        });
-        const data={
-            ccode: this.state.ccodet,
-            cid: this.state.cidt,
-            eid: this.state.eidt,
-        }
-        post({url:"/api/misinformation/gets_misinfo",data:data},(res)=>{
-            if(res){
-                this.setState({
-                    data:res.data,
-                    srct:res.path,
-                    eid:res.eid,
-                },()=>{
-                    this.drawtwo();
-                });
-            }
-        })
-    }
-
     drawtwo = ()=>{ //画围界
         this.setState({
             createby:"",
@@ -239,7 +213,7 @@ class LookAlarm extends React.Component{
         let y= coords.clientY - canvsclent.top * (ele.height / canvsclent.height)
         let pre=[x,y]
         return pre;
-    }
+    };
     clickgetcorrd =(e)=>{ //点击
         e.preventDefault();
         const objss=this.state.data;
@@ -334,9 +308,6 @@ class LookAlarm extends React.Component{
                                 )}
                             </Form.Item>
                             <Button type="primary" htmlType="submit" className="queryBtn">查询</Button>
-                            <Button type="primary" onClick={()=>this.misinf()} >
-                                查看误报信息
-                            </Button>
                         </Form>
                     </Row>
                 </LocaleProvider>
@@ -378,7 +349,6 @@ class LookAlarm extends React.Component{
                                                                     <p className="time-col fontstyle fontstyletime">{v.atime}</p>
                                                                 </Col>
                                                                 <Col span={9} push={1} style={{marginLeft:'13px'}}>
-                                                                    {/!* <p className="fontstyle time-col">报警对象：{v.tags===""?"无":v.tags}</p> *!/}
                                                                     <p className="fontstyle time-col">
                                                                         {v.atype===1? <span> 　
                                                                      <span> {v.s_est===-1?"误报":""}</span>
@@ -449,4 +419,3 @@ class LookAlarm extends React.Component{
 }
 
 export default LookAlarm= Form.create()(LookAlarm);
-*/
