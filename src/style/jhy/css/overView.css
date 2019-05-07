@@ -1,0 +1,20 @@
+.overView {
+  /* display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  box-sizing: border-box; */
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* .overView img {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 10px;
+} */
+.anchorBL,
+.BMap_cpyCtrl {
+  display: none;
+}

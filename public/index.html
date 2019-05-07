@@ -8,18 +8,30 @@
 	<meta name="theme-color" content="#000000">
 
 	<title>椒图服务商平台</title>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=MuapPz6iQML2Vdhb8HEu8Ps3Wgt8oe5V"></script>
+	<link rel="stylesheet/less" type="text/css" href="./theme.less" />
+	<script src="./config.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js"></script>
+	<style>
+		html,
+		body {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+	</style>
 </head>
 
 <body>
-	<link rel="stylesheet/less" type="text/css" href="./theme.less" />
-  <script src="./config.js" type="text/javascript"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js"></script>
+	<script>
+		window.BMap = BMap;
+	</script>
 	<script>
 		const primaryColor = localStorage.getItem('@primary-color');
 		primaryColor && window.less.modifyVars({
 			'@primary-color': primaryColor,
 		})
-    </script>
+	</script>
 	<noscript>
 		You need to enable JavaScript to run this app.
 	</noscript>
