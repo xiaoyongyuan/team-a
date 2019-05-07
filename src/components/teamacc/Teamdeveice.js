@@ -306,14 +306,14 @@ class Teamdeveice extends Component {
                               {/*  <Button onClick={() => {this.showModalEdit(record.code,index)}}>编辑</Button>*/}
                                 <Button onClick={() => this.upLatitude(record, index)}>编辑</Button>
                                  <Button><a href={"#/app/teamacc/lookAlarm?cid=" + record.cid}>查看报警</a></Button>
-                                <Button onClick={() => this.showModaldelete(record.code, index)}>删除</Button>
+                                <Button onClick={() => this.showModaldelete(record.code, index)} style={{display:record.estatus==1?"none":"block"}}>删除</Button>
 
                             </span>
                         )
                     } else {
                         return (
                             <span>
-                                <Button onClick={() => this.showModaldelete(record.code, index)}>删除</Button>
+                                <Button onClick={() => this.showModaldelete(record.code, index)} style={{display:record.estatus==1?"none":"block"}}>删除</Button>
                             </span>
 
                         )
