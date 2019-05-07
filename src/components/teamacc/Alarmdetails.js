@@ -151,84 +151,11 @@ class Alarmdetails extends React.Component{
     area.stroke();
     area.closePath();
   }
-  getcoord = (coords) => { //获取坐标
-        let ele = document.getElementById("canvasobj");
-        let canvsclent = ele.getBoundingClientRect();
-        let x= coords.clientX - canvsclent.left * (ele.width / canvsclent.width);
-        let y= coords.clientY - canvsclent.top * (ele.height / canvsclent.height)
-        let pre=[x,y]
-        return pre;
-    }
-  clickgetcorrd =(e)=>{ //点击
-    e.preventDefault();
-    const finalresult=this.state.data.finalresult;
-        if(finalresult.length){
-          let getcord=this.getcoord(e); //获取点击的坐标
-          const xi=604/this.state.data.pic_width, yi=476/this.state.data.pic_height;
-          let x=parseInt(getcord[0]/xi),y=parseInt(getcord[1]/yi);
-          const crut=this.selectObj(x,y);
-          if(crut){
-            this.setState({crut})
-            this.drawSelectObj(crut);
-            this.openNotification();
-          } 
-        }
-  }
-  selectObj=(x,y)=>{
-    var crut='';
-    const finalresult=this.state.data.finalresult;
-    finalresult.some((el,i)=>{
-      if(el.x<=x && x<=(el.x+el.w) && el.y<=y && y<=(el.y+el.h) ){
-        return crut=el;
-      }
-    })
-    return crut;
-  }
-  openNotification = () => { //确认误报弹层
-    this.setState({
-      ifmis:true,
-    })
-  };
-  selectobjOk =(key)=>{ //误报提交
-    this.setState({
-      ifmis:false,
-    })
-    const _this=this;
-    const data={
-      finalinfo:'',
-      aid:_this.state.code,
-      cid:_this.state.data.cid,
-      finalarea:JSON.stringify(_this.state.crut),
-      picpath:_this.state.data.src,
-      pic_width:_this.state.data.pic_width,
-      pic_height:_this.state.data.pic_height,
-      memo:_this.state.memo,
-    }
-     post({url:"/api/Misinformation/add",data:data},(res)=>{
-      if(res.success){
-        notification.close(key);
-        message.success('操作成功');
-        _this.draw();
-      }
-     })
-     document.getElementById("memo").value="";
-  }
-
   memo =(e)=>{ 
     var memoval=document.getElementById("memo").value;  
     this.setState({
       memo:memoval
     })
-  }
-  selectobjCancel =(key)=>{ //误报确认取消
-    this.setState({
-      crut:{},
-      ifmis:false,
-    },()=>{
-      this.draw();
-      notification.close(key);
-    })
-    document.getElementById("memo").value="";  
   }
   baojing=()=>{
     this.setState({
@@ -243,7 +170,7 @@ class Alarmdetails extends React.Component{
               <div style={this.state.ifall?{display:'none'}:{display:'block'}}>
                   <div className="alarmflex">
                     <div className="flexleft" id="flexleft">
-                      <canvas id="canvasobj" width="604px" height="476px" onClick={this.clickgetcorrd} style={{backgroundImage:'url('+this.state.data.src+')',backgroundSize:"100% 100%"}} />
+                      <canvas id="canvasobj" width="604px" height="476px" style={{backgroundImage:'url('+this.state.data.src+')',backgroundSize:"100% 100%"}} />
                       <div style={{textAlign:'center'}}>
                         <ButtonGroup>
                           <Button type="primary" onClick={()=>this.looknew('prev')} disabled={this.state.prev?false:true}>
@@ -280,20 +207,6 @@ class Alarmdetails extends React.Component{
                     </div> 
                   </div>
               </div>
-              <Modal visible={this.state.ifmis} 
-                    title="信息"
-                    okText="确认"
-                      cancelText="取消"
-                      onCancel={() => this.selectobjCancel('newalarm')}
-                      onOk={() => this.selectobjOk('newalarm')}
-              >
-                      <div style={{marginLeft:"60px"}}>
-                      确认将此条报警对象置为误报?
-                      <div style={{marginTop:"10px"}}>
-                        <span style={{float:'left'}}>备注：</span><textarea onChange={() => this.memo()} style={{width:'200px',height:'30px',float:'left'}} placeholder="请输入备注" id="memo" />
-                      </div>
-                      </div>
-              </Modal>
               </Spin>
             </div>
         )

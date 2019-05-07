@@ -3,11 +3,10 @@ import '../../style/sjg/home.css';
 import {Table, Form, Input, Row, Col, Button, Select, Modal, message} from 'antd';
 import BreadcrumbCustom from "../BreadcrumbCustom";
 import {post} from "../../axios/tools";
-import moment from "moment";
 import CascaderModule from "../common/CascaderModule";
+import moment from "moment";
 const FormItem = Form.Item;
 const Option = Select.Option;
-var province;
 class Teamdeveice extends Component {
     constructor(props) {
         super(props);
@@ -32,7 +31,7 @@ class Teamdeveice extends Component {
             }
         });*/
         //取数据
-        this.requestdata()
+        this.requestdata();
     }
 
     requestdata = (params) => {//取数据
@@ -44,7 +43,7 @@ class Teamdeveice extends Component {
             companycode: this.state.companycode,
             pageindex: this.state.page,
 
-        }
+        };
         post({url: '/api/equipment/getlist', data: quparams}, (res) => {
             if (res) {
                 this.setState({
@@ -54,7 +53,7 @@ class Teamdeveice extends Component {
                 });
             }
         })
-    }
+    };
     selectopt = (e) => { //检索
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -78,7 +77,7 @@ class Teamdeveice extends Component {
             type: code,
             index: index,
         });
-    }
+    };
 
     deleteOk = () => {//删除确认
         post({url: '/api/equipment/del', data: {code: this.state.type}}, (res) => {
@@ -123,7 +122,7 @@ class Teamdeveice extends Component {
         this.setState({
             editstate: value
         });
-    }
+    };
     changePage = (page) => { //分页  页码改变的回调，参数是改变后的页码及每页条数
         this.setState({
             page: page,
@@ -173,18 +172,17 @@ class Teamdeveice extends Component {
             filed:true
         })
     };
-    onRef = (ref) => {
-        this.child = ref;
+    hanleonRef = (ref) => {
+        this.setState({caseInfo:ref});
     };
     longitudeOk = () => {
         this.props.form.validateFields((err, values) => {
-            province=this.child.formref();
             if (!err) {
                 const datas = {
                     code:this.state.changeCode,
                     lng: values.lng,
                     lat: values.lat,
-                    location: province.zonename+","+values.location
+                    location:this.state.caseInfo.formref().zonename+","+values.location
                 };
                 if (this.state.changeCode) {
                     post({url: "/api/camera/update", data: datas}, (res) => {
@@ -434,7 +432,7 @@ class Teamdeveice extends Component {
                             <div onClick={this.hanleFiled} style={{position: "absolute",right: "0%",top: "27%",color:"#0099FF",cursor:"pointer",display:this.state.filedInput===false?"none":"block"}}>修改</div>
                             <FormItem label="所在区域" {...formItemLayout} style={{display:this.state.filed===true?"block":"none"}}>
                                 {getFieldDecorator('location')(
-                                    <CascaderModule onRef={this.onRef} />
+                                    <CascaderModule onRef={this.hanleonRef} />
                                 )}
                             </FormItem>
                         </Col>
