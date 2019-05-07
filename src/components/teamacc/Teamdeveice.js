@@ -7,9 +7,7 @@ import moment from "moment";
 import CascaderModule from "../common/CascaderModule";
 const FormItem = Form.Item;
 const Option = Select.Option;
-var province
-var utype
-var zcode
+var province;
 class Teamdeveice extends Component {
     constructor(props) {
         super(props);
@@ -24,20 +22,15 @@ class Teamdeveice extends Component {
             filed:false//控制子组件的修改
         };
     }
-    getChildContext() {
-        return {
-            change: this.change
-        }
-    }
-
     componentDidMount() {
-        post({url: '/api/company/getlist'}, (res) => {
+        //所属用户
+        /*post({url: '/api/company/getlist'}, (res) => {
             if (res) {
                 this.setState({
                     userlist: res.data,
                 });
             }
-        });
+        });*/
         //取数据
         this.requestdata()
     }
@@ -69,7 +62,7 @@ class Teamdeveice extends Component {
                 this.setState({
                     ecode: values.ecode,
                     estatus: values.estatus,
-                    companycode: values.companycode,
+                    companycode: values.cname,
                     page: 1
                 }, () => {
                     this.requestdata();
@@ -140,24 +133,34 @@ class Teamdeveice extends Component {
     };
     //经纬度model
     upLatitude = (redcord, index) => {
+        this.props.form.resetFields(); //清空
         this.setState({
             longitude: true,
             LatitudeIndex: index,
             changeCode:redcord.code
         });
         post({url:"/api/equipment/getone",data:{code:redcord.code}},(res)=>{
-            console.log(res.data.location.split(',')[0]);
             if(res.success){
-                this.props.form.setFieldsValue({
-                    lng:res.data.lng,
-                    lat:res.data.lat,
-                    location:res.data.location.split(',')[1],
-                    filedlocation:res.data.location.split(',')[0]
-                });
+                if(res.data.location.toString().indexOf(",")===-1){
+                    this.props.form.setFieldsValue({
+                        lng:res.data.lng,
+                        lat:res.data.lat,
+                        location:res.data.location,
+                       /* filedlocation:res.data.location*/
+                    });
+                }else{
+                    this.props.form.setFieldsValue({
+                        lng:res.data.lng,
+                        lat:res.data.lat,
+                        location:res.data.location.toString()?res.data.location.toString().split(',')[1]:"",
+                        filedlocation:res.data.location.toString()?res.data.location.toString().split(',')[0]:""
+                    });
+                }
             }
         })
     };
     longitudeCancel = () => {
+        this.props.form.resetFields(); //清空
         this.setState({
             longitude: false,
             filedInput:true,//控制子组件的修改
@@ -175,18 +178,21 @@ class Teamdeveice extends Component {
     };
     longitudeOk = () => {
         this.props.form.validateFields((err, values) => {
-            console.log(values);
+            province=this.child.formref();
             if (!err) {
                 const datas = {
+                    code:this.state.changeCode,
                     lng: values.lng,
                     lat: values.lat,
-                    location: values.location
+                    location: province.zonename+","+values.location
                 };
                 if (this.state.changeCode) {
                     post({url: "/api/camera/update", data: datas}, (res) => {
                         if (res.success) {
                             let list = this.state.list;
-                            list[this.state.LatitudeIndex]=res.data[0];
+                            list[this.state.LatitudeIndex].lng=res.data[0].lng;
+                            list[this.state.LatitudeIndex].lat=res.data[0].lat;
+                            list[this.state.LatitudeIndex].location=res.data[0].location;
                             this.setState({
                                 longitude: false,
                                 list
@@ -198,7 +204,6 @@ class Teamdeveice extends Component {
                 }
             }
         });
-        this.props.form.resetFields() //清空
     };
 
     render() {
@@ -235,9 +240,9 @@ class Teamdeveice extends Component {
                 key: 'etype',
                 render: text => <span>树莓派</span>,
             }, {
-                title: '所属企业',
-                dataIndex: 'pname',
-                key: 'pname',
+                title: '所属用户',
+                dataIndex: 'cname',
+                key: 'cname',
                 render: text => <span>{text}</span>,
             }, {
                 title: '设备状态',
@@ -345,18 +350,10 @@ class Teamdeveice extends Component {
                                 )}
                             </FormItem>
                             <FormItem label="所属用户">
-                                {getFieldDecorator('companycode', {
+                                {getFieldDecorator('cname', {
                                     initialValue: "",
                                 })(
-                                    <Select style={{width: 120}}>
-                                        <Option value="">所有</Option>
-                                        {
-                                            this.state.userlist.map((item, index) => (
-                                                <Option value={item.code} key={index}>{item.cname}</Option>
-                                            ))
-
-                                        }
-                                    </Select>
+                                    <Input />
                                 )}
                             </FormItem>
                             <FormItem>
@@ -431,10 +428,10 @@ class Teamdeveice extends Component {
                         <Col>
                             <FormItem label="所在区域" {...formItemLayout} style={{display:this.state.filedInput===false?"none":"block"}}>
                                 {getFieldDecorator('filedlocation')(
-                                    <Input disabled  />
+                                    <Input disabled />
                                 )}
                             </FormItem>
-                            <div onClick={this.hanleFiled} style={{position: "absolute",right: "0%",top: "24%",color:"#0099FF",cursor:"pointer",display:this.state.filedInput===false?"none":"block"}}>修改</div>
+                            <div onClick={this.hanleFiled} style={{position: "absolute",right: "0%",top: "27%",color:"#0099FF",cursor:"pointer",display:this.state.filedInput===false?"none":"block"}}>修改</div>
                             <FormItem label="所在区域" {...formItemLayout} style={{display:this.state.filed===true?"block":"none"}}>
                                 {getFieldDecorator('location')(
                                     <CascaderModule onRef={this.onRef} />
@@ -444,7 +441,7 @@ class Teamdeveice extends Component {
                         <Col>
                             <FormItem label="详细地址"{...formItemLayout}>
                                 {getFieldDecorator('location')(
-                                    <textarea  style={{width:"100%",height:"80px",border:"1px solid #D9D9D9",borderRadius:"4px"}} />
+                                    <Input />
                                 )}
                             </FormItem>
                         </Col>
