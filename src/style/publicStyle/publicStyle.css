@@ -6,6 +6,6 @@
     background: #FAFAFA
 }
 
-.ant-table-thead > tr {
-    background: #F1F1F1 
+.ant-table-thead > tr > th {
+    background: #F1F1F1 !important;
 }
