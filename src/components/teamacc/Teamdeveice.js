@@ -40,7 +40,7 @@ class Teamdeveice extends Component {
             pagesize: 10,
             ecode: this.state.ecode,
             estatus: this.state.estatus,
-            companycode: this.state.companycode,
+            cname: this.state.cname,
             pageindex: this.state.page,
 
         };
@@ -54,23 +54,34 @@ class Teamdeveice extends Component {
             }
         })
     };
+    //设备编号
+    hanleCode=(e)=>{
+        this.setState({
+            ecode: e.target.value,
+        })
+    };
+    //所属用户
+    hanleUser=(e)=>{
+        this.setState({
+            cname: e.target.value,
+        })
+    };
+    //状态
+    handleSelect=(value)=>{
+        if(value==="5"){
+            this.setState({
+                estatus: "",
+            })
+        }else{
+            this.setState({
+                estatus: value,
+            })
+        }
+    };
     selectopt = (e) => { //检索
         e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                this.setState({
-                    ecode: values.ecode,
-                    estatus: values.estatus,
-                    companycode: values.cname,
-                    page: 1
-                }, () => {
-                    this.requestdata();
-                })
-            }
-        })
-    }
-
-
+        this.requestdata();
+    };
     showModaldelete = (code, index) => { //删除弹层
         this.setState({
             deleteshow: true,
@@ -126,6 +137,9 @@ class Teamdeveice extends Component {
     changePage = (page) => { //分页  页码改变的回调，参数是改变后的页码及每页条数
         this.setState({
             page: page,
+            ecode:"",
+            cname:"",
+            estatus:""
         }, () => {
             this.requestdata();
         })
@@ -145,14 +159,22 @@ class Teamdeveice extends Component {
                         lng:res.data.lng,
                         lat:res.data.lat,
                         location:res.data.location,
-                       /* filedlocation:res.data.location*/
+                        installmen:res.data.installmen,
+                        installtel:res.data.installtel,
+                        salemen:res.data.salemen,
+                        saletel:res.data.saletel,
+                        /* filedlocation:res.data.location*/
                     });
                 }else{
                     this.props.form.setFieldsValue({
                         lng:res.data.lng,
                         lat:res.data.lat,
                         location:res.data.location.toString()?res.data.location.toString().split(',')[1]:"",
-                        filedlocation:res.data.location.toString()?res.data.location.toString().split(',')[0]:""
+                        filedlocation:res.data.location.toString()?res.data.location.toString().split(',')[0]:"",
+                        installmen:res.data.installmen,
+                        installtel:res.data.installtel,
+                        salemen:res.data.salemen,
+                        saletel:res.data.saletel,
                     });
                 }
             }
@@ -184,21 +206,36 @@ class Teamdeveice extends Component {
                     lat: values.lat,
                     location:this.state.caseInfo.formref().zonename+","+values.location
                 };
-                if (this.state.changeCode) {
-                    post({url: "/api/camera/update", data: datas}, (res) => {
-                        if (res.success) {
-                            let list = this.state.list;
-                            list[this.state.LatitudeIndex].lng=res.data[0].lng;
-                            list[this.state.LatitudeIndex].lat=res.data[0].lat;
-                            list[this.state.LatitudeIndex].location=res.data[0].location;
-                            this.setState({
-                                longitude: false,
-                                list
-                            }, () => {
-                                message.success('修改成功！');
-                            })
-                        }
-                    })
+                const equipment={
+                    code:this.state.changeCode,
+                    installmen:values.installmen,
+                    installtel:values.installtel,
+                    salemen:values.salemen,
+                    saletel:values.saletel,
+                };
+                if (this.state.changeCode && values.lng && values.lat && this.state.caseInfo.formref().zonename && values.location) {
+                    post({url: "/api/camera/update", data: datas}, (ress) => {
+                        post({url:"/api/equipment/update",data: equipment},(res)=>{
+                            if (ress.success && res.success) {
+                                let list = this.state.list;
+                                list[this.state.LatitudeIndex].lng=ress.data[0].lng;
+                                list[this.state.LatitudeIndex].lat=ress.data[0].lat;
+                                list[this.state.LatitudeIndex].location=ress.data[0].location;
+                                list[this.state.LatitudeIndex].installmen=res.data[0].installmen;
+                                list[this.state.LatitudeIndex].installtel=res.data[0].installtel;
+                                list[this.state.LatitudeIndex].salemen=res.data[0].salemen;
+                                list[this.state.LatitudeIndex].saletel=res.data[0].saletel;
+                                this.setState({
+                                    longitude: false,
+                                    list
+                                }, () => {
+                                    message.success('修改成功！');
+                                })
+                            }
+                        })
+                    });
+                }else{
+                    message.warning("请选择所在区域或者详细地址!");
                 }
             }
         });
@@ -224,7 +261,7 @@ class Teamdeveice extends Component {
                 render: (text, record, index) => <span>{index + 1}</span>,
 
             }, {
-                title: '设备编号',
+                title: '编号',
                 dataIndex: 'ecode',
                 key: 'ecode',
                 defaultSortOrder: 'descend',
@@ -233,7 +270,7 @@ class Teamdeveice extends Component {
                 sortDirections: ['descend', 'ascend'],
                 render: text => <span>{text}</span>,
             }, {
-                title: '设备类型',
+                title: '类型',
                 dataIndex: 'etype',
                 key: 'etype',
                 render: text => <span>树莓派</span>,
@@ -243,17 +280,28 @@ class Teamdeveice extends Component {
                 key: 'cname',
                 render: text => <span>{text}</span>,
             }, {
-                title: '设备状态',
+                title: '状态',
                 dataIndex: 'estatus',
                 key: 'estatus1',
                 defaultSortOrder: 'descend',
                 sorter: (a, b) => a.estatus - b.estatus,
-                render: (text) => {
+                render: (text,record) => {
+                    var newDate=new Date().getTime();
+                    var lasttime=new Date(record.lasttime).getTime();
+                    var heartime=new Date(record.heartime).getTime();
+                    var lastfont="";
+                    if(newDate-lasttime>60000 || newDate-heartime>60000){
+                        lastfont="离线";
+                    }else{
+                        lastfont="在线";
+                    }
                     switch (text) {
                         case 0:
                             return `未使用`;
                         case 1:
-                            return `使用中`;
+                            return (
+                                <div>使用中-<span style={{color:lastfont=="离线"?"red":"green"}}>{lastfont}</span></div>
+                            );
                         case 2:
                             return `报修中`;
                         case 9001:
@@ -277,24 +325,24 @@ class Teamdeveice extends Component {
                 }
             }, {
                 title: '绑定日期',
-                dataIndex: 'createon',
-                key: 'createon',
-                sorter: (a, b) => Date.parse(a.createon) - Date.parse(b.createon),
+                dataIndex: 'biddingdate',
+                key: 'biddingdate',
+                sorter: (a, b) => Date.parse(a.biddingdate) - Date.parse(b.biddingdate),
                 sortDirections: ['descend', 'ascend'],
             }, {
                 title: '最后一次报警',
-                dataIndex: 'setuptime',
-                key: 'setuptime',
-                sorter: (a, b) => Date.parse(a.setuptime) - Date.parse(b.setuptime),
+                dataIndex: 'lasttime',
+                key: 'lasttime',
+                sorter: (a, b) => Date.parse(a.lasttime) - Date.parse(b.lasttime),
                 sortDirections: ['descend', 'ascend'],
             }, {
                 title: '安装人员',
-                dataIndex: 'man',
-                key: 'man',
+                dataIndex: 'installmen',
+                key: 'installmen',
             }, {
                 title: '责任销售',
-                dataIndex: 'ze',
-                key: 'ze',
+                dataIndex: 'salemen',
+                key: 'salemen',
             }, {
                 title: '操作',
                 dataIndex: 'estatus',
@@ -329,33 +377,22 @@ class Teamdeveice extends Component {
                     <Col span={22}>
                         <Form layout="inline" onSubmit={this.selectopt}>
                             <FormItem label="设备编号">
-                                {getFieldDecorator('ecode', {
-                                    rules: [{required: false, message: '设备编号!'}],
-                                })(
-                                    <Input />
-                                )}
+                                <Input onBlur={this.hanleCode} />
                             </FormItem>
                             <FormItem label="状态">
-                                {getFieldDecorator('estatus', {
-                                    initialValue: ""
-                                })(
-                                    <Select style={{width: 120}}>
-                                        <Option value="">所有</Option>
-                                        <Option value="0">未绑定</Option>
-                                        <Option value="2">维修中</Option>
-                                        <Option value="1">已绑定</Option>
-                                    </Select>
-                                )}
+                                <Select style={{width: 120}} defaultValue="5" onChange={this.handleSelect}>
+                                    <Option value="5">所有</Option>
+                                    <Option value="0">未使用</Option>
+                                    <Option value="1">使用中</Option>
+                                    <Option value="2">报修中</Option>
+                                    <Option value="9001">服务已过期</Option>
+                                </Select>
                             </FormItem>
                             <FormItem label="所属用户">
-                                {getFieldDecorator('cname', {
-                                    initialValue: "",
-                                })(
-                                    <Input />
-                                )}
+                                 <Input onBlur={this.hanleUser} />
                             </FormItem>
                             <FormItem>
-                                <Button type="primary" htmlType="submit">
+                                <Button onClick={this.selectopt}>
                                     查询
                                 </Button>
                             </FormItem>
@@ -395,13 +432,15 @@ class Teamdeveice extends Component {
                        okText="确认"
                        cancelText="取消"
                 >
-                    <Form onSubmit={this.handleSubmit} ref={(form)=>this.form2=form}>
+                    <Form >
                     <Row>
                         <Col>
                             <FormItem label="经度" {...formItemLayout}>
                                 {getFieldDecorator('lng',{
                                     rules:[{
-                                        required:false,
+                                        required:true,
+                                        message: '经度不能为空!'
+                                    },{
                                         pattern: new RegExp(/^\d+(\.\d+)?$/),
                                         message: '请输入整数或者小数'
                                     }],
@@ -414,9 +453,11 @@ class Teamdeveice extends Component {
                             <Form.Item label="纬度"{...formItemLayout} >
                                 {getFieldDecorator('lat',{
                                     rules:[{
-                                        required:false,
+                                        required:true,
+                                        message: '纬度不能为空!'
+                                    },{
                                         pattern: new RegExp(/^\d+(\.\d+)?$/),
-                                        message: '请输入整数或者小数'
+                                        message: '请输入整数或者小数!'
                                     }],
                                 })(
                                     <Input />
@@ -431,21 +472,25 @@ class Teamdeveice extends Component {
                             </FormItem>
                             <div onClick={this.hanleFiled} style={{position: "absolute",right: "0%",top: "27%",color:"#0099FF",cursor:"pointer",display:this.state.filedInput===false?"none":"block"}}>修改</div>
                             <FormItem label="所在区域" {...formItemLayout} style={{display:this.state.filed===true?"block":"none"}}>
-                                {getFieldDecorator('location')(
+                                {getFieldDecorator('location',{
+                                    rules: [{ required: false, message: '所在区域不能为空!' }],
+                                })(
                                     <CascaderModule onRef={this.hanleonRef} />
                                 )}
                             </FormItem>
                         </Col>
                         <Col>
                             <FormItem label="详细地址"{...formItemLayout}>
-                                {getFieldDecorator('location')(
+                                {getFieldDecorator('location',{
+                                    rules: [{ required: false, message: '详细地址不能为空!' }],
+                                })(
                                     <Input />
                                 )}
                             </FormItem>
                         </Col>
                         <Col>
                             <FormItem label="安装人"{...formItemLayout}>
-                                {getFieldDecorator('installmemo', {
+                                {getFieldDecorator('installmen', {
                                     rules: [{ required: false, message: '请输入姓名!' }],
                                 })(
                                     <Input />
@@ -454,7 +499,7 @@ class Teamdeveice extends Component {
                         </Col>
                         <Col>
                             <FormItem label="安装电话" {...formItemLayout}>
-                                {getFieldDecorator('installiphone', {
+                                {getFieldDecorator('installtel', {
                                     rules:[{
                                         required:false,
                                         pattern: new RegExp("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$|^0\\d{2,3}-?\\d{7,8}$"),
@@ -467,7 +512,7 @@ class Teamdeveice extends Component {
                         </Col>
                         <Col>
                             <FormItem label="责任销售"{...formItemLayout}>
-                                {getFieldDecorator('responsibility', {
+                                {getFieldDecorator('salemen', {
                                     rules: [{ required: false, message: '请输入姓名!' }],
                                 })(
                                     <Input />
@@ -476,7 +521,7 @@ class Teamdeveice extends Component {
                         </Col>
                         <Col>
                             <FormItem label="销售电话"{...formItemLayout}>
-                                {getFieldDecorator('saleIphone', {
+                                {getFieldDecorator('saletel', {
                                     rules:[{
                                         required:false,
                                         pattern: new RegExp("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$|^0\\d{2,3}-?\\d{7,8}$"),

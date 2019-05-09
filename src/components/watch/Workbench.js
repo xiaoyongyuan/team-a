@@ -30,6 +30,7 @@ class Workbench extends Component {
             finishSwitch:false, //结束报警开关
             lightSwitch:false, //设备闪灯开关
             lightValue:'5', //闪灯默认时长
+            alarmUp:"2",//默认是报警未结束
         };
     }
     componentDidMount() {
@@ -40,7 +41,19 @@ class Workbench extends Component {
         }
         this.pendingList();
         this.padingLoad();
+        this.getListCount();
     }
+    //获取报警未结束和挂起的总数
+    getListCount=()=>{
+        post({url:"/api/alarmhandle/getlist_count"},(res)=>{
+            if(res.success){
+                this.setState({
+                    count_h:res.count_h,
+                    count_u:res.count_u
+                })
+            }
+        })
+    };
     //值班人员报警
     getOneAlarm=(url="/api/alarmhandle/get_handle",data={})=>{
       post({url:url,data:data},(res)=>{
@@ -132,14 +145,14 @@ class Workbench extends Component {
     //挂载列表显示
     pendingList=()=>{
         const loginaccount=localStorage.getItem('loginaccount');
-    	if(hangup && loginaccount){
-        post({url:"/api/alarmhandle/getlist",data:{htype:"hangup",pageindex:this.state.page,pagesize:10,account:loginaccount}},(res)=>{
+    	if(hangup && loginaccount && this.state.alarmUp){
+        post({url:"/api/alarmhandle/getlist",data:{hstatus:this.state.alarmUp,pageindex:this.state.page,pagesize:10,account:loginaccount}},(res)=>{
             if(res.success){
                 if(res.data.length>0){
                 	var pending=res.data;
                 	if(this.state.page>1){
-                		const listPending=this.state.pending;
-                		pending=listPending.concat(res.data);
+                        const listPending=this.state.pending;
+                        pending=listPending.concat(res.data);
                 	}
                 	this.setState({
                       pending:pending,
@@ -153,6 +166,15 @@ class Workbench extends Component {
             }else message.warning(res.errorinfo);
         })
       }
+    };
+    //报警未结束和挂起的切换
+    hanleEnd=(htypeUp)=>{
+        this.setState({
+            alarmUp:htypeUp,
+            page:1
+        },()=>{
+            this.pendingList();
+        });
     };
     padingLoad=()=>{
         document.getElementById("hangUpPanel").onscroll=()=>{
@@ -358,7 +380,9 @@ class Workbench extends Component {
                         <div className="processingAlarm-right">
                         {this.state.oldHstatus!==2 && this.state.oldHstatus!==3
                         		?<Fragment>
-	                        		<div className="mount" style={{visibility:this.state.nextPageBtn?"hidden":"visible"}}><Icon className="IconMount" type="tag" size="large" theme="filled" title="挂起" onClick={()=>this.typeAlarm(1,"挂起")} /></div>
+	                        		<div className="mount" >
+                                        <Button type="primary" shape="circle" icon="right-circle" theme="filled" title="下一页" size="large" onClick={()=>this.nextPage()} style={{marginTop:"-6%"}} />
+                                        <Icon className="IconMount" style={{visibility:this.state.nextPageBtn?"hidden":"visible"}} type="tag" size="large" theme="filled" title="挂起" onClick={()=>this.typeAlarm(1,"挂起")} /></div>
 	                            	<div className="alarm-btn xuJing" style={{marginTop:"15px"}}><Button key="xub" type="primary" onClick={()=>this.typeAlarm(4,"虚警")} disabled={this.state.nextPageBtn}>虚警</Button></div>
 	                            	<div className="alarm-btn wuBao"><Button key="wub" type="primary" onClick={()=>this.typeAlarm(5,"误报")} disabled={this.state.nextPageBtn}>误报</Button></div>
 	                            	<div className="alarm-btn pushAlarm"><Button key="jinb" type="primary" onClick={this.pushinfo} disabled={this.state.nextPageBtn}>警情推送</Button></div>
@@ -388,8 +412,9 @@ class Workbench extends Component {
                     <div className="mountUp">挂起列表</div>
                     <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"52px"}}>
                         <Panel key="1" showArrow={false}>
+                            <p className="hanleCenter"><Button onClick={()=>this.hanleEnd("2")} style={{border:this.state.alarmUp==="2"?"1px solid #313653":"1px solid #CCCCCC",background:this.state.alarmUp==="2"?"#313653":"#fff",color:this.state.alarmUp==="2"?"#fff":"#000"}}>报警未结束({this.state.count_u})</Button>
+                                <Button onClick={()=>this.hanleEnd("1")} style={{border:this.state.alarmUp==="1"?"1px solid #313653":"1px solid #CCCCCC",background:this.state.alarmUp==="1"?"#313653":"#fff",color:this.state.alarmUp==="1"?"#fff":"#000"}}>挂起({this.state.count_h})</Button></p>
                             <div className="hangUpPanel" id="hangUpPanel">
-
                                 {
                                     this.state.pending.length
                                     ?<Fragment>
@@ -401,6 +426,7 @@ class Workbench extends Component {
                                             <Col xxl={9} xl={10}>
                                                 <p className="overflow">{v.name}</p>
                                                 <p className={this.alarmTypeColor(v.hstatus)}>{this.alarmType(v.hstatus)}</p>
+                                                <p>{v.atime}</p>
                                             </Col>
                                         </Row>
                                     ))}
@@ -474,6 +500,7 @@ class Workbench extends Component {
                     {this.state.returnmemo.map((el,i)=>(
                             <Comment
                                 author={el.time}
+                                key={i}
                                 avatar={(
                                   <Icon type="message" theme="filled" style={{color:'#6BAC20',fontSize:'1.5em'}} />
                                 )}
