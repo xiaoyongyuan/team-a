@@ -1,7 +1,7 @@
 export default {
     menus: [ 
         //维护团队
-        { key: '/app/teamhome/index', title: '维护团队首页', icon: 'mobile', component: 'Teamhome' },
+        { key: '/app/teamhome/index', title: '首页', icon: 'mobile', component: 'Teamhome' },
         {
             key: '/app/teamacc', title: '账号管理', icon: 'bars',
             subs: [
@@ -41,6 +41,7 @@ export default {
         { key: '/app/teamacc/auditing', title: '点名查看', component: 'Auditing'},
         { key: '/app/groupleader/dataCharts', title: '统计图', component: 'dataCharts'},
         { key: '/app/teamacc/lookAlarm', title: '查看报警', component: 'LookAlarm'},
+        { key: '/app/teamacc/overview', title: '总览', component: 'OverView'},
         {
             key: '/subs4', title: '页面', icon: 'switcher',
             subs: [

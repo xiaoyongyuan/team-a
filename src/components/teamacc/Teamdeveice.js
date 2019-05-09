@@ -2,12 +2,11 @@ import React, {Component} from 'react';
 import '../../style/sjg/home.css';
 import {Table, Form, Input, Row, Col, Button, Select, Modal, message} from 'antd';
 import BreadcrumbCustom from "../BreadcrumbCustom";
-import TeamdeveiceForm from "./TeamdeveiceForm";
 import {post} from "../../axios/tools";
+import CascaderModule from "../common/CascaderModule";
 import moment from "moment";
 const FormItem = Form.Item;
 const Option = Select.Option;
-
 class Teamdeveice extends Component {
     constructor(props) {
         super(props);
@@ -17,21 +16,22 @@ class Teamdeveice extends Component {
             editstate: 1,
             userlist: [], //用户列表
             page: 1,
-            longitude: false
+            longitude: false,
+            filedInput:true,//控制子组件的修改
+            filed:false//控制子组件的修改
         };
     }
-
     componentDidMount() {
-        post({url: '/api/company/getlist'}, (res) => {
+        //所属用户
+        /*post({url: '/api/company/getlist'}, (res) => {
             if (res) {
                 this.setState({
                     userlist: res.data,
                 });
             }
-        });
-
+        });*/
         //取数据
-        this.requestdata()
+        this.requestdata();
     }
 
     requestdata = (params) => {//取数据
@@ -43,7 +43,7 @@ class Teamdeveice extends Component {
             companycode: this.state.companycode,
             pageindex: this.state.page,
 
-        }
+        };
         post({url: '/api/equipment/getlist', data: quparams}, (res) => {
             if (res) {
                 this.setState({
@@ -53,7 +53,7 @@ class Teamdeveice extends Component {
                 });
             }
         })
-    }
+    };
     selectopt = (e) => { //检索
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -61,7 +61,7 @@ class Teamdeveice extends Component {
                 this.setState({
                     ecode: values.ecode,
                     estatus: values.estatus,
-                    companycode: values.companycode,
+                    companycode: values.cname,
                     page: 1
                 }, () => {
                     this.requestdata();
@@ -77,7 +77,7 @@ class Teamdeveice extends Component {
             type: code,
             index: index,
         });
-    }
+    };
 
     deleteOk = () => {//删除确认
         post({url: '/api/equipment/del', data: {code: this.state.type}}, (res) => {
@@ -122,7 +122,7 @@ class Teamdeveice extends Component {
         this.setState({
             editstate: value
         });
-    }
+    };
     changePage = (page) => { //分页  页码改变的回调，参数是改变后的页码及每页条数
         this.setState({
             page: page,
@@ -132,36 +132,65 @@ class Teamdeveice extends Component {
     };
     //经纬度model
     upLatitude = (redcord, index) => {
+        this.props.form.resetFields(); //清空
         this.setState({
             longitude: true,
-            changeCode: redcord.code,
-            LatitudeIndex: index
+            LatitudeIndex: index,
+            changeCode:redcord.code
+        });
+        post({url:"/api/equipment/getone",data:{code:redcord.code}},(res)=>{
+            if(res.success){
+                if(res.data.location.toString().indexOf(",")===-1){
+                    this.props.form.setFieldsValue({
+                        lng:res.data.lng,
+                        lat:res.data.lat,
+                        location:res.data.location,
+                       /* filedlocation:res.data.location*/
+                    });
+                }else{
+                    this.props.form.setFieldsValue({
+                        lng:res.data.lng,
+                        lat:res.data.lat,
+                        location:res.data.location.toString()?res.data.location.toString().split(',')[1]:"",
+                        filedlocation:res.data.location.toString()?res.data.location.toString().split(',')[0]:""
+                    });
+                }
+            }
         })
     };
     longitudeCancel = () => {
+        this.props.form.resetFields(); //清空
         this.setState({
             longitude: false,
+            filedInput:true,//控制子组件的修改
+            filed:false//控制子组件的修改
         });
     };
-    HanleChangelng = (Changelng, e) => {
+    hanleFiled=()=>{
         this.setState({
-            [Changelng]: e.target.value
+            filedInput:false,
+            filed:true
         })
     };
+    hanleonRef = (ref) => {
+        this.setState({caseInfo:ref});
+    };
     longitudeOk = () => {
-        const forms = this.formRef.formref();
-        forms.validateFields((err, values) => {
+        this.props.form.validateFields((err, values) => {
             if (!err) {
                 const datas = {
+                    code:this.state.changeCode,
                     lng: values.lng,
                     lat: values.lat,
-                    location: values.location
+                    location:this.state.caseInfo.formref().zonename+","+values.location
                 };
                 if (this.state.changeCode) {
                     post({url: "/api/camera/update", data: datas}, (res) => {
                         if (res.success) {
                             let list = this.state.list;
-                            list[this.state.LatitudeIndex]=res.data[0];
+                            list[this.state.LatitudeIndex].lng=res.data[0].lng;
+                            list[this.state.LatitudeIndex].lat=res.data[0].lat;
+                            list[this.state.LatitudeIndex].location=res.data[0].location;
                             this.setState({
                                 longitude: false,
                                 list
@@ -173,11 +202,20 @@ class Teamdeveice extends Component {
                 }
             }
         });
-        forms.resetFields() //清空
     };
 
     render() {
         const {getFieldDecorator} = this.props.form;
+        const formItemLayout = {
+            labelCol: {
+                xs: { span: 20 },
+                sm: { span: 4 },
+            },
+            wrapperCol: {
+                xs: { span: 24 },
+                sm: { span: 18 },
+            },
+        };
         const columns = [
             {
                 title: '序号',
@@ -200,9 +238,9 @@ class Teamdeveice extends Component {
                 key: 'etype',
                 render: text => <span>树莓派</span>,
             }, {
-                title: '所属企业',
-                dataIndex: 'pname',
-                key: 'pname',
+                title: '所属用户',
+                dataIndex: 'cname',
+                key: 'cname',
                 render: text => <span>{text}</span>,
             }, {
                 title: '设备状态',
@@ -268,14 +306,14 @@ class Teamdeveice extends Component {
                               {/*  <Button onClick={() => {this.showModalEdit(record.code,index)}}>编辑</Button>*/}
                                 <Button onClick={() => this.upLatitude(record, index)}>编辑</Button>
                                  <Button><a href={"#/app/teamacc/lookAlarm?cid=" + record.cid}>查看报警</a></Button>
-                                <Button onClick={() => this.showModaldelete(record.code, index)}>删除</Button>
+                                <Button onClick={() => this.showModaldelete(record.code, index)} style={{display:record.estatus==1?"none":"block"}}>删除</Button>
 
                             </span>
                         )
                     } else {
                         return (
                             <span>
-                                <Button onClick={() => this.showModaldelete(record.code, index)}>删除</Button>
+                                <Button onClick={() => this.showModaldelete(record.code, index)} style={{display:record.estatus==1?"none":"block"}}>删除</Button>
                             </span>
 
                         )
@@ -310,18 +348,10 @@ class Teamdeveice extends Component {
                                 )}
                             </FormItem>
                             <FormItem label="所属用户">
-                                {getFieldDecorator('companycode', {
+                                {getFieldDecorator('cname', {
                                     initialValue: "",
                                 })(
-                                    <Select style={{width: 120}}>
-                                        <Option value="">所有</Option>
-                                        {
-                                            this.state.userlist.map((item, index) => (
-                                                <Option value={item.code} key={index}>{item.cname}</Option>
-                                            ))
-
-                                        }
-                                    </Select>
+                                    <Input />
                                 )}
                             </FormItem>
                             <FormItem>
@@ -365,15 +395,104 @@ class Teamdeveice extends Component {
                        okText="确认"
                        cancelText="取消"
                 >
-                    <TeamdeveiceForm
-                        longitude={this.state.longitude}
-                        changeCode={this.state.changeCode}
-                        wrappedComponentRef={(form) => this.formRef = form}
-                    />
+                    <Form onSubmit={this.handleSubmit} ref={(form)=>this.form2=form}>
+                    <Row>
+                        <Col>
+                            <FormItem label="经度" {...formItemLayout}>
+                                {getFieldDecorator('lng',{
+                                    rules:[{
+                                        required:false,
+                                        pattern: new RegExp(/^\d+(\.\d+)?$/),
+                                        message: '请输入整数或者小数'
+                                    }],
+                                })(
+                                    <Input />
+                                )}
+                            </FormItem>
+                        </Col>
+                        <Col>
+                            <Form.Item label="纬度"{...formItemLayout} >
+                                {getFieldDecorator('lat',{
+                                    rules:[{
+                                        required:false,
+                                        pattern: new RegExp(/^\d+(\.\d+)?$/),
+                                        message: '请输入整数或者小数'
+                                    }],
+                                })(
+                                    <Input />
+                                )}
+                            </Form.Item>
+                        </Col>
+                        <Col>
+                            <FormItem label="所在区域" {...formItemLayout} style={{display:this.state.filedInput===false?"none":"block"}}>
+                                {getFieldDecorator('filedlocation')(
+                                    <Input disabled />
+                                )}
+                            </FormItem>
+                            <div onClick={this.hanleFiled} style={{position: "absolute",right: "0%",top: "27%",color:"#0099FF",cursor:"pointer",display:this.state.filedInput===false?"none":"block"}}>修改</div>
+                            <FormItem label="所在区域" {...formItemLayout} style={{display:this.state.filed===true?"block":"none"}}>
+                                {getFieldDecorator('location')(
+                                    <CascaderModule onRef={this.hanleonRef} />
+                                )}
+                            </FormItem>
+                        </Col>
+                        <Col>
+                            <FormItem label="详细地址"{...formItemLayout}>
+                                {getFieldDecorator('location')(
+                                    <Input />
+                                )}
+                            </FormItem>
+                        </Col>
+                        <Col>
+                            <FormItem label="安装人"{...formItemLayout}>
+                                {getFieldDecorator('installmemo', {
+                                    rules: [{ required: false, message: '请输入姓名!' }],
+                                })(
+                                    <Input />
+                                )}
+                            </FormItem>
+                        </Col>
+                        <Col>
+                            <FormItem label="安装电话" {...formItemLayout}>
+                                {getFieldDecorator('installiphone', {
+                                    rules:[{
+                                        required:false,
+                                        pattern: new RegExp("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$|^0\\d{2,3}-?\\d{7,8}$"),
+                                        message: '请输入正确的手机号'
+                                    }],
+                                })(
+                                    <Input />
+                                )}
+                            </FormItem>
+                        </Col>
+                        <Col>
+                            <FormItem label="责任销售"{...formItemLayout}>
+                                {getFieldDecorator('responsibility', {
+                                    rules: [{ required: false, message: '请输入姓名!' }],
+                                })(
+                                    <Input />
+                                )}
+                            </FormItem>
+                        </Col>
+                        <Col>
+                            <FormItem label="销售电话"{...formItemLayout}>
+                                {getFieldDecorator('saleIphone', {
+                                    rules:[{
+                                        required:false,
+                                        pattern: new RegExp("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$|^0\\d{2,3}-?\\d{7,8}$"),
+                                        message: '请输入正确的手机号'
+                                    }],
+                                })(
+                                    <Input />
+                                )}
+                            </FormItem>
+                        </Col>
+                    </Row>
+
+                </Form>
                 </Modal>
             </div>
         )
     }
 }
-
 export default Teamdeveice = Form.create()(Teamdeveice);

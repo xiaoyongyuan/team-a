@@ -135,32 +135,27 @@ class LookAlarm extends React.Component{
     handleSubmit =(e)=>{
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            this.setState({
-                bdate:values.date&&values.date.length?values.date[0].format('YYYY-MM-DD HH:mm:ss'):'',
-                edate:values.date&&values.date.length?values.date[1].format('YYYY-MM-DD HH:mm:ss'):'',
-                pageindex:this.state.page,
-            })
-            if(!err){
-                this.setState({
-                    page:1,
-                    loadding:true,
-                },()=>{
-                    this.handleAlerm()
-                })
+            if(values.date&&values.date.length){
+                if(Date.parse(values.date[1].format('YYYY-MM-DD HH:mm:ss'))-Date.parse(values.date[0].format('YYYY-MM-DD HH:mm:ss'))<86400000){
+                    this.setState({
+                        bdate:values.date&&values.date.length?values.date[0].format('YYYY-MM-DD HH:mm:ss'):'',
+                        edate:values.date&&values.date.length?values.date[1].format('YYYY-MM-DD HH:mm:ss'):'',
+                        pageindex:this.state.page,
+                    })
+                    if(!err){
+                        this.setState({
+                            page:1,
+                            loadding:true,
+                            displaysearch:false,
+                        },()=>{
+                            this.handleAlerm()
+                        })
+                    }
+                }else{
+                    message.error('最多选择24小时');
+                }
             }
         })
-        this.setState({
-            displaysearch:false,
-        })
-
-    };
-    handleStartOpenChange = (open) => {
-        if (!open) {
-            this.setState({ endOpen: true });
-        }
-    };
-    handleEndOpenChange = (open) => {
-        this.setState({ endOpen: open });
     };
     drawtwo = ()=>{ //画围界
         this.setState({
@@ -206,91 +201,9 @@ class LookAlarm extends React.Component{
         area.stroke();
         area.closePath();
     }
-    getcoord = (coords) => { //获取坐标
-        let ele = document.getElementById("canvasobjt");
-        let canvsclent = ele.getBoundingClientRect();
-        let x= coords.clientX - canvsclent.left * (ele.width / canvsclent.width);
-        let y= coords.clientY - canvsclent.top * (ele.height / canvsclent.height)
-        let pre=[x,y]
-        return pre;
-    };
-    clickgetcorrd =(e)=>{ //点击
-        e.preventDefault();
-        const objss=this.state.data;
-        if(objss.length>0){
-            let getcord=this.getcoord(e); //获取点击的坐标
-            let x=parseInt(getcord[0]/this.state.x),y=parseInt(getcord[1]/this.state.y);
-            let crut=this.selectObj(x,y);
-            if(crut){
-                this.openNotification();
-                this.drawSelectObj(crut);
-                this.setState({crut})
-                this.setState({
-                    createby:crut.createby,
-                    createon:crut.createon,
-                    memo:crut.memo,
-                    ifblock:true,
-                    miscode:crut.code,
-                })
-            }
-        }
-    }
-    selectObj=(x,y)=>{
-        const objssa=this.state.data;
-        var crut='';
-        for( var j=0; j<= objssa.length; j++){
-            //点击是否在 objssa[j].finalarea
-            let finalareastring=objssa[j]!==undefined?objssa[j].finalarea:'';
-            let zhuanhou=finalareastring!==""?JSON.parse(finalareastring):'';
-            if(zhuanhou.x<=x && x<=(zhuanhou.x+zhuanhou.w) && zhuanhou.y<=y && y<=(zhuanhou.y+zhuanhou.h) ){
-                return objssa[j]
-            }
-        }
-        return crut;
-    }
-    openNotification = () => { //确认误报弹层
-        this.setState({
-            ifkai:true,
-            ifmis:true,
-        })
-    };
     queren=(key)=>{ //误报删除
         this.setState({ ifkai:false,})
     }
-    delCancel =(key)=>{ //误报删除取消
-        this.setState({
-            ifmis:false,
-        })
-        this.drawtwo();
-    }
-    selectobjOk =(key)=>{ //误报删除
-        const _this=this;
-        const data={
-            code:this.state.miscode,
-        }
-        this.setState({
-            ifmis:false,
-        })
-        post({url:"/api/misinformation/del",data:data},(res)=>{
-            if(res.success){
-                notification.close(key);
-                message.success('删除成功');
-                _this.drawtwo();
-                this.misinf();
-            }
-        })
-    }
-    selectobjCancel =(key)=>{ //误报删除取消
-        this.setState({
-            ifkai:false,
-            ifmis:false,
-            crut:{}
-        },()=>{
-            this.drawtwo();
-            notification.close(key);
-        })
-    }
-
     render(){
         const { getFieldDecorator } = this.props.form;
         return(
@@ -382,37 +295,6 @@ class LookAlarm extends React.Component{
                         <Alarmdetails visible={this.state.alarmImgType} toson={this.state.toson} />
                     </Modal>
                 </div>
-
-                <Modal visible={this.state.ifkai}
-                       width={900}
-                       title="信息"
-                       onCancel={() => this.selectobjCancel()}
-                       onOk={() => this.queren()}
-                       footer={null}
-                >
-                    <div>
-                        <div className="alarmflex">
-                            <div className="flexleft" id="flexleft">
-                                <canvas id="canvasobjt"onClick={this.clickgetcorrd} width="604px" height="476px" style={{backgroundImage:'url('+this.state.srct+')',backgroundSize:"100% 100%",}} />
-                            </div>
-                            <div className="flexright">
-                                <p><label>设备名称：<span>{this.state.eidt}</span></label></p>
-                                <p><label>误报数量：<span>{this.state.data?this.state.data.length:'0'}</span></label></p>
-                            </div>
-                        </div>
-                    </div>
-                </Modal>
-                <Modal visible={this.state.ifmis}
-                       title="信息"
-                       okText="确认"
-                       cancelText="取消"
-                       onCancel={() => this.delCancel('newalarm')}
-                       onOk={() => this.selectobjOk('newalarm')}
-                >
-                    <div style={{marginLeft:"60px"}}>
-                        确认将此条误报对象删除?
-                    </div>
-                </Modal>
             </div>
         )
     }

@@ -6,6 +6,8 @@ import Loadable from 'react-loadable';
 import Loading from './widget/Loading';
 
 import meunHome from './meunHome';
+import OverView from './teamacc/OverView';
+
 
 
 //维护团队
@@ -39,7 +41,7 @@ const WysiwygBundle = Loadable({ // 按需加载富文本配置
 });
 
 export default {
-    WysiwygBundle, meunHome
+    WysiwygBundle, meunHome, OverView
     
     , Teamhome, Teammange, Teamdeveice, Callalarm, Adopt, Auditing, Department, Comemploye
 

@@ -230,8 +230,9 @@ class Workbench extends Component {
     };
     //挂载还原
     mountRestore=(code)=>{
-        if((code && this.state.nextPageBtn) || this.state.oldHstatus===2){
-        	this.getOneAlarm("/api/alarmhandle/get_hangup",{code:code})
+
+        if((this.state.code && ((code && this.state.nextPageBtn) || this.state.oldHstatus===2)) || (!this.state.code && code)){
+            this.getOneAlarm("/api/alarmhandle/get_hangup",{code:code})
         }else{
             message.warning("请先处理当前报警！");
         }
