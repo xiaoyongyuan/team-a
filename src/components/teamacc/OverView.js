@@ -9,24 +9,6 @@ class OverView extends Component {
       statistic: {}
     };
   }
-
-  componentDidMount() {
-    // post({ url: "/api/camera_cop/getcount_e" }, res => {
-    //   this.setState({
-    //     statistic: res
-    //   });
-    // });
-    // this.dynamic = setInterval(() => {
-    //   post({ url: "/api/camera_cop/getcount_e" }, res => {
-    //     this.setState({
-    //       statistic: res
-    //     });
-    //   });
-    // }, 1000 * 5);
-  }
-  componentWillUnmount() {
-    // clearInterval(this.dynamic);
-  }
   render() {
     return (
       <div className="overView">

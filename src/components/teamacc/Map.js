@@ -36,7 +36,7 @@ class Map extends Component {
           markerList: res.data
         },
         () => {
-          console.log(this.state.markerList);
+          console.log(this.state.markerList, "woooooooooooooo");
           const _this = this;
           this.initializeMap(_this);
         }
@@ -49,10 +49,10 @@ class Map extends Component {
     var mapStyle = { style: "midnight" };
     map.setMapStyle(mapStyle);
     const defpoint = this.state.zonename;
-    //以下写法我也很无奈，领导要求，就这样吧
-    // defpoint && defpoint.indexOf("汉中市汉台区") > 0
-    //   ? map.centerAndZoom(new BMap.Point(107.053349, 33.191015), 12)
-    //   : map.centerAndZoom(defpoint, 10);
+    // 以下写法我也很无奈，领导要求，就这样吧
+    defpoint && defpoint.indexOf("汉中市汉台区") > 0
+      ? map.centerAndZoom(new BMap.Point(107.053349, 33.191015), 12)
+      : map.centerAndZoom(defpoint, 10);
     map.centerAndZoom(defpoint, 10);
     map.setCurrentCity(defpoint);
     map.setDefaultCursor("hand");
@@ -87,11 +87,11 @@ class Map extends Component {
         var marker;
         marker = new BMap.Marker(pt); // 创建标注
 
-        // if (!this.momenttime(v.lasttime) && !this.momenttime(v.hearttime)) {
-        //   marker = new BMap.Marker(pt, { icon: offlineIcon });
-        // } else {
-        //   marker = new BMap.Marker(pt, { icon: myIcon }); // 创建标注
-        // }
+        if (!this.momenttime(v.lasttime) && !this.momenttime(v.hearttime)) {
+          marker = new BMap.Marker(pt, { icon: offlineIcon });
+        } else {
+          marker = new BMap.Marker(pt, { icon: myIcon }); // 创建标注
+        }
         map.addOverlay(marker);
         marker.addEventListener("click", function() {
           post(
@@ -140,7 +140,7 @@ class Map extends Component {
           <p>
             <label>用户名：</label> <span>{this.state.equipdat.ausername}</span>
           </p>
-          {/* <p>
+          <p>
             <label>电话：</label>{" "}
             <span>{this.state.equipdat.adminaccount}</span>
           </p>
@@ -165,7 +165,7 @@ class Map extends Component {
                 <img src={this.state.equipdat.pic_min} width="100%" />
               </div>
             </Fragment>
-          ) : null} */}
+          ) : null}
         </div>
       </Fragment>
     );
