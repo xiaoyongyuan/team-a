@@ -392,7 +392,7 @@ class Teamdeveice extends Component {
                                  <Input onBlur={this.hanleUser} />
                             </FormItem>
                             <FormItem>
-                                <Button onClick={this.selectopt}>
+                                <Button onClick={this.selectopt} type="primary">
                                     查询
                                 </Button>
                             </FormItem>
