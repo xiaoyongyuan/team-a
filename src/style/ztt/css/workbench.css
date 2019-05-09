@@ -265,11 +265,11 @@
 .workBench .information{
    margin-right: 25px;
 }
-.handupColor{
+.workBench .handupColor{
     color:#096dd9;
     font-weight: bolder;
 }
-.alarmUntreated{
+.workBench .alarmUntreated{
     color: #FF1533;
     font-weight: bolder;
 }
@@ -280,4 +280,25 @@
     text-align: center;
     font-size: 1.3em;
     color: #333;
+}
+.workBench .hanleCenter{
+    text-align: center;
+    margin: 0;
+}
+.workBench .hanleCenter Button{
+   margin:0 20px 15px 20px;
+}
+.btnAlam{
+    background: #313653;
+    border: 1px solid #313653;
+    color: #fff;
+}
+.btnAlam:hover{
+    background: #313653;
+    border: 1px solid #313653;
+    color: #fff;
+}
+.btnAlam1{
+    background: #fff;
+    color: #fff;
 }
