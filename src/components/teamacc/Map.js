@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { post } from "../../axios/tools.js";
-import { Icon } from "antd";
+import { Icon, Modal } from "antd";
 import redpoint from "../../style/jhy/imgs/redpoint.png";
 import greenpoint from "../../style/jhy/imgs/greenpoint.png";
 import graypoint from "../../style/jhy/imgs/graypoint.png";
@@ -30,13 +30,12 @@ class Map extends Component {
     }
   };
   getMarkerList = () => {
-    post({ url: "/api/equipment/getlist" }, res => {
+    post({ url: "​/api/camera/getlist_map" }, res => {
       this.setState(
         {
           markerList: res.data
         },
         () => {
-          console.log(this.state.markerList, "woooooooooooooo");
           const _this = this;
           this.initializeMap(_this);
         }
@@ -95,12 +94,16 @@ class Map extends Component {
         map.addOverlay(marker);
         marker.addEventListener("click", function() {
           post(
-            { url: "/api/equipment/getone", data: { code: v.code } },
+            { url: "/api/camera/getone_map", data: { code: v.code } },
             res => {
               if (res.success) {
                 console.log(res, "huoquyige");
                 _this.setState({
-                  equipdat: Object.assign({}, res.data),
+                  equipdat: Object.assign({}, res.data, res.alarm, {
+                    prestatus:
+                      _this.momenttime(res.data.hearttime) ||
+                      _this.momenttime(res.alarm.atime)
+                  }),
                   modalVisible: true
                 });
               }
@@ -113,6 +116,25 @@ class Map extends Component {
   modalVis = () => {
     this.setState({ modalVisible: false });
   };
+  showVidMo = (name, path) => {
+    localStorage.setItem("vidpath", path);
+    localStorage.setItem("vidtit", name);
+    this.setState(
+      {
+        VidMo: true
+      },
+      () => {
+        this.props.hideNewAla();
+      }
+    );
+  };
+  cancVidMo = () => {
+    localStorage.setItem("vidpath", "");
+    localStorage.setItem("vidtit", "");
+    this.setState({
+      VidMo: false
+    });
+  };
   render() {
     return (
       <Fragment>
@@ -120,7 +142,10 @@ class Map extends Component {
         <div
           className="layerdatail"
           style={{
-            display: this.state.modalVisible ? "block" : "none"
+            display:
+              this.state.equipdat.adminaccount && this.state.modalVisible
+                ? "block"
+                : "none"
           }}
         >
           <h3>
@@ -138,7 +163,7 @@ class Map extends Component {
             />
           </h3>
           <p>
-            <label>用户名：</label> <span>{this.state.equipdat.ausername}</span>
+            <label>用户名：</label> <span>{this.state.equipdat.adminname}</span>
           </p>
           <p>
             <label>电话：</label>{" "}
@@ -149,7 +174,37 @@ class Map extends Component {
           </p>
           <p>
             <label>设备状态：</label>{" "}
-            <span>{this.state.equipdat.prestatus ? "在线" : "离线"}</span>
+            <span>
+              {this.state.equipdat.prestatus ? (
+                <span
+                  style={{
+                    color: "green",
+                    borderRadius: "2px",
+                    border: "1px solid rgb(120,255,120)",
+                    padding: "0 2px",
+                    display: "inline-block",
+                    lineHeight: "16px",
+                    background: "rgb(180,255,180)"
+                  }}
+                >
+                  在线
+                </span>
+              ) : (
+                <span
+                  style={{
+                    color: "red",
+                    borderRadius: "2px",
+                    border: "1px solid rgb(255,80,80)",
+                    padding: "0 2px",
+                    lineHeight: "16px",
+                    display: "inline-block",
+                    background: "rgb(255,170,170)"
+                  }}
+                >
+                  离线
+                </span>
+              )}
+            </span>
           </p>
           <p>
             <label>设备地址：</label>{" "}
@@ -162,10 +217,55 @@ class Map extends Component {
                 <span>{this.state.equipdat.atime}</span>
               </p>
               <div>
-                <img src={this.state.equipdat.pic_min} width="100%" />
+                {this.state.equipdat.pic_min ? (
+                  <img src={this.state.equipdat.pic_min} width="100%" />
+                ) : null}
+              </div>
+              <div style={{ marginTop: "5px", textAlign: "center" }}>
+                <video
+                  src={this.state.equipdat.videopath}
+                  width="100%"
+                  autoPlay="autoplay"
+                  loop="loop"
+                />
+                <button
+                  // onClick={() => {
+                  //   this.showVidMo(
+                  //     this.state.equipdat.name,
+                  //     this.state.equipdat.videopath
+                  //   );
+                  // }}
+                  style={{
+                    margin: "20px auto",
+                    borderRadius: "2px",
+                    background: "#313653",
+                    border: "none",
+                    color: "#fff"
+                  }}
+                >
+                  实时视频
+                </button>
               </div>
             </Fragment>
           ) : null}
+          <Modal
+            title={localStorage.getItem("vidtit")}
+            visible={this.state.VidMo}
+            onCancel={this.cancVidMo}
+            footer={null}
+            destroyOnClose={true}
+            centered={true}
+            width="60%"
+          >
+            <div>
+              <video
+                src={localStorage.getItem("vidpath")}
+                autoPlay="autoplay"
+                controls
+                width="100%"
+              />
+            </div>
+          </Modal>
         </div>
       </Fragment>
     );
