@@ -107,10 +107,11 @@
 .workBench .alarm-btn Button{
     width: 90%;
     height: 55px;
-    margin: 20px 0;
+    margin: 10px 0;
     border-radius: 5px;
 }
-.workBench .pushAlarm .ant-btn-primary[disabled],.wuBao .ant-btn-primary[disabled],.xuJing .ant-btn-primary[disabled]{
+.workBench .pushAlarm .ant-btn-primary[disabled],
+.wuBao .ant-btn-primary[disabled],.xuJing .ant-btn-primary[disabled],.workhanleup .ant-btn-primary[disabled]{
     color: rgba(0, 0, 0, 0.25);
     background-color: #f5f5f5;
     border-color: #d9d9d9;
@@ -248,16 +249,20 @@
     background:#2E75E4;
     border:none;
 }
-.workBench .mount .IconMount{
-    width: 50px;
-    height:50px;
-    font-size: 33px;
-    float:right;
-    color:#6188C1;
-    cursor:pointer;
-    border: none;
-    margin-top: -13px;
-    background: #fff;
+.workBench .workhanleup Button{
+    background: #aeb9c3;
+    border: 1px solid #aeb9c3;
+}
+.workBench .nextPage{
+    width: 58px;
+    height: 58px;
+    font-size: 26px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.workBench .mount{
+    margin-top: 60px;
 }
 .workBench .ant-collapse-content-box{
     height: 712px!important;

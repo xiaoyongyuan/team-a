@@ -22,8 +22,6 @@ class CascaderModule extends Component {
         this.getsData(params).then((res)=>{
           if(res) this.setState({options:res});
         })
-        this.props.onRef(this)
-
     }
     getsData=(params)=>{
       const _this=this;
@@ -50,7 +48,8 @@ class CascaderModule extends Component {
         zonecode:value.length?value[value.length-1]:'',
         usertype:value.length-1,
         zonename:zonename
-      })   
+      })
+        this.props.onRef(this)
     }
     loadData = (selectedOptions) => {
       const targetOption = selectedOptions[selectedOptions.length - 1];

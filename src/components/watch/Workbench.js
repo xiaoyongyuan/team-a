@@ -381,11 +381,12 @@ class Workbench extends Component {
                         {this.state.oldHstatus!==2 && this.state.oldHstatus!==3
                         		?<Fragment>
 	                        		<div className="mount" >
-                                        <Button type="primary" shape="circle" icon="right-circle" theme="filled" title="下一页" size="large" onClick={()=>this.nextPage()} style={{marginTop:"-6%"}} />
-                                        <Icon className="IconMount" style={{visibility:this.state.nextPageBtn?"hidden":"visible"}} type="tag" size="large" theme="filled" title="挂起" onClick={()=>this.typeAlarm(1,"挂起")} /></div>
-	                            	<div className="alarm-btn xuJing" style={{marginTop:"15px"}}><Button key="xub" type="primary" onClick={()=>this.typeAlarm(4,"虚警")} disabled={this.state.nextPageBtn}>虚警</Button></div>
-	                            	<div className="alarm-btn wuBao"><Button key="wub" type="primary" onClick={()=>this.typeAlarm(5,"误报")} disabled={this.state.nextPageBtn}>误报</Button></div>
-	                            	<div className="alarm-btn pushAlarm"><Button key="jinb" type="primary" onClick={this.pushinfo} disabled={this.state.nextPageBtn}>警情推送</Button></div>
+                                        <Button type="primary" className="nextPage" shape="circle" icon="right-circle" theme="filled" title="下一页" size="large" onClick={()=>this.nextPage()} style={{marginTop:"-6%"}} />
+                                        <div className="alarm-btn workhanleup"><Button disabled={this.state.nextPageBtn} type="primary" onClick={()=>this.typeAlarm(1,"挂起")} >挂起</Button></div>
+                                        <div className="alarm-btn xuJing" ><Button key="xub" type="primary" onClick={()=>this.typeAlarm(4,"虚警")} disabled={this.state.nextPageBtn}>虚警</Button></div>
+                                        <div className="alarm-btn wuBao"><Button key="wub" type="primary" onClick={()=>this.typeAlarm(5,"误报")} disabled={this.state.nextPageBtn}>误报</Button></div>
+                                        <div className="alarm-btn pushAlarm"><Button key="jinb" type="primary" onClick={this.pushinfo} disabled={this.state.nextPageBtn}>警情推送</Button></div>
+                                    </div>
                         		</Fragment>
                         		:<Fragment>
                         				<div className="mount" style={{visibility:"hidden"}}><Icon className="IconMount" type="tag" size="large" key="guaq" theme="filled" title="挂起" /></div>
@@ -395,9 +396,6 @@ class Workbench extends Component {
                             <div className="alarm-btn"><Button icon="alert" type="danger" key="over" ghost onClick={()=>this.lookretrun('lightSwitch')}>设备闪灯</Button></div>
                             <div className="noteTriangle" />
                             <textarea className="remarks" id="remarks" value={this.state.memochange} onChange={this.memochange} onBlur={()=>this.remarks()} />
-                            <div className="nextPage">
-                                <Button type="primary" shape="circle" icon="right-circle" theme="filled" title="下一页" size="large" onClick={()=>this.nextPage()} />
-                            </div>
                         </div>
                     </div>
                 	:<div className="nodatastatus">
@@ -429,7 +427,10 @@ class Workbench extends Component {
                                                 <p>{v.atime}</p>
                                             </Col>
                                         </Row>
-                                    ))}
+                                    ))}:<div style={{width:'80%',maxWidth:'200px',margin:'0 auto 10px',textAlign:'center'}}>
+                                            <img src={nodata} width="100%" />
+                                            <p>暂无数据</p>
+                                        </div>
                                     </Fragment>
                                     :<div style={{width:'80%',maxWidth:'200px',margin:'0 auto 10px',textAlign:'center'}}>
                                     <img src={nodata} width="100%" />

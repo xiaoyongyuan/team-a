@@ -17,6 +17,7 @@ class Teamdeveice extends Component {
             userlist: [], //用户列表
             page: 1,
             longitude: false,
+            caseInfo:"",
             filedInput:true,//控制子组件的修改
             filed:false//控制子组件的修改
         };
@@ -185,13 +186,14 @@ class Teamdeveice extends Component {
         this.setState({
             longitude: false,
             filedInput:true,//控制子组件的修改
-            filed:false//控制子组件的修改
+            filed:false,//控制子组件的修改
         });
     };
+    //修改所在区域切换
     hanleFiled=()=>{
         this.setState({
             filedInput:false,
-            filed:true
+            filed:true,
         })
     };
     hanleonRef = (ref) => {
@@ -200,47 +202,70 @@ class Teamdeveice extends Component {
     longitudeOk = () => {
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const datas = {
-                    code:this.state.changeCode,
-                    lng: values.lng,
-                    lat: values.lat,
-                    location:this.state.caseInfo.formref().zonename+","+values.location
-                };
-                const equipment={
+                let equipment={
                     code:this.state.changeCode,
                     installmen:values.installmen,
                     installtel:values.installtel,
                     salemen:values.salemen,
                     saletel:values.saletel,
                 };
-                if (this.state.changeCode && values.lng && values.lat && this.state.caseInfo.formref().zonename && values.location) {
-                    post({url: "/api/camera/update", data: datas}, (ress) => {
-                        post({url:"/api/equipment/update",data: equipment},(res)=>{
-                            if (ress.success && res.success) {
-                                let list = this.state.list;
-                                list[this.state.LatitudeIndex].lng=ress.data[0].lng;
-                                list[this.state.LatitudeIndex].lat=ress.data[0].lat;
-                                list[this.state.LatitudeIndex].location=ress.data[0].location;
-                                list[this.state.LatitudeIndex].installmen=res.data[0].installmen;
-                                list[this.state.LatitudeIndex].installtel=res.data[0].installtel;
-                                list[this.state.LatitudeIndex].salemen=res.data[0].salemen;
-                                list[this.state.LatitudeIndex].saletel=res.data[0].saletel;
-                                this.setState({
-                                    longitude: false,
-                                    list
-                                }, () => {
-                                    message.success('修改成功！');
-                                })
-                            }
-                        })
-                    });
-                }else{
-                    message.warning("请选择所在区域或者详细地址!");
+                if (this.state.changeCode) {
+                    if(this.state.filedInput){
+                        if(values.lng && values.lat && values.filedlocation && values.location){
+                            let datasfiledlocation = {
+                                code:this.state.changeCode,
+                                lng: values.lng,
+                                lat: values.lat,
+                                location:values.filedlocation+","+values.location
+                            };
+                          this.hanleUpdate(datasfiledlocation,equipment);
+                        }else{
+                            message.warning("请选择所在区域或详细地址!");
+                        }
+                    }else{
+                        if(values.lng && values.lat && this.state.caseInfo.formref().zonename && values.location){
+                            let dataszonename = {
+                                code:this.state.changeCode,
+                                lng: values.lng,
+                                lat: values.lat,
+                                location:this.state.caseInfo.formref().zonename+","+values.location
+                            };
+                          this.hanleUpdate(dataszonename,equipment);
+                        }else{
+                            message.warning("请选择所在区域或详细地址!");
+                        }
+                    }
+
                 }
             }
         });
     };
-
+    hanleUpdate=(datas,equipment)=>{
+        post({url: "/api/camera/update", data: datas}, (ress) => {
+            post({url:"/api/equipment/update",data: equipment},(res)=>{
+                if (ress.success && res.success) {
+                    let list = this.state.list;
+                    list[this.state.LatitudeIndex].lng=ress.data[0].lng;
+                    list[this.state.LatitudeIndex].lat=ress.data[0].lat;
+                    list[this.state.LatitudeIndex].location=ress.data[0].location;
+                    list[this.state.LatitudeIndex].installmen=res.data[0].installmen;
+                    list[this.state.LatitudeIndex].installtel=res.data[0].installtel;
+                    list[this.state.LatitudeIndex].salemen=res.data[0].salemen;
+                    list[this.state.LatitudeIndex].saletel=res.data[0].saletel;
+                    this.setState({
+                        longitude: false,
+                        list,
+                    }, () => {
+                        this.setState({
+                            filedInput:true,
+                            filed:false,
+                        });
+                        message.success('修改成功！');
+                    })
+                }
+            })
+        });
+    }
     render() {
         const {getFieldDecorator} = this.props.form;
         const formItemLayout = {
@@ -472,11 +497,7 @@ class Teamdeveice extends Component {
                             </FormItem>
                             <div onClick={this.hanleFiled} style={{position: "absolute",right: "0%",top: "27%",color:"#0099FF",cursor:"pointer",display:this.state.filedInput===false?"none":"block"}}>修改</div>
                             <FormItem label="所在区域" {...formItemLayout} style={{display:this.state.filed===true?"block":"none"}}>
-                                {getFieldDecorator('location',{
-                                    rules: [{ required: false, message: '所在区域不能为空!' }],
-                                })(
-                                    <CascaderModule onRef={this.hanleonRef} />
-                                )}
+                                <CascaderModule onRef={this.hanleonRef} />
                             </FormItem>
                         </Col>
                         <Col>
