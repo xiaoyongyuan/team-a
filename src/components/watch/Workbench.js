@@ -153,16 +153,13 @@ class Workbench extends Component {
                 	if(this.state.page>1){
                         const listPending=this.state.pending;
                         pending=listPending.concat(res.data);
-                	}
+                    }
                 	this.setState({
                       pending:pending,
                       pendingCount:res.totalcount,
-                  })
+                    })
                 }else{
-                	if(this.state.page>1) hangup=false;
-                    this.setState({
-                        pending:res.data,
-                    });
+                    if(this.state.page>1) hangup=false;
                 	message.info("没有更多了");
                 }
             }else message.warning(res.errorinfo);
