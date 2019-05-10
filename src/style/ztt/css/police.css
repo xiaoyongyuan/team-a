@@ -374,6 +374,7 @@
 .row-alarmlist-detail{
     width: 100%;
     color: #333;
+    padding-left: 12px;
 }
 
 .flexright button:focus {
@@ -495,8 +496,6 @@
 }
 .fontstyle{
     font-size: 13px;
-    height: 61px;
-    line-height: 61px;
     margin: 0 !important;
     overflow: hidden;
     text-overflow: ellipsis;

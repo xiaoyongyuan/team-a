@@ -158,9 +158,11 @@ class Workbench extends Component {
                       pending:pending,
                       pendingCount:res.totalcount,
                   })
-
                 }else{
                 	if(this.state.page>1) hangup=false;
+                    this.setState({
+                        pending:res.data,
+                    });
                 	message.info("没有更多了");
                 }
             }else message.warning(res.errorinfo);
@@ -215,7 +217,8 @@ class Workbench extends Component {
                       returnChange:''
                   },()=>{
                   	hangup=true;
-                  	_this.pendingList() 
+                  	_this.pendingList() ;
+                      _this.getListCount();
                   });                    
                 }else{
                     message.warning(res.errorinfo);
@@ -378,10 +381,10 @@ class Workbench extends Component {
                             </div>
                         </div>
                         <div className="processingAlarm-right">
+                            <Button type="primary" className="nextPage" shape="circle" icon="right-circle" theme="filled" title="下一页" size="large" onClick={()=>this.nextPage()} style={{marginTop:"-6%"}} />
                         {this.state.oldHstatus!==2 && this.state.oldHstatus!==3
                         		?<Fragment>
 	                        		<div className="mount" >
-                                        <Button type="primary" className="nextPage" shape="circle" icon="right-circle" theme="filled" title="下一页" size="large" onClick={()=>this.nextPage()} style={{marginTop:"-6%"}} />
                                         <div className="alarm-btn workhanleup"><Button disabled={this.state.nextPageBtn} type="primary" onClick={()=>this.typeAlarm(1,"挂起")} >挂起</Button></div>
                                         <div className="alarm-btn xuJing" ><Button key="xub" type="primary" onClick={()=>this.typeAlarm(4,"虚警")} disabled={this.state.nextPageBtn}>虚警</Button></div>
                                         <div className="alarm-btn wuBao"><Button key="wub" type="primary" onClick={()=>this.typeAlarm(5,"误报")} disabled={this.state.nextPageBtn}>误报</Button></div>
@@ -410,8 +413,10 @@ class Workbench extends Component {
                     <div className="mountUp">挂起列表</div>
                     <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"52px"}}>
                         <Panel key="1" showArrow={false}>
-                            <p className="hanleCenter"><Button onClick={()=>this.hanleEnd("2")} style={{border:this.state.alarmUp==="2"?"1px solid #313653":"1px solid #CCCCCC",background:this.state.alarmUp==="2"?"#313653":"#fff",color:this.state.alarmUp==="2"?"#fff":"#000"}}>报警未结束({this.state.count_u})</Button>
-                                <Button onClick={()=>this.hanleEnd("1")} style={{border:this.state.alarmUp==="1"?"1px solid #313653":"1px solid #CCCCCC",background:this.state.alarmUp==="1"?"#313653":"#fff",color:this.state.alarmUp==="1"?"#fff":"#000"}}>挂起({this.state.count_h})</Button></p>
+                            <p className="hanleCenter">
+                                <Button onClick={()=>this.hanleEnd("2")} style={{border:this.state.alarmUp==="2"?"1px solid #313653":"1px solid #CCCCCC",background:this.state.alarmUp==="2"?"#313653":"#fff",color:this.state.alarmUp==="2"?"#fff":"#000"}}>报警未结束({this.state.count_u})</Button>
+                                <Button onClick={()=>this.hanleEnd("1")} style={{border:this.state.alarmUp==="1"?"1px solid #313653":"1px solid #CCCCCC",background:this.state.alarmUp==="1"?"#313653":"#fff",color:this.state.alarmUp==="1"?"#fff":"#000"}}>挂起({this.state.count_h})</Button>
+                            </p>
                             <div className="hangUpPanel" id="hangUpPanel">
                                 {
                                     this.state.pending.length
@@ -427,10 +432,7 @@ class Workbench extends Component {
                                                 <p>{v.atime}</p>
                                             </Col>
                                         </Row>
-                                    ))}:<div style={{width:'80%',maxWidth:'200px',margin:'0 auto 10px',textAlign:'center'}}>
-                                            <img src={nodata} width="100%" />
-                                            <p>暂无数据</p>
-                                        </div>
+                                    ))}
                                     </Fragment>
                                     :<div style={{width:'80%',maxWidth:'200px',margin:'0 auto 10px',textAlign:'center'}}>
                                     <img src={nodata} width="100%" />
