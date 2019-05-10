@@ -9,7 +9,7 @@ import moment from "moment";
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-var hangup=true;
+var hangup=true; //挂载滚动开关
 const { TextArea } = Input;
 const Panel = Collapse.Panel;
 class Workbench extends Component {
@@ -148,20 +148,20 @@ class Workbench extends Component {
     	if(hangup && loginaccount && this.state.alarmUp){
         post({url:"/api/alarmhandle/getlist",data:{hstatus:this.state.alarmUp,pageindex:this.state.page,pagesize:10,account:loginaccount}},(res)=>{
             if(res.success){
-                if(res.data.length>0){
-                	var pending=res.data;
-                	if(this.state.page>1){
-                        const listPending=this.state.pending;
-                        pending=listPending.concat(res.data);
+                var pending=res.data;
+                if(this.state.page>1){
+                    const listPending=this.state.pending;
+                    pending=listPending.concat(res.data);
+                    if(!res.data.length){
+                        hangup=false;
+                        message.info("没有更多了");
                     }
-                	this.setState({
-                      pending:pending,
-                      pendingCount:res.totalcount,
-                    })
-                }else{
-                    if(this.state.page>1) hangup=false;
-                	message.info("没有更多了");
                 }
+                this.setState({
+                  pending:pending,
+                  pendingCount:res.totalcount,
+                })
+
             }else message.warning(res.errorinfo);
         })
       }
@@ -172,14 +172,16 @@ class Workbench extends Component {
             alarmUp:htypeUp,
             page:1
         },()=>{
+            hangup=true;
             this.pendingList();
         });
     };
     padingLoad=()=>{
-        document.getElementById("hangUpPanel").onscroll=()=>{
-            var pending=document.getElementById("hangUpPanel").scrollHeight;//内容的总体高度
-            var scroll=document.getElementById("hangUpPanel").scrollTop;//距离顶部的高度
-            var clice=document.getElementById("hangUpPanel").clientHeight;//可视的高度
+        var hangUpPanel=document.getElementById("hangUpPanel");
+        hangUpPanel.onscroll=()=>{
+            var pending=hangUpPanel.scrollHeight;//内容的总体高度
+            var scroll=hangUpPanel.scrollTop;//距离顶部的高度
+            var clice=hangUpPanel.clientHeight;//可视的高度
             var bottom=pending-clice;
             var foot=bottom-scroll;//滚动条距离底部的高度
             if(foot===0){
@@ -406,7 +408,7 @@ class Workbench extends Component {
                     
                 </div>
                 <div className="hangUp">
-                    <div className="garden">{this.state.pendingCount?this.state.pendingCount:0}</div>
+                    <div className="garden">{this.state.count_u+this.state.count_h}</div>
                     <div className="mountUp">挂起列表</div>
                     <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"52px"}}>
                         <Panel key="1" showArrow={false}>
@@ -414,7 +416,7 @@ class Workbench extends Component {
                                 <Button onClick={()=>this.hanleEnd("2")} style={{border:this.state.alarmUp==="2"?"1px solid #313653":"1px solid #CCCCCC",background:this.state.alarmUp==="2"?"#313653":"#fff",color:this.state.alarmUp==="2"?"#fff":"#000"}}>报警未结束({this.state.count_u})</Button>
                                 <Button onClick={()=>this.hanleEnd("1")} style={{border:this.state.alarmUp==="1"?"1px solid #313653":"1px solid #CCCCCC",background:this.state.alarmUp==="1"?"#313653":"#fff",color:this.state.alarmUp==="1"?"#fff":"#000"}}>挂起({this.state.count_h})</Button>
                             </p>
-                            <div className="hangUpPanel" id="hangUpPanel">
+                            <div className="hangUpPanel" id="hangUpPanel" style={{height:'630px'}}>
                                 {
                                     this.state.pending.length
                                     ?<Fragment>
