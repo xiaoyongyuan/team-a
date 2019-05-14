@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "../../style/sjg/home.css";
-import { Card, Form, Input, Row, Col, Button, message } from "antd";
+import { Card, Form, Input, Row, Col, message } from "antd";
 import BreadcrumbCustom from "../BreadcrumbCustom";
 import { post } from "../../axios/tools";
 import nopic from "../../style/imgs/nopic.png";

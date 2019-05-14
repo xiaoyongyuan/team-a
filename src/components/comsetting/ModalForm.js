@@ -129,7 +129,7 @@ class ModalForm extends Component {
                             <RadioGroup onChange={this.onChangeradio}>
                             {this.state.roles.map(function(item,index){
                                 return(
-                                    <Radio value={item.rolename}>{item.roledescribe}</Radio>
+                                    <Radio value={item.rolename} key={index}>{item.roledescribe}</Radio>
                                 )
                             })}
                             </RadioGroup>

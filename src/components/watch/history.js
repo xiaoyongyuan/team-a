@@ -78,7 +78,7 @@ class history extends React.Component {
     handleAlerm = ()=>{
         this.setState({
             loadding:true,
-        })
+        });
         var alarmmdata={
             bdate:this.state.bdate,
             edate:this.state.edate,
@@ -86,7 +86,7 @@ class history extends React.Component {
             account:this.state.account,
             pagesize:18,
             pageindex:this.state.page,
-        }
+        };
         post({url:'/api/alarmhandlehistory/getlist',data:alarmmdata},(res)=>{
             if(res.success){
                
@@ -135,7 +135,7 @@ class history extends React.Component {
                 hstatus:values.hstatus,
                 account:values.account,
                 pageindex:this.state.page,
-            })
+            });
             if(!err){
                 this.setState({
                     page:1,
@@ -144,7 +144,7 @@ class history extends React.Component {
                     this.handleAlerm()
                 })
             }
-       })
+       });
         this.setState({
             displaysearch:false,
         })
@@ -170,7 +170,7 @@ class history extends React.Component {
         }else if(status === -3){
             return("triangle-topright-green trianglea");
         }
-    }
+    };
       //报警状态
       handleState = (code)=>{
           switch (code) {
@@ -222,7 +222,7 @@ class history extends React.Component {
           default:
            return nodata;
         }
-      }
+      };
       changeCoord(e){ 
         this.setState({
             eee:e,

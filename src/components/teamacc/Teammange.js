@@ -288,7 +288,8 @@ changePage=(page,pageSize)=>{ //分页  页码改变的回调，参数是改变�
                  pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage ,hideOnSinglePage:true}}
                 />
 
-                <Modal visible={this.state.visible}
+                <Modal title="用户操作"
+                       visible={this.state.visible}
                        onOk={this.handleCreate}
                        onCancel={this.handleCancel}
                        okText="确认"

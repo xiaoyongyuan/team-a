@@ -218,7 +218,7 @@ class Map extends Component {
               </p>
               <div>
                 {this.state.equipdat.pic_min ? (
-                  <img src={this.state.equipdat.pic_min} width="100%" />
+                  <img src={this.state.equipdat.pic_min} width="100%" alt="图片" />
                 ) : null}
               </div>
               <div style={{ marginTop: "5px", textAlign: "center" }}>

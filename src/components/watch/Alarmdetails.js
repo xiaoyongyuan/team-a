@@ -331,7 +331,7 @@ class Alarmdetails extends React.Component{
                     onCancel={()=>this.lookretrun('lookretrunSwitch',false)} 
                     width={600}
                     footer={null}
-               >
+              >
                   {this.state.returnmemo.map((el,i)=>(
                       <Comment key={'Comment'+i}
                                 author={el.time}

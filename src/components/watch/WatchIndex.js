@@ -162,7 +162,7 @@ class WatchIndex extends Component {
                               ))
                             }</Fragment>
                             :<div style={{margin:'50px auto 0',width:'200px',textAlign:'center'}}>
-                                <img src={nodata} width="100%"/>
+                                <img src={nodata} width="100%" alt="暂无数据" />
                                 <p>暂无数据</p>
                             </div>
                           }

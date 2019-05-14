@@ -49,68 +49,66 @@ class Auditing extends Component {
     };
     this.jumpPage = this.jumpPage.bind(this);
   }
+  componentWillMount() {
+      this.setState({
+          code: this.props.query.code
+      });
+  }
+  componentDidMount() {
+      post(
+          { url: "/api/rollcall/getone_maintain", data: { code: this.state.code } },
+          res => {
+              if (res.success) {
+                  this.props.form.setFieldsValue({
+                      qpplyname: res.data.cameraname, //用户名
+                      cameraname: res.data.cameraname
+                  });
+                  const furl = res.data.basepic;
+                  const regs = furl.substring(furl.indexOf("?"));
+                  const downpic = furl.replace(regs, "");
+                  this.setState(
+                      {
+                          // areapic: res.data.basepic,
+                          imgsrc: res.data.basepic, //图片
+                          present: JSON.parse(res.data.rzone), //区域
 
+                          downpic
+                      },
+                      () => {
+                          this.draw();
+                      }
+                  );
+              }
+          }
+      );
+  }
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log("Received values of form: ", values);
-      }
-      if (this.state.imageUrl) {
-        post(
-          {
-            url: "/api/rollcall/handle",
-            data: {
-              code: this.state.code,
-              rhandle: 1,
-              picurl: this.state.imageUrl
-            }
-          },
-          res => {
-            if (res.success === 1) {
-              message.success("审核通过");
-              setTimeout(() => {
-                window.location.href = "#/app/teamacc/callalram";
-              }, 1000);
-            }
+          if (this.state.imageUrl) {
+              post(
+                  {
+                      url: "/api/rollcall/handle",
+                      data: {
+                          code: this.state.code,
+                          rhandle: 1,
+                          picurl: this.state.imageUrl
+                      }
+                  },
+                  res => {
+                      if (res.success === 1) {
+                          message.success("审核通过");
+                          setTimeout(() => {
+                              window.location.href = "#/app/teamacc/callalram";
+                          }, 1000);
+                      }
+                  }
+              );
           }
-        );
       }
     });
   };
-  componentWillMount() {
-    this.setState({
-      code: this.props.query.code
-    });
-  }
-  componentDidMount() {
-    post(
-      { url: "/api/rollcall/getone_maintain", data: { code: this.state.code } },
-      res => {
-        if (res.success) {
-          this.props.form.setFieldsValue({
-            qpplyname: res.data.cameraname, //用户名
-            cameraname: res.data.cameraname
-          });
-          const furl = res.data.basepic;
-          const regs = furl.substring(furl.indexOf("?"));
-          const downpic = furl.replace(regs, "");
-          this.setState(
-            {
-              // areapic: res.data.basepic,
-              imgsrc: res.data.basepic, //图片
-              present: JSON.parse(res.data.rzone), //区域
-
-              downpic
-            },
-            () => {
-              this.draw();
-            }
-          );
-        }
-      }
-    );
-  }
   draw = () => {
     //绘制区域
     let item = this.state.present;
@@ -133,7 +131,6 @@ class Auditing extends Component {
       });
     }
   };
-  componentDidUpdate() {}
   handleChange = info => {
     if (info.file.status === "uploading") {
       this.setState({ loading: true });

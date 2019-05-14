@@ -43,7 +43,20 @@ class ModaBianhao extends Component {
             this.requestdata()
         });
     }
+    componentWillReceiveProps(nextProps){
+        if( nextProps.visible !== vis){
+            vis=nextProps.visible;
+            if(nextProps.visible){
+                vis=nextProps.visible;
+                this.setState({
+                    code:nextProps.code,
+                },()=>{
+                    this.requestdata()
+                });
+            }
+        }
 
+    }
     requestdata=(params) => {//取数据
         this.props.form.setFieldsValue({
             opening:['围界入侵']
@@ -74,20 +87,7 @@ class ModaBianhao extends Component {
         return this.props.form;
     };
 
-    componentWillReceiveProps(nextProps){
-        if( nextProps.visible !== vis){
-            vis=nextProps.visible;
-            if(nextProps.visible){
-                vis=nextProps.visible;
-                this.setState({
-                    code:nextProps.code,
-                },()=>{
-                    this.requestdata() 
-                });
-            }
-        }
 
-    }
 
 
     render() {

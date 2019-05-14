@@ -1,5 +1,5 @@
 import React from 'react';
-import { DatePicker, Row, Col, Button, Modal, Pagination, Form,LocaleProvider,Spin,notification,message} from "antd";
+import { DatePicker, Row, Col, Button, Modal, Pagination, Form,LocaleProvider,Spin,message} from "antd";
 import "../../style/ztt/css/police.css";
 import "../../style/publicStyle/publicStyle.css";
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
@@ -171,7 +171,7 @@ class LookAlarm extends React.Component{
         const objs=this.state.data;
         if( objs.length>0){
             //计算缩放比例
-            objs.map((el,i) => {
+            objs.map((el) => {
                 this.setState({ x:604/el.pic_width,y:476/el.pic_height});
                 const x=604/el.pic_width, y=476/el.pic_height;
                 let fangquarr = []
@@ -184,7 +184,9 @@ class LookAlarm extends React.Component{
                     area.rect(parseInt(item.x*x),parseInt(item.y*y),parseInt(item.w*x),parseInt(item.h*y));
                     area.stroke();
                     area.closePath();
-                })
+                    return "";
+                });
+                return "";
             })
         }
     }

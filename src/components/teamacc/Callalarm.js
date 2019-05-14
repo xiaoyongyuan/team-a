@@ -56,8 +56,6 @@ class Callalarm extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if(!err){
-                console.log('******************',values);
-
                 this.setState({
                     bdate: values.clouddata&&values.clouddata.length?values.clouddata[0].format('YYYY-MM-DD'):"",
                     edate: values.clouddata&&values.clouddata.length?values.clouddata[1].format('YYYY-MM-DD'):"",
@@ -143,17 +141,12 @@ class Callalarm extends Component {
                     }
                 }
             }];
-
-        function onChange_time(date, dateString) {
-            console.log(date,dateString[0]);
-            console.log(date,dateString[1]);
-        }
         return (
             <div>
                 <BreadcrumbCustom first="账号管理" second="点名区域审核" />
                 <Row className="margin_top20 margin_bottom20">
                     <Col span={18}>
-                        <Form layout="inline"onSubmit={this.selectopt}>
+                        <Form layout="inline" onSubmit={this.selectopt}>
                             <FormItem label="查询用户">
                                 {getFieldDecorator('name', {
                                     rules: [{ required: false, message: '请输入用户名称!' }],
@@ -166,7 +159,7 @@ class Callalarm extends Component {
                                 {getFieldDecorator('clouddata', {
                                     rules: [{ required: false, message: '请选择!' }],
                                 })(
-                                    <RangePicker onChange={onChange_time} format={dateFormat} />
+                                    <RangePicker format={dateFormat} />
                                 )}
                             </FormItem>
                             </LocaleProvider>

@@ -49,7 +49,8 @@ class Workbench extends Component {
             if(res.success){
                 this.setState({
                     count_h:res.count_h,
-                    count_u:res.count_u
+                    count_u:res.count_u,
+                    counthu:res.count_h+res.count_u
                 })
             }
         })
@@ -408,7 +409,7 @@ class Workbench extends Component {
                     
                 </div>
                 <div className="hangUp">
-                    <div className="garden">{this.state.count_u+this.state.count_h}</div>
+                    <div className="garden">{this.state.counthu}</div>
                     <div className="mountUp">挂起列表</div>
                     <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"52px"}}>
                         <Panel key="1" showArrow={false}>
@@ -434,7 +435,7 @@ class Workbench extends Component {
                                     ))}
                                     </Fragment>
                                     :<div style={{width:'80%',maxWidth:'200px',margin:'0 auto 10px',textAlign:'center'}}>
-                                    <img src={nodata} width="100%" />
+                                    <img src={nodata} width="100%" alt="暂无数据" />
                                     <p>暂无数据</p>
                                     </div>
                                 }

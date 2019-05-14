@@ -123,7 +123,7 @@ class Groupleader extends Component {
                 <Row className="group-flex">
                     <div className="group-height name groupLeader-border">
                         <div className="groupLeader-img">
-                             <div className="groupIcon"style={{marginTop: '15px',borderRadius: '50%',background:'#cacaca'}}><img src={leaderpng} /></div>
+                             <div className="groupIcon"style={{marginTop: '15px',borderRadius: '50%',background:'#cacaca'}}><img src={leaderpng} alt="头像" /></div>
                              <p className="groupLeaderName">{this.state.realname}</p>
                         </div>
                         <div className="groupLeader-img group-information">
@@ -190,7 +190,7 @@ class Groupleader extends Component {
                                         </Row>
                                         {
                                             this.state.userList.map((v,i)=>(
-                                                <Row key={v.code}>
+                                                <Row key={i}>
                                                     <Col span={8} className="record-body">{v.cname?v.cname:"无"}</Col>
                                                     <Col span={8} className="record-body overflow" title={v.gettime?v.gettime:"无"}>{v.gettime?v.gettime:"无"}</Col>
                                                     <Col span={8} className="record-body">{v.realname?v.realname:v.account}</Col>

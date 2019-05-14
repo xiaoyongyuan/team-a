@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Switch, Icon, notification, message,Modal,Spin } from 'antd';
+import {Button, Switch, Icon,Spin } from 'antd';
 import {post} from "../../axios/tools";
 import "../../style/ztt/css/police.css";
 const ButtonGroup = Button.Group;
