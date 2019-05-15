@@ -69,7 +69,6 @@ class Comemploye extends Component {
         });
         const forms=this.formRef.formref();
         forms.validateFields((err, values) => {
-            console.log(values.userpower,":99999");
             if (!err) {
             	const data={
                   realname:values.realname,
@@ -90,11 +89,14 @@ class Comemploye extends Component {
                               list[this.state.index]=res.data[0];
                               this.setState({
                                   list:list,
+                                  visible: false
                               })
                           }
                       })
+                      forms.resetFields();
                   }else{
                       message.warning("不能选择维护团队管理员!");
+                      this.setState({ visible: true});
                   }
               }else{
                   //新增接口');
@@ -107,14 +109,12 @@ class Comemploye extends Component {
                           list.unshift(data);
                           this.setState({
                               list:list,
+                              visible: false
                           })
                       }
                   })
+                  forms.resetFields();
               }
-              this.setState({
-                  visible: false
-              });
-              forms.resetFields() //清空
             }
         });
     };
