@@ -122,7 +122,9 @@ class ModalForm extends Component {
                 </Col>
                 <Col>
                     <FormItem label="账号" {...formItemLayout}>
-                        {getFieldDecorator('account')(
+                        {getFieldDecorator('account',{
+                            rules: [{ required: true ,message:"请输入账号!"}],
+                        })(
                             <Input disabled={_this.state.code?true:false} />
                         )}
                     </FormItem>
