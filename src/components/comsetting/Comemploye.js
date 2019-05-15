@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BreadcrumbCustom from '../BreadcrumbCustom';
 import ModalForm from './ModalForm.js';
-import {Form,Input, Row, Col, Button, Modal, Table,message} from 'antd';
+import {Form,Input, Row, Col, Button, Modal, Table} from 'antd';
 // import '../../style/sjg/home.css';
 import {post} from "../../axios/tools";
 const FormItem = Form.Item;
@@ -81,23 +81,16 @@ class Comemploye extends Component {
               };
               if(this.state.type){
                   //编辑接口');
-                  if(values.userpower==="onduty_helper" || values.userpower==="chargehand_helper"){
-                      data.code=this.state.codetype;
-                      post({url:"/api/userworker/update",data:data}, (res)=>{
-                          if(res.success){
-                              let list=this.state.list;
-                              list[this.state.index]=res.data[0];
-                              this.setState({
-                                  list:list,
-                                  visible: false
-                              })
-                          }
-                      })
-                      forms.resetFields();
-                  }else{
-                      message.warning("不能选择维护团队管理员!");
-                      this.setState({ visible: true});
-                  }
+                  data.code=this.state.codetype;
+                  post({url:"/api/userworker/update",data:data}, (res)=>{
+                      if(res.success){
+                          let list=this.state.list;
+                          list[this.state.index]=res.data[0];
+                          this.setState({
+                              list:list,
+                          })
+                      }
+                  })
               }else{
                   //新增接口');
                   data.account=values.account;
@@ -109,12 +102,14 @@ class Comemploye extends Component {
                           list.unshift(data);
                           this.setState({
                               list:list,
-                              visible: false
                           })
                       }
                   })
-                  forms.resetFields();
               }
+              this.setState({
+                  visible: false
+              });
+              forms.resetFields() //清空
             }
         });
     };

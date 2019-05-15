@@ -5,13 +5,14 @@ const FormItem = Form.Item;
 let vis=false;
 const RadioGroup = Radio.Group;
 const Option = Select.Option;
+var radioVis=true;
 class ModalForm extends Component {
     constructor(props){
         super(props);
         this.state={
             visible:props.visible || false,
             form:false,
-            roles:[{rolename:'admin'}]
+            roles:[{rolename:'admin'}],
           };
     }
     componentDidMount() {
@@ -21,7 +22,7 @@ class ModalForm extends Component {
             account:this.props.account,
         },()=>{
             this.requestdata()
-            this.userroles()
+            this.userroles();
         });
     }
 
@@ -33,7 +34,8 @@ class ModalForm extends Component {
                     code:nextProps.code,
                     account:nextProps.account,
                 }, () => {
-                    this.requestdata()
+                    this.requestdata();
+                    this.userroles();
                 });
             }
         }
@@ -41,9 +43,14 @@ class ModalForm extends Component {
     userroles =()=>{
         post({url:"/api/userroles/getlist"}, (res)=>{
             if(res.success){
-                this.setState({
-                    roles:res.data
-                })  
+                if(this.state.account==="admin"||this.state.account==="onduty1"||this.state.account==="chargehand1"){
+                    this.setState({
+                        roles:res.data
+                    })
+                }else{
+                    this.setState({roles:res.data.slice(0,2)})
+                }
+
             } 
         })
     }
@@ -71,7 +78,7 @@ class ModalForm extends Component {
         this.setState({
           value: e.target.value,
         });
-      }
+    };
     formref = () => { //将form传给父组件由父组件控制表单提交
         return this.props.form;
     };
