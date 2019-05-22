@@ -48,8 +48,9 @@ class Workbench extends Component {
         post({url:"/api/alarmhandle/getlist_count",data:{account:localStorage.getItem('loginaccount')}},(res)=>{
             if(res.success){
                 this.setState({
-                    count_h:res.count_h,
-                    count_u:res.count_u
+                    count_h:res.count_h?res.count_h:0,
+                    count_u:res.count_u?res.count_u:0,
+                    count_z:Number(res.count_h?res.count_h:0)+Number(res.count_u?res.count_u:0)
                 })
             }
         })
@@ -408,7 +409,7 @@ class Workbench extends Component {
                     
                 </div>
                 <div className="hangUp">
-                    <div className="garden">{this.state.count_u+this.state.count_h}</div>
+                    <div className="garden">{this.state.count_z}</div>
                     <div className="mountUp">挂起列表</div>
                     <Collapse accordion defaultActiveKey={['1']} style={{marginTop:"52px"}}>
                         <Panel key="1" showArrow={false}>
