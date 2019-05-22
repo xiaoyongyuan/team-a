@@ -349,7 +349,7 @@ class Teamdeveice extends Component {
                         <div>
                             <p><span>{record.lng}</span><span style={{display: text ? "inline-block" : "none"}}>,</span><span>{record.lat}</span>
                             </p>
-                            <p>{record.location}</p>
+                            <p>{record.location.toString().split(',')[0]===undefined?"":record.location}</p>
                         </div>
                     )
                 }
