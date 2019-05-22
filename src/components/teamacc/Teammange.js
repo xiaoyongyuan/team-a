@@ -135,7 +135,6 @@ class Teammange extends Component {
                 });
                 return false ;
             }
-
             if(!err){
                     this.setState({
                         bdate: values.clouddata&&values.clouddata.length?values.clouddata[0].format('YYYY-MM-DD'):"",
@@ -165,7 +164,6 @@ changePage=(page,pageSize)=>{ //分页  页码改变的回调，参数是改变�
     },()=>{
         this.requestdata()
     })
-
 }
     render() {
         const _this=this;
@@ -209,29 +207,30 @@ changePage=(page,pageSize)=>{ //分页  页码改变的回调，参数是改变�
                 title: '类型',
                 dataIndex: 'ctype',
                 key: 'ctype',
-                render: (text, record) => {
+                render: (text) => {
                  if(text===4){
                     return ('树莓派企业用户');
-                 }if (text===5) {
-                    return ('局域网企业用户');
-                 } else {
-                    return ('树莓派个人用户');
+                 }else if (text===5) {
+                    return ('椒图精灵个人用户');
+                 }else if(text===3){
+                    return ('局域网用户');
+                 }else{
+                    return '未知类型：'+text
                  }
-               
                 },
             },
-            {
-                title: '说明',
-                dataIndex: 'explain',
-                key: 'explain',
-                render: text => <span>自行管理</span>,
-            },
-            {
-                title: '共享',
-                dataIndex: 'share',
-                key: 'share',
-                render: text => <span>{text}</span>,
-            },
+            // {
+            //     title: '说明',
+            //     dataIndex: 'explain',
+            //     key: 'explain',
+            //     render: text => <span>自行管理</span>,
+            // },
+            // {
+            //     title: '共享',
+            //     dataIndex: 'share',
+            //     key: 'share',
+            //     render: text => <span>{text}</span>,
+            // },
             {
                 title: '操作',
                 dataIndex: 'code',
@@ -288,8 +287,7 @@ changePage=(page,pageSize)=>{ //分页  页码改变的回调，参数是改变�
                  pagination={{defaultPageSize:10,current:this.state.page, total:this.state.total,onChange:this.changePage ,hideOnSinglePage:true}}
                 />
 
-                <Modal title="用户操作"
-                       visible={this.state.visible}
+                <Modal visible={this.state.visible}
                        onOk={this.handleCreate}
                        onCancel={this.handleCancel}
                        okText="确认"

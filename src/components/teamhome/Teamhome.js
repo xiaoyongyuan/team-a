@@ -116,7 +116,7 @@ class Teamhome extends React.Component {
                                             <Col xl={24} className="adminFont wiHuFont">{this.state.raspberry}</Col>
                                         </Row>
                                         <Row>
-                                            <Col xl={24}>树莓派设备</Col>
+                                            <Col xl={24}>椒图精灵</Col>
                                         </Row>
                                     </Col>
                                 </div>

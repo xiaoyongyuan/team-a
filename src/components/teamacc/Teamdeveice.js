@@ -298,7 +298,7 @@ class Teamdeveice extends Component {
                 title: '类型',
                 dataIndex: 'etype',
                 key: 'etype',
-                render: text => <span>树莓派</span>,
+                render: text => <span>椒图精灵</span>,
             }, {
                 title: '所属用户',
                 dataIndex: 'cname',
@@ -335,6 +335,11 @@ class Teamdeveice extends Component {
                             return "";
                     }
                 },
+            },{
+                title: '是否试用',
+                dataIndex: 'iftrail',
+                key: 'iftrail',
+                render: text =>{return text?'是':'否'},
             }, {
                 title: '所在位置',
                 dataIndex: 'lng',
