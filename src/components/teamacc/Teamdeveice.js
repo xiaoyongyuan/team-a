@@ -209,6 +209,7 @@ class Teamdeveice extends Component {
                     salemen:values.salemen,
                     saletel:values.saletel,
                 };
+                console.log(this.state.caseInfo);
                 if (this.state.changeCode) {
                     if(this.state.filedInput){
                         if(values.lng && values.lat && values.filedlocation && values.location){
@@ -223,7 +224,7 @@ class Teamdeveice extends Component {
                             message.warning("请选择所在区域或详细地址!");
                         }
                     }else{
-                        if(values.lng && values.lat && this.state.caseInfo.formref().zonename && values.location){
+                        if(values.lng && values.lat && this.state.caseInfo && values.location){
                             let dataszonename = {
                                 code:this.state.changeCode,
                                 lng: values.lng,
